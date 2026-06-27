@@ -26,7 +26,7 @@ function clearToken() {
 
 let refreshing: Promise<boolean> | null = null;
 
-async function tryRefresh(): Promise<boolean> {
+async function doRefresh(): Promise<boolean> {
   try {
     // No body — the refresh token rides along as the httpOnly cookie.
     const res = await fetch(`${API_BASE}/auth/refresh`, {
@@ -44,6 +44,22 @@ async function tryRefresh(): Promise<boolean> {
     clearToken();
     return false;
   }
+}
+
+/**
+ * Dedupe concurrent refreshes into ONE in-flight request. Critical: the refresh
+ * token ROTATES on every /auth/refresh, so parallel refreshes (e.g. AuthGuard +
+ * a page's many data fetches on load) would invalidate each other — all but one
+ * would send the just-revoked token and get 401, forcing a spurious logout.
+ * Every caller (apiFetch, apiUpload, AuthGuard) must go through this.
+ */
+function tryRefresh(): Promise<boolean> {
+  if (!refreshing) {
+    refreshing = doRefresh().finally(() => {
+      refreshing = null;
+    });
+  }
+  return refreshing;
 }
 
 export class ApiError extends Error {
@@ -74,14 +90,9 @@ export async function apiFetch<T>(
   // attached to ordinary API calls.
   let res = await fetch(url, { ...options, headers, credentials: "include" });
 
-  // 401 → try refresh once
+  // 401 → try refresh once (deduped across concurrent callers)
   if (res.status === 401) {
-    if (!refreshing) {
-      refreshing = tryRefresh().finally(() => {
-        refreshing = null;
-      });
-    }
-    const ok = await refreshing;
+    const ok = await tryRefresh();
     if (ok) {
       const newToken = getToken();
       if (newToken) headers["Authorization"] = `Bearer ${newToken}`;
@@ -141,12 +152,7 @@ export async function apiUpload<T>(path: string, formData: FormData): Promise<T>
   });
 
   if (res.status === 401) {
-    if (!refreshing) {
-      refreshing = tryRefresh().finally(() => {
-        refreshing = null;
-      });
-    }
-    const ok = await refreshing;
+    const ok = await tryRefresh();
     if (ok) {
       res = await fetch(url, {
         method: "POST",
