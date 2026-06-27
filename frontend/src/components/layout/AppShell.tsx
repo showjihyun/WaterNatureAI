@@ -1,0 +1,39 @@
+"use client";
+
+import type { ReactNode } from "react";
+import { Sidebar, MobileNav } from "./Sidebar";
+import { NotificationBell } from "./NotificationBell";
+import { AuthGuard } from "@/components/auth/AuthGuard";
+
+interface AppShellProps {
+  children: ReactNode;
+}
+
+export function AppShell({ children }: AppShellProps) {
+  return (
+    <AuthGuard>
+      <div className="flex h-screen overflow-hidden bg-surface">
+        {/* 키보드 사용자: 사이드바 건너뛰고 본문으로 */}
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[60] focus:rounded-lg focus:bg-ink focus:px-4 focus:py-2 focus:text-sm focus:font-medium focus:text-white"
+        >
+          본문 바로가기
+        </a>
+        <Sidebar />
+        {/* min-w-0: 자식 콘텐츠가 flex 트랙을 넘쳐 가로 스크롤 만드는 것 방지 */}
+        <div className="flex min-w-0 flex-1 flex-col">
+          <MobileNav />
+          {/* 데스크톱 상단 유틸리티 바 — 알림 벨 */}
+          <div className="hidden h-14 shrink-0 items-center justify-end border-b border-surface-border bg-surface-card px-6 lg:flex">
+            <NotificationBell />
+          </div>
+          <main id="main-content" className="flex-1 overflow-y-auto">
+            {/* 초광폭 모니터에서 콘텐츠가 과도하게 늘어나지 않도록 폭 상한 + 중앙정렬 */}
+            <div className="mx-auto min-h-full max-w-screen-2xl p-4 sm:p-6">{children}</div>
+          </main>
+        </div>
+      </div>
+    </AuthGuard>
+  );
+}

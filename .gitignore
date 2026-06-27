@@ -1,0 +1,77 @@
+# ── Secrets / local config (NEVER commit) ───────────
+.env
+.env.*
+!.env.example
+*.env
+backend/.env
+frontend/.env.local
+*.pem
+*.key
+secrets*
+credentials*
+
+# ── Database dumps / backups ────────────────────────
+*.sql
+*.dump
+*.sqlite
+*.sqlite3
+backend/bizradar_live_backup.sql
+
+# ── Logs / runtime state ────────────────────────────
+*.log
+backend/_uvicorn.out.log
+backend/_uvicorn.err.log
+frontend/dev-server.log
+celerybeat-schedule*
+celerybeat.pid
+
+# ── Python ──────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.egg-info/
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
+.benchmarks/
+.coverage
+htmlcov/
+.venv/
+venv/
+env/
+
+# ── Node / Next.js ──────────────────────────────────
+node_modules/
+.next/
+out/
+next-env.d.ts
+tsconfig.tsbuildinfo
+npm-debug.log*
+yarn-error.log*
+
+# ── Tooling / editor / OS ───────────────────────────
+.playwright-mcp/
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# ── Dev screenshots / verification artifacts ────────
+# (kept out of the repo; remove these rules if you want them tracked)
+/*.png
+frontend/screenshots/
+
+# ── Business / strategy docs (kept LOCAL only — not for public repo) ──
+# 사업계획·PRD·경쟁사분석·로드맵 등 기획 문서는 공개 저장소에 포함하지 않는다.
+docs/00-overview/
+docs/01-business/
+docs/02-product/
+docs/03-spec/
+docs/05-spikes/
+docs/init-biz-build-up/
+
+# ── Binary office docs (3rd-party gov API source materials; contain PII) ──
+# 정부 OpenAPI 원본 .docx/.xlsx — 개인 이메일 등 PII 포함, 바이너리라 정제 불가.
+# API 레퍼런스 본문은 06-data api ref/*.md 로 유지.
+*.docx
+*.xlsx
+*.pptx
