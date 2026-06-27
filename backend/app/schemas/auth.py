@@ -23,3 +23,10 @@ class TokenOut(BaseModel):
     access_token: str
     refresh_token: str
     token_type: str = "bearer"
+
+
+class AccessTokenOut(BaseModel):
+    """HTTP 응답용 — access 토큰만 본문에 반환. refresh 토큰은 httpOnly 쿠키로 전달."""
+
+    access_token: str
+    token_type: str = "bearer"

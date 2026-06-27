@@ -1,23 +1,18 @@
 // ────────────────────────────────────────────────────────────────────────────
-// JWT token utilities — no external dependencies
+// JWT token utilities — reads the in-memory access token from the API client
+// (no localStorage). Refresh is handled separately via the httpOnly cookie.
 // ────────────────────────────────────────────────────────────────────────────
 
-const ACCESS_KEY = "bizradar_access_token";
+import { getToken } from "@/lib/api/client";
 
 /**
- * Decodes the JWT payload from the access token in localStorage and checks
- * whether it is present and not expired.
+ * Returns true when an in-memory access token is present and not expired.
  *
- * Returns false when:
- *  - running on the server (SSR)
- *  - no token in localStorage
- *  - token cannot be parsed (malformed)
- *  - payload.exp is missing or has already elapsed
+ * Returns false when: no token in memory (e.g. right after a reload, before a
+ * silent refresh), the token is malformed, or `payload.exp` has elapsed.
  */
 export function isAccessTokenValid(): boolean {
-  if (typeof window === "undefined") return false;
-
-  const token = localStorage.getItem(ACCESS_KEY);
+  const token = getToken();
   if (!token) return false;
 
   try {

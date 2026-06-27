@@ -31,6 +31,10 @@ class Settings(BaseSettings):
     # DB 저장 시크릿(LLM API 키 등) 대칭 암호화 마스터 키. 미설정 시 jwt_secret 파생.
     # 운영에서는 강한 랜덤값 권장(변경 시 기존 암호문 복호화 불가).
     app_secret_key: str = ""
+    # 리프레시 토큰은 httpOnly 쿠키로 보관(XSS 탈취 차단). access 토큰은 클라 메모리+
+    # Authorization 헤더 유지 → API는 헤더 인증 그대로(CSRF 표면 최소).
+    refresh_cookie_name: str = "bizradar_refresh"
+    cookie_samesite: str = "lax"
 
     # Collectors
     ingest_buffer_days: int = 2
@@ -111,6 +115,11 @@ class Settings(BaseSettings):
     # 웹훅 서명 검증용 공유 시크릿(HMAC-SHA256). 미설정 시 웹훅은 fail-closed(401).
     toss_webhook_secret: str = ""
     billing_plan_default: str = "basic_monthly"
+
+    @property
+    def cookie_secure(self) -> bool:
+        """운영(비-local)에선 https 전제 → Secure 쿠키. local http 개발에선 비활성."""
+        return self.app_env != "local"
 
     @model_validator(mode="after")
     def _enforce_prod_secrets(self) -> "Settings":

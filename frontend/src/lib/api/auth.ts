@@ -1,4 +1,4 @@
-import { apiFetch, setTokens, clearTokens } from "./client";
+import { apiFetch, setToken, clearToken } from "./client";
 import type { TokenOut, LoginIn, RegisterIn } from "@/types/api";
 
 export async function register(body: RegisterIn): Promise<TokenOut> {
@@ -6,7 +6,7 @@ export async function register(body: RegisterIn): Promise<TokenOut> {
     method: "POST",
     body: JSON.stringify(body),
   });
-  setTokens(data.access_token, data.refresh_token);
+  setToken(data.access_token); // refresh 토큰은 httpOnly 쿠키로 자동 저장됨
   return data;
 }
 
@@ -15,17 +15,15 @@ export async function login(body: LoginIn): Promise<TokenOut> {
     method: "POST",
     body: JSON.stringify(body),
   });
-  setTokens(data.access_token, data.refresh_token);
+  setToken(data.access_token);
   return data;
 }
 
-export async function logout(refreshToken: string): Promise<void> {
+export async function logout(): Promise<void> {
   try {
-    await apiFetch("/auth/logout", {
-      method: "POST",
-      body: JSON.stringify({ refresh_token: refreshToken }),
-    });
+    // 본문 없음 — 서버가 httpOnly 리프레시 쿠키를 읽어 폐기·삭제한다.
+    await apiFetch("/auth/logout", { method: "POST" });
   } finally {
-    clearTokens();
+    clearToken();
   }
 }

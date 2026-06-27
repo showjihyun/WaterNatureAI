@@ -4,7 +4,7 @@ import { useEffect, useState, type ReactNode } from "react";
 import { useRouter } from "next/navigation";
 import { LoadingPage } from "@/components/ui/Spinner";
 import { isAccessTokenValid } from "@/lib/auth/token";
-import { clearTokens } from "@/lib/api/client";
+import { tryRefresh } from "@/lib/api/client";
 
 interface AuthGuardProps {
   children: ReactNode;
@@ -12,27 +12,27 @@ interface AuthGuardProps {
 
 export function AuthGuard({ children }: AuthGuardProps) {
   const router = useRouter();
-  // localStorage(토큰)는 서버에 없으므로 렌더 중 직접 분기하면 SSR↔클라이언트 hydration
-  // mismatch가 난다. mount 이후에만 토큰을 검사(서버·첫 클라이언트 렌더는 동일하게 로딩).
-  const [mounted, setMounted] = useState(false);
+  // access 토큰은 메모리에만 있어 새로고침 시 사라진다. 마운트 시 httpOnly 리프레시
+  // 쿠키로 silent refresh를 시도해 access를 복구한 뒤 인증 여부를 판단한다(쿠키 없으면 실패).
+  const [status, setStatus] = useState<"loading" | "ok" | "denied">("loading");
+
   useEffect(() => {
-    setMounted(true);
+    let alive = true;
+    (async () => {
+      const ok = isAccessTokenValid() || (await tryRefresh());
+      if (alive) setStatus(ok ? "ok" : "denied");
+    })();
+    return () => {
+      alive = false;
+    };
   }, []);
 
-  const tokenValid = mounted && isAccessTokenValid();
-
   useEffect(() => {
-    if (mounted && !tokenValid) {
-      clearTokens();
-      router.replace("/login");
-    }
-  }, [mounted, tokenValid, router]);
+    if (status === "denied") router.replace("/login");
+  }, [status, router]);
 
-  // mount 전(=서버/첫 렌더) 또는 토큰 무효(리다이렉트 중) → 로딩.
-  // children을 렌더하지 않아 죽은 토큰으로 401 API 호출하는 것을 방지.
-  if (!mounted || !tokenValid) {
-    return <LoadingPage />;
-  }
+  // 인증 확인/리다이렉트 중 → 로딩. children을 렌더하지 않아 죽은 토큰으로 API 호출 방지.
+  if (status !== "ok") return <LoadingPage />;
 
   return <>{children}</>;
 }

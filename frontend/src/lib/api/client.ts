@@ -1,59 +1,47 @@
 // ────────────────────────────────────────────────────────────────────────────
-// API client — auto-attaches Bearer token, handles 401 refresh, mock mode
+// API client — access token in memory (+ Authorization header); the refresh
+// token lives in an httpOnly cookie set by the backend, so JS never sees it.
+// On 401 (incl. fresh page loads where the in-memory token is gone) we silently
+// re-mint the access token from the refresh cookie.
 // ────────────────────────────────────────────────────────────────────────────
 
 const API_BASE =
   process.env.NEXT_PUBLIC_API_BASE ?? "http://localhost:8000/api/v1";
 
-const ACCESS_KEY = "bizradar_access_token";
-const REFRESH_KEY = "bizradar_refresh_token";
+// Access token kept in memory ONLY (not localStorage) → not stealable via XSS,
+// short-lived, and re-minted from the httpOnly refresh cookie after a reload.
+let accessToken: string | null = null;
 
 function getToken(): string | null {
-  if (typeof window === "undefined") return null;
-  return localStorage.getItem(ACCESS_KEY);
+  return accessToken;
 }
 
-function getRefreshToken(): string | null {
-  if (typeof window === "undefined") return null;
-  return localStorage.getItem(REFRESH_KEY);
+function setToken(access: string) {
+  accessToken = access;
 }
 
-function setTokens(access: string, refresh: string) {
-  if (typeof window === "undefined") return;
-  localStorage.setItem(ACCESS_KEY, access);
-  localStorage.setItem(REFRESH_KEY, refresh);
-}
-
-function clearTokens() {
-  if (typeof window === "undefined") return;
-  localStorage.removeItem(ACCESS_KEY);
-  localStorage.removeItem(REFRESH_KEY);
+function clearToken() {
+  accessToken = null;
 }
 
 let refreshing: Promise<boolean> | null = null;
 
 async function tryRefresh(): Promise<boolean> {
-  const rt = getRefreshToken();
-  if (!rt) {
-    // No refresh token — clear any stale access token and bail
-    clearTokens();
-    return false;
-  }
   try {
+    // No body — the refresh token rides along as the httpOnly cookie.
     const res = await fetch(`${API_BASE}/auth/refresh`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ refresh_token: rt }),
+      credentials: "include",
     });
     if (!res.ok) {
-      clearTokens();
+      clearToken();
       return false;
     }
     const data = await res.json();
-    setTokens(data.access_token, data.refresh_token);
+    setToken(data.access_token);
     return true;
   } catch {
-    clearTokens();
+    clearToken();
     return false;
   }
 }
@@ -81,7 +69,10 @@ export async function apiFetch<T>(
   };
   if (token) headers["Authorization"] = `Bearer ${token}`;
 
-  let res = await fetch(url, { ...options, headers });
+  // credentials:'include' so the httpOnly refresh cookie is set on login/register
+  // and sent on /auth/* calls. The cookie path is scoped to /auth, so it is not
+  // attached to ordinary API calls.
+  let res = await fetch(url, { ...options, headers, credentials: "include" });
 
   // 401 → try refresh once
   if (res.status === 401) {
@@ -94,7 +85,7 @@ export async function apiFetch<T>(
     if (ok) {
       const newToken = getToken();
       if (newToken) headers["Authorization"] = `Bearer ${newToken}`;
-      res = await fetch(url, { ...options, headers });
+      res = await fetch(url, { ...options, headers, credentials: "include" });
     }
   }
 
@@ -106,15 +97,15 @@ export async function apiFetch<T>(
       detail = undefined;
     }
 
-    // 401 confirmed (refresh either failed or was skipped): clear tokens and
-    // redirect to /login — but only for non-auth endpoints so that the login
-    // page itself can display its own error message and we avoid redirect loops.
+    // 401 confirmed (refresh failed/skipped): clear token and redirect to /login —
+    // but only for non-auth endpoints so the login page shows its own error and
+    // we avoid redirect loops.
     if (
       res.status === 401 &&
       !path.startsWith("/auth/") &&
       typeof window !== "undefined"
     ) {
-      clearTokens();
+      clearToken();
       if (window.location.pathname !== "/login") {
         window.location.assign("/login");
       }
@@ -142,7 +133,12 @@ export async function apiUpload<T>(path: string, formData: FormData): Promise<T>
     return h;
   };
 
-  let res = await fetch(url, { method: "POST", headers: buildHeaders(), body: formData });
+  let res = await fetch(url, {
+    method: "POST",
+    headers: buildHeaders(),
+    body: formData,
+    credentials: "include",
+  });
 
   if (res.status === 401) {
     if (!refreshing) {
@@ -152,7 +148,12 @@ export async function apiUpload<T>(path: string, formData: FormData): Promise<T>
     }
     const ok = await refreshing;
     if (ok) {
-      res = await fetch(url, { method: "POST", headers: buildHeaders(), body: formData });
+      res = await fetch(url, {
+        method: "POST",
+        headers: buildHeaders(),
+        body: formData,
+        credentials: "include",
+      });
     }
   }
 
@@ -170,4 +171,4 @@ export async function apiUpload<T>(path: string, formData: FormData): Promise<T>
   return res.json() as Promise<T>;
 }
 
-export { setTokens, clearTokens, getToken };
+export { setToken, clearToken, getToken, tryRefresh };

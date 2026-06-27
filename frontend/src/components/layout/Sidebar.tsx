@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { clearTokens } from "@/lib/api/client";
+import { logout } from "@/lib/api/auth";
 import { Brand } from "@/components/ui/Brand";
 import { NotificationBell } from "./NotificationBell";
 
@@ -190,9 +190,9 @@ function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
   const pathname = usePathname();
   const router = useRouter();
 
-  function handleLogout() {
+  async function handleLogout() {
     onNavigate?.();
-    clearTokens();
+    await logout(); // 서버에서 리프레시 토큰 폐기 + httpOnly 쿠키 삭제 + 메모리 토큰 클리어
     router.push("/login");
   }
 

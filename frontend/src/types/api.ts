@@ -2,10 +2,10 @@
 // WaterNature AI — API Types (mirrors backend pydantic schemas exactly)
 // ────────────────────────────────────────────────────────────────────────────
 
-// Auth
+// Auth — login/register/refresh return only the access token in the body;
+// the refresh token is delivered as an httpOnly cookie (never exposed to JS).
 export interface TokenOut {
   access_token: string;
-  refresh_token: string;
   token_type: string;
 }
 
