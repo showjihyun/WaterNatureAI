@@ -228,9 +228,10 @@ npm run dev        # 화면 켜기 (이 창도 계속 켜둡니다)
 
 ```bash
 cd backend
-# Windows
-python -m celery -A app.core.celery_app.celery_app worker -B --pool=solo --loglevel=info
-# Mac / Linux
+# ▸ Windows — 일꾼(worker)과 스케줄러(beat)를 각각 새 터미널에서 (Windows는 -B 미지원)
+python -m celery -A app.core.celery_app.celery_app worker --pool=solo --loglevel=info
+python -m celery -A app.core.celery_app.celery_app beat --loglevel=info
+# ▸ Mac / Linux — 한 줄로(-B = beat 내장)
 # celery -A app.core.celery_app.celery_app worker -B --loglevel=info
 ```
 
