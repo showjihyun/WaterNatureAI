@@ -58,6 +58,32 @@ const FEASIBILITY_OPTIONS: FeasibilityOption[] = [
 // 출처 — 공고가 들어오는 공공 사이트(다중선택). 빈 선택 = 전체. 라벨은 sourceLabel().
 const SOURCE_OPTIONS: string[] = ["narajangter", "kstartup", "ntis", "bizinfo"];
 
+// 지역 — 단일 시도(드롭다운). value === label. 빈 값 = 전체.
+const REGION_OPTIONS: string[] = [
+  "전국", "서울", "부산", "대구", "인천", "광주", "대전", "울산", "세종",
+  "경기", "강원", "충북", "충남", "전북", "전남", "경북", "경남", "제주",
+];
+
+// 분야 — 단일 카테고리(드롭다운, optgroup). value === label.
+// 단, 기술개발(R&D)만 백엔드 저장 형식(HTML 엔티티)을 그대로 value로 사용.
+const CATEGORY_GROUPS: { label: string; options: string[] }[] = [
+  { label: "입찰", options: ["용역", "공사", "물품", "외자"] },
+  {
+    label: "정부지원사업",
+    options: [
+      "사업화",
+      "멘토링ㆍ컨설팅ㆍ교육",
+      "시설ㆍ공간ㆍ보육",
+      "행사ㆍ네트워크",
+      "판로ㆍ해외진출",
+      "창업교육",
+      "글로벌",
+      "인력",
+      "정책자금",
+    ],
+  },
+];
+
 // ── derived state from filter values ─────────────────────────────────────────
 
 function detectBudgetPreset(filters: OpportunityFilters): BudgetPreset {
@@ -264,6 +290,57 @@ export function OpportunityFilterBar({
               ))}
             </div>
           </div>
+          {/* Region (지역 — 단일 선택 드롭다운) */}
+          <div className="flex items-center gap-2">
+            <GroupLabel>지역</GroupLabel>
+            <label htmlFor="filter-region" className="sr-only">지역 선택</label>
+            <select
+              id="filter-region"
+              value={filters.region ?? ""}
+              onChange={(e) => onChange({ region: e.target.value || undefined, page: 1 })}
+              className={cn(
+                "h-7 rounded-lg border px-2 text-xs text-ink bg-surface",
+                "focus:border-primary-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-1",
+                filters.region
+                  ? "border-primary-400 ring-1 ring-primary-200"
+                  : "border-surface-border"
+              )}
+            >
+              <option value="">전체</option>
+              {REGION_OPTIONS.map((r) => (
+                <option key={r} value={r}>{r}</option>
+              ))}
+            </select>
+          </div>
+          {/* Category (분야 — 단일 선택 드롭다운) */}
+          <div className="flex items-center gap-2">
+            <GroupLabel>분야</GroupLabel>
+            <label htmlFor="filter-category" className="sr-only">분야 선택</label>
+            <select
+              id="filter-category"
+              value={filters.category ?? ""}
+              onChange={(e) => onChange({ category: e.target.value || undefined, page: 1 })}
+              className={cn(
+                "h-7 rounded-lg border px-2 text-xs text-ink bg-surface",
+                "focus:border-primary-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-1",
+                filters.category
+                  ? "border-primary-400 ring-1 ring-primary-200"
+                  : "border-surface-border"
+              )}
+            >
+              <option value="">전체</option>
+              {CATEGORY_GROUPS.map((g) => (
+                <optgroup key={g.label} label={g.label}>
+                  {g.options.map((c) => (
+                    <option key={c} value={c}>{c}</option>
+                  ))}
+                  {g.label === "정부지원사업" && (
+                    <option value={"기술개발(R&amp;D)"}>기술개발(R&D)</option>
+                  )}
+                </optgroup>
+              ))}
+            </select>
+          </div>
           {/* Budget presets */}
           <div className="flex shrink-0 items-center gap-2">
             <GroupLabel>예산</GroupLabel>
@@ -369,6 +446,8 @@ export function OpportunityFilterBar({
 export function countActiveFilters(filters: OpportunityFilters): number {
   let n = 0;
   if (filters.agency) n++;
+  if (filters.region) n++;
+  if (filters.category) n++;
   if (filters.budget_min != null || filters.budget_max != null) n++;
   if (filters.deadline_before) n++;
   if (filters.min_score != null) n++;

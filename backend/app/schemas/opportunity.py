@@ -39,6 +39,28 @@ class OpportunityList(BaseModel):
     size: int
 
 
+class AwardItem(BaseModel):
+    id: str
+    title: str | None = None
+    category: str | None = None
+    winner_name: str | None = None
+    winner_bizno: str | None = None
+    award_amount: int | None = None
+    award_rate: float | None = None
+    participant_count: int | None = None
+    demand_agency: str | None = None
+    final_award_date: str | None = None   # ISO date
+    registered_at: str | None = None      # ISO datetime
+    bid_ntce_no: str | None = None
+
+
+class AwardList(BaseModel):
+    items: list[AwardItem]
+    total: int
+    page: int
+    size: int
+
+
 class ActionIn(BaseModel):
     type: ActionType
 

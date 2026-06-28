@@ -5,15 +5,33 @@ import uuid
 from datetime import datetime, timezone
 
 from fastapi import APIRouter, HTTPException, Query
-from sqlalchemy import or_, select
+from sqlalchemy import func, or_, select
 
 from app.api.deps import CurrentCompany, DbSession
 from app.db.models.accounts import Company
-from app.db.models.opportunity import Match, Opportunity
-from app.schemas.opportunity import OpportunityList, RecommendationItem
+from app.db.models.opportunity import Match, Opportunity, OpportunityAward
+from app.schemas.opportunity import AwardItem, AwardList, OpportunityList, RecommendationItem
 from app.services.feasibility.engine import FeasibilityResult, assess_feasibility
 
 router = APIRouter()
+
+_SIDO_PREFIX = {
+    "서울": "서울", "부산": "부산", "대구": "대구", "인천": "인천", "광주": "광주",
+    "대전": "대전", "울산": "울산", "세종": "세종", "경기": "경기", "강원": "강원",
+    "충청북도": "충북", "충북": "충북", "충청남도": "충남", "충남": "충남",
+    "전라북도": "전북", "전북": "전북", "전라남도": "전남", "전남": "전남",
+    "경상북도": "경북", "경북": "경북", "경상남도": "경남", "경남": "경남",
+    "제주": "제주", "전국": "전국",
+}
+
+
+def _normalize_sido(region: str | None) -> str | None:
+    if not region:
+        return None
+    for prefix, sido in _SIDO_PREFIX.items():
+        if region.startswith(prefix):
+            return sido
+    return None
 
 _ALLOWED_SORT = {"score", "deadline", "posted", "budget", "feasibility"}
 _ALLOWED_FEASIBILITY = {"go", "review", "no_go"}
@@ -75,6 +93,8 @@ def list_opportunities(
     deadline_before: datetime | None = None,
     min_score: int | None = None,
     source: list[str] | None = Query(None),  # 출처 필터(나라장터·kstartup·ntis·bizinfo)
+    region: str | None = None,
+    category: str | None = None,
     sort: str = Query("score"),
     feasibility: str | None = Query(None),
     page: int = Query(1, ge=1),
@@ -109,10 +129,14 @@ def list_opportunities(
         base = base.where(Match.score >= min_score)
     if source:
         base = base.where(Opportunity.source.in_(source))
+    if category:
+        base = base.where(Opportunity.category == category)
 
     # 단일 파이썬 경로: 표시단 dedup(동일 공고 중복 제거)이 필요해 전 행을 가져온 뒤
     # 적합도 최고 1건만 남기고 정렬·페이징. (company 스코프라 행 수가 작음 — 수십 건)
     rows = db.execute(base).all()
+    if region:
+        rows = [(m, o) for m, o in rows if _normalize_sido(o.region) == region]
 
     # dedup: 같은 논리 공고(_dedup_key)면 score 최고 1건 유지. NTIS 등 마감 정보 보존을
     # 위해 동점이면 deadline 있는 행 우선.
@@ -165,6 +189,40 @@ def list_opportunities(
     items = items_all[offset: offset + size]
 
     return OpportunityList(items=items, total=total, page=page, size=size)
+
+
+@router.get("/awards", response_model=AwardList)
+def list_awards(
+    company_id: CurrentCompany,   # auth only — awards are public, NOT company-filtered
+    db: DbSession,
+    q: str | None = None,
+    category: str | None = None,
+    page: int = Query(1, ge=1),
+    size: int = Query(20, ge=1, le=100),
+) -> AwardList:
+    base = select(OpportunityAward)
+    if category:
+        base = base.where(OpportunityAward.category == category)
+    if q:
+        base = base.where(or_(OpportunityAward.title.ilike(f"%{q}%"),
+                              OpportunityAward.demand_agency.ilike(f"%{q}%")))
+    total = db.scalar(select(func.count()).select_from(base.subquery())) or 0
+    rows = db.scalars(
+        base.order_by(OpportunityAward.final_award_date.desc().nullslast(),
+                      OpportunityAward.registered_at.desc().nullslast())
+        .offset((page - 1) * size).limit(size)
+    ).all()
+    items = [AwardItem(
+        id=str(a.id), title=a.title, category=a.category,
+        winner_name=a.winner_name, winner_bizno=a.winner_bizno,
+        award_amount=a.award_amount,
+        award_rate=float(a.award_rate) if a.award_rate is not None else None,
+        participant_count=a.participant_count, demand_agency=a.demand_agency,
+        final_award_date=a.final_award_date.isoformat() if a.final_award_date else None,
+        registered_at=a.registered_at.isoformat() if a.registered_at else None,
+        bid_ntce_no=a.bid_ntce_no,
+    ) for a in rows]
+    return AwardList(items=items, total=total, page=page, size=size)
 
 
 @router.get("/{opportunity_id}")

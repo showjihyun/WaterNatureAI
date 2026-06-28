@@ -172,6 +172,8 @@ export type SortKey = "score" | "deadline" | "posted" | "budget" | "feasibility"
 export interface OpportunityFilters {
   agency?: string;
   sources?: string[]; // 출처 코드 다중선택(없음/빈배열 = 전체)
+  region?: string; // 지역(단일 시도 문자열)
+  category?: string; // 분야(단일 정확 카테고리 문자열)
   budget_min?: number;
   budget_max?: number;
   deadline_before?: string;
@@ -180,4 +182,27 @@ export interface OpportunityFilters {
   sort?: SortKey;
   page?: number;
   size?: number;
+}
+
+// Awards (낙찰 결과)
+export interface AwardItem {
+  id: string;
+  title: string | null;
+  category: string | null;
+  winner_name: string | null;
+  winner_bizno: string | null;
+  award_amount: number | null;
+  award_rate: number | null;
+  participant_count: number | null;
+  demand_agency: string | null;
+  final_award_date: string | null;
+  registered_at: string | null;
+  bid_ntce_no: string | null;
+}
+
+export interface AwardList {
+  items: AwardItem[];
+  total: number;
+  page: number;
+  size: number;
 }

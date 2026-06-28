@@ -4,6 +4,7 @@ import type {
   OpportunityDetail,
   OpportunityFilters,
   ActionType,
+  AwardList,
 } from "@/types/api";
 import {
   MOCK_OPPORTUNITY_LIST,
@@ -33,6 +34,8 @@ export async function listOpportunities(
   const params = new URLSearchParams();
   if (filters.agency) params.set("agency", filters.agency);
   filters.sources?.forEach((s) => params.append("source", s));
+  if (filters.region) params.set("region", filters.region);
+  if (filters.category) params.set("category", filters.category);
   if (filters.budget_min != null)
     params.set("budget_min", String(filters.budget_min));
   if (filters.budget_max != null)
@@ -118,4 +121,19 @@ export async function unhideOpportunity(
 ): Promise<void> {
   if (mock) return;
   await apiFetch(`/opportunities/${opportunityId}/hide`, { method: "DELETE" });
+}
+
+/** 낙찰(결과) 목록 — 기관/공고명 검색·분야·페이지네이션. */
+export async function listAwards(
+  params: { q?: string; category?: string; page?: number; size?: number } = {},
+  mock = false
+): Promise<AwardList> {
+  if (mock) return { items: [], total: 0, page: 1, size: 20 };
+  const p = new URLSearchParams();
+  if (params.q) p.set("q", params.q);
+  if (params.category) p.set("category", params.category);
+  if (params.page) p.set("page", String(params.page));
+  if (params.size) p.set("size", String(params.size));
+  const qs = p.toString();
+  return apiFetch<AwardList>(`/opportunities/awards${qs ? `?${qs}` : ""}`);
 }

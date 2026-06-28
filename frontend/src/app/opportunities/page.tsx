@@ -7,6 +7,7 @@ import { AppShell } from "@/components/layout/AppShell";
 import { RecommendationCard } from "@/components/dashboard/RecommendationCard";
 import { RecommendationList } from "@/components/dashboard/RecommendationList";
 import { KeywordWatchPanel } from "@/components/watch/KeywordWatchPanel";
+import { AwardsPanel } from "@/components/dashboard/AwardsPanel";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { Alert } from "@/components/ui/Alert";
 import { LoadingPage } from "@/components/ui/Spinner";
@@ -19,7 +20,7 @@ import { listOpportunities } from "@/lib/api/opportunities";
 import { OpportunityFilterBar, countActiveFilters } from "@/components/dashboard/OpportunityFilters";
 import type { OpportunityFilters, SortKey } from "@/types/api";
 
-type ExploreTab = "all" | "watch";
+type ExploreTab = "all" | "watch" | "awards";
 
 const DEFAULT_FILTERS: OpportunityFilters = {
   page: 1,
@@ -33,14 +34,15 @@ function OpportunitiesContent() {
   const isMock = searchParams.get("mock") === "1";
   const { mode, setMode } = useViewMode();
 
+  const initialTab = searchParams.get("tab");
   const [tab, setTab] = useState<ExploreTab>(
-    searchParams.get("tab") === "watch" ? "watch" : "all"
+    initialTab === "watch" ? "watch" : initialTab === "awards" ? "awards" : "all"
   );
 
   function switchTab(next: ExploreTab) {
     setTab(next);
     const qs = new URLSearchParams(searchParams.toString());
-    if (next === "watch") qs.set("tab", "watch");
+    if (next === "watch" || next === "awards") qs.set("tab", next);
     else qs.delete("tab");
     const s = qs.toString();
     router.replace(s ? `/opportunities?${s}` : "/opportunities", { scroll: false });
@@ -82,7 +84,7 @@ function OpportunitiesContent() {
 
       {/* Tabs: 전체 공고 / 키워드 워치 */}
       <div className="mb-5 flex gap-1 overflow-x-auto border-b border-surface-border" role="tablist" aria-label="공고 탐색 보기">
-        {([["all", "전체 공고"], ["watch", "키워드 워치"]] as const).map(([key, label]) => (
+        {([["all", "전체 공고"], ["watch", "키워드 워치"], ["awards", "낙찰 결과"]] as const).map(([key, label]) => (
           <button
             key={key}
             role="tab"
@@ -105,6 +107,10 @@ function OpportunitiesContent() {
       {tab === "watch" ? (
         <div id="tabpanel-watch" role="tabpanel" aria-labelledby="tab-watch">
           <KeywordWatchPanel />
+        </div>
+      ) : tab === "awards" ? (
+        <div id="tabpanel-awards" role="tabpanel" aria-labelledby="tab-awards">
+          <AwardsPanel mock={isMock} />
         </div>
       ) : (
         <div id="tabpanel-all" role="tabpanel" aria-labelledby="tab-all">
