@@ -4,6 +4,7 @@
 """
 from __future__ import annotations
 
+import logging
 from datetime import datetime, timedelta, timezone
 
 from fastapi import HTTPException, status
@@ -20,6 +21,8 @@ from app.core.security import (
 )
 from app.db.models.accounts import Company, RefreshToken, User
 from app.schemas.auth import TokenOut
+
+logger = logging.getLogger(__name__)
 
 
 def _issue_tokens(db: Session, user: User) -> TokenOut:
@@ -77,6 +80,11 @@ def refresh(db: Session, *, refresh_token: str) -> TokenOut:
     # 해당 사용자의 모든 유효 리프레시 토큰 폐기(전 세션 강제 로그아웃).
     if rec.revoked_at is not None:
         if now - rec.revoked_at > _REFRESH_REUSE_GRACE:
+            # 보안 이벤트 로깅(A09) — 토큰 탈취 의심 신호.
+            logger.warning(
+                "refresh token reuse detected — revoking all sessions for user=%s",
+                rec.user_id,
+            )
             db.execute(
                 update(RefreshToken)
                 .where(
