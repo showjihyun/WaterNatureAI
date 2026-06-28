@@ -12,8 +12,9 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=[o.strip() for o in settings.cors_origins.split(",") if o.strip()],
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    # credentials 허용 시 와일드카드 대신 실제 쓰는 것만 명시(공격면 축소).
+    allow_methods=["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    allow_headers=["Authorization", "Content-Type"],
 )
 app.include_router(api_router, prefix=settings.api_v1_prefix)
 

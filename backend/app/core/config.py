@@ -34,7 +34,9 @@ class Settings(BaseSettings):
     # 리프레시 토큰은 httpOnly 쿠키로 보관(XSS 탈취 차단). access 토큰은 클라 메모리+
     # Authorization 헤더 유지 → API는 헤더 인증 그대로(CSRF 표면 최소).
     refresh_cookie_name: str = "bizradar_refresh"
-    cookie_samesite: str = "lax"
+    # 리프레시 쿠키는 1st-party fetch(/auth/refresh·/logout)에서만 쓰이므로 strict로 둬도
+    # 비용이 없고 CSRF·Lax 유예창 모호성을 제거한다.
+    cookie_samesite: str = "strict"
 
     # Collectors
     ingest_buffer_days: int = 2
@@ -119,25 +121,26 @@ class Settings(BaseSettings):
     @property
     def cookie_secure(self) -> bool:
         """운영(비-local)에선 https 전제 → Secure 쿠키. local http 개발에선 비활성."""
-        return self.app_env != "local"
+        return self.app_env.strip().lower() != "local"
 
     @model_validator(mode="after")
     def _enforce_prod_secrets(self) -> "Settings":
-        """비-local 환경에서 기본/약한 시크릿이면 부팅 거부(fail-closed).
+        """비-local 환경에서 약한 시크릿이면 부팅 거부(fail-closed).
 
-        local 기본값에서는 무동작 → 개발 흐름 영향 없음. 운영(APP_ENV!=local)에서
-        'change-me'/빈 시크릿으로 뜨면 토큰 위조·저장키 복호화가 가능하므로 즉시 차단.
+        local 기본값에서는 무동작 → 개발 흐름 영향 없음. 공개 저장소라 시크릿이 약하면
+        토큰 위조·저장키(LLM/카카오) 복호화가 가능하므로, 운영에서는 'change-me'·빈 값뿐
+        아니라 **32자 미만**도 거부한다(JWT_SECRET=서명키, APP_SECRET_KEY=암호화 마스터키).
         """
-        if self.app_env != "local":
+        if self.app_env.strip().lower() != "local":
             weak: list[str] = []
-            if self.jwt_secret in ("", "change-me"):
-                weak.append("JWT_SECRET")
-            if not self.app_secret_key:
-                # 저장 시크릿 암호화 마스터키. 미설정 시 jwt_secret 파생(약함).
-                weak.append("APP_SECRET_KEY")
+            if self.jwt_secret in ("", "change-me") or len(self.jwt_secret) < 32:
+                weak.append("JWT_SECRET(>=32 chars)")
+            if not self.app_secret_key or len(self.app_secret_key) < 32:
+                # 저장 시크릿 암호화 마스터키 — 짧으면 DB 유출 시 brute-force 위험.
+                weak.append("APP_SECRET_KEY(>=32 chars)")
             if weak:
                 raise ValueError(
-                    f"APP_ENV={self.app_env}에서 안전하지 않은 기본 시크릿: "
+                    f"APP_ENV={self.app_env}에서 안전하지 않은 시크릿: "
                     f"{', '.join(weak)} — 강한 랜덤값으로 설정해야 부팅됩니다."
                 )
         return self

@@ -177,6 +177,7 @@ export default function SettingsPage() {
   const { data: llmData, isLoading: llmLoading } = useQuery({
     queryKey: ["settings", "llm"],
     queryFn: getLlmSettings,
+    retry: false, // 운영자 전용 — 비운영자는 403, 재시도 없이 섹션을 숨긴다
   });
 
   const [llmProvider, setLlmProvider] = useState<string>("");
@@ -278,7 +279,8 @@ export default function SettingsPage() {
               <p className="mt-0.5 text-xs text-gray-400">AI 공급자 키와 구독을 관리합니다.</p>
             </div>
 
-            {/* AI 공급자 (LLM) settings card */}
+            {/* AI 공급자 (LLM) — GET /llm은 운영자 전용이라 비운영자(403)에겐 숨김 */}
+        {llmData && (
         <div className="rounded-xl border border-surface-border bg-surface-card p-6 shadow-sm">
           <h2 className="text-base font-semibold text-gray-900 mb-1">AI 공급자</h2>
           <p className="text-sm text-gray-500 mb-5">
@@ -365,6 +367,7 @@ export default function SettingsPage() {
             </div>
           </form>
         </div>
+        )}
 
         {/* 카카오 발신 자격증명 (SOLAPI) — 시스템 전역·운영자 전용 */}
         <KakaoConfigSection />

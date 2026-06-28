@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 from fastapi import APIRouter, HTTPException, status
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 from sqlalchemy import select
 
 from app.api.deps import CurrentAdmin, CurrentCompany, DbSession
@@ -22,6 +22,8 @@ def _active_sources() -> list[str]:
 
 
 class NotificationSettingIn(BaseModel):
+    model_config = ConfigDict(extra="forbid")  # 미지정 필드 거부(mass-assignment 방어)
+
     enabled: bool | None = None
     channel: str | None = None
     send_hour: int | None = None
@@ -88,6 +90,8 @@ def notification_preview(company_id: CurrentCompany, db: DbSession) -> dict:
 
 
 class LlmSettingIn(BaseModel):
+    model_config = ConfigDict(extra="forbid")  # 미지정 필드 거부(mass-assignment 방어)
+
     provider: str
     model: str
     # 입력 시 암호화하여 DB 저장(평문 미저장). 미입력이면 기존 키 유지.
@@ -95,10 +99,11 @@ class LlmSettingIn(BaseModel):
 
 
 @router.get("/llm")
-def get_llm(company_id: CurrentCompany, db: DbSession) -> dict:
+def get_llm(admin: CurrentAdmin, db: DbSession) -> dict:
     """현재 활성 LLM 공급자/모델 + 공급자별 설정여부·선택가능 모델.
 
-    키 원문은 절대 노출하지 않는다(설정여부 bool만). 시스템 전역 설정.
+    키 원문은 절대 노출하지 않는다(설정여부 bool만). 시스템 전역 설정이라 **운영자 전용**
+    (어떤 공급자가 설정됐는지 정보가 일반 테넌트에 새지 않도록 GET도 게이트).
     """
     provider, model = llm.get_active_provider_model(db)
     providers = [
@@ -154,6 +159,8 @@ class KakaoSettingIn(BaseModel):
 
     api_key/api_secret은 입력 시 **암호화하여 DB 저장**(평문 미저장)하고 응답에 반환하지 않는다.
     """
+
+    model_config = ConfigDict(extra="forbid")  # 미지정 필드 거부(mass-assignment 방어)
 
     provider: str | None = None
     sender_key: str | None = None          # SOLAPI 발신프로필 pfId
