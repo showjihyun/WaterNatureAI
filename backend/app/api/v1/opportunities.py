@@ -74,6 +74,7 @@ def list_opportunities(
     budget_max: int | None = None,
     deadline_before: datetime | None = None,
     min_score: int | None = None,
+    source: list[str] | None = Query(None),  # 출처 필터(나라장터·kstartup·ntis·bizinfo)
     sort: str = Query("score"),
     feasibility: str | None = Query(None),
     page: int = Query(1, ge=1),
@@ -106,6 +107,8 @@ def list_opportunities(
         base = base.where(Opportunity.deadline <= deadline_before)
     if min_score is not None:
         base = base.where(Match.score >= min_score)
+    if source:
+        base = base.where(Opportunity.source.in_(source))
 
     # 단일 파이썬 경로: 표시단 dedup(동일 공고 중복 제거)이 필요해 전 행을 가져온 뒤
     # 적합도 최고 1건만 남기고 정렬·페이징. (company 스코프라 행 수가 작음 — 수십 건)

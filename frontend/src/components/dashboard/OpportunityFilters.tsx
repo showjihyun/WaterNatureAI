@@ -2,6 +2,7 @@
 
 import { useRef, useEffect, useCallback } from "react";
 import { cn } from "@/lib/utils";
+import { sourceLabel } from "@/lib/sourceLabel";
 import type { OpportunityFilters } from "@/types/api";
 
 // ── helpers ──────────────────────────────────────────────────────────────────
@@ -53,6 +54,9 @@ const FEASIBILITY_OPTIONS: FeasibilityOption[] = [
   { value: "review", label: "검토", icon: "🟡" },
   { value: "no_go", label: "어려움", icon: "🔴" },
 ];
+
+// 출처 — 공고가 들어오는 공공 사이트(다중선택). 빈 선택 = 전체. 라벨은 sourceLabel().
+const SOURCE_OPTIONS: string[] = ["narajangter", "kstartup", "ntis", "bizinfo"];
 
 // ── derived state from filter values ─────────────────────────────────────────
 
@@ -168,8 +172,16 @@ export function OpportunityFilterBar({
   const deadlinePreset = detectDeadlinePreset(filters);
   const scorePreset = detectScorePreset(filters);
   const feasibilityPreset = detectFeasibilityPreset(filters);
+  const selectedSources = filters.sources ?? [];
 
   // ── handlers ───────────────────────────────────────────────────────────────
+
+  function toggleSource(code: string) {
+    const next = selectedSources.includes(code)
+      ? selectedSources.filter((c) => c !== code)
+      : [...selectedSources, code];
+    onChange({ sources: next.length ? next : undefined, page: 1 });
+  }
 
   function applyBudget(opt: BudgetOption) {
     onChange({
@@ -229,6 +241,27 @@ export function OpportunityFilterBar({
                     : "border-surface-border"
                 )}
               />
+            </div>
+          </div>
+          {/* Source presets (출처 — 다중선택) */}
+          <div className="flex w-full shrink-0 items-center gap-2 sm:w-auto">
+            <GroupLabel>출처</GroupLabel>
+            <div className="flex flex-wrap gap-1">
+              <Chip
+                active={selectedSources.length === 0}
+                onClick={() => onChange({ sources: undefined, page: 1 })}
+              >
+                전체
+              </Chip>
+              {SOURCE_OPTIONS.map((code) => (
+                <Chip
+                  key={code}
+                  active={selectedSources.includes(code)}
+                  onClick={() => toggleSource(code)}
+                >
+                  {sourceLabel(code)}
+                </Chip>
+              ))}
             </div>
           </div>
           {/* Budget presets */}
@@ -340,5 +373,6 @@ export function countActiveFilters(filters: OpportunityFilters): number {
   if (filters.deadline_before) n++;
   if (filters.min_score != null) n++;
   if (filters.feasibility) n++;
+  if (filters.sources && filters.sources.length) n++;
   return n;
 }

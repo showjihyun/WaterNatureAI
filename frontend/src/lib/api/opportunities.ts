@@ -10,20 +10,29 @@ import {
   MOCK_RECOMMENDATIONS,
 } from "@/lib/mock/mockData";
 import { sortRecommendations } from "@/lib/utils";
+import { sourceLabel } from "@/lib/sourceLabel";
 
 export async function listOpportunities(
   filters: OpportunityFilters = {},
   mock = false
 ): Promise<OpportunityList> {
   if (mock) {
-    // Mock has no server; apply the same sort client-side so the control works.
+    // Mock has no server; apply source filter + sort client-side so the controls work.
+    let items = MOCK_OPPORTUNITY_LIST.items;
+    if (filters.sources?.length) {
+      // 목 데이터는 출처를 한글 라벨로 보관 → 코드/라벨 둘 다로 매칭.
+      const wanted = new Set(filters.sources.flatMap((c) => [c, sourceLabel(c)]));
+      items = items.filter((i) => i.source != null && wanted.has(i.source));
+    }
     return {
       ...MOCK_OPPORTUNITY_LIST,
-      items: sortRecommendations(MOCK_OPPORTUNITY_LIST.items, filters.sort ?? "score"),
+      items: sortRecommendations(items, filters.sort ?? "score"),
+      total: items.length,
     };
   }
   const params = new URLSearchParams();
   if (filters.agency) params.set("agency", filters.agency);
+  filters.sources?.forEach((s) => params.append("source", s));
   if (filters.budget_min != null)
     params.set("budget_min", String(filters.budget_min));
   if (filters.budget_max != null)

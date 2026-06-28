@@ -171,6 +171,7 @@ export type SortKey = "score" | "deadline" | "posted" | "budget" | "feasibility"
 // Filters
 export interface OpportunityFilters {
   agency?: string;
+  sources?: string[]; // 출처 코드 다중선택(없음/빈배열 = 전체)
   budget_min?: number;
   budget_max?: number;
   deadline_before?: string;
