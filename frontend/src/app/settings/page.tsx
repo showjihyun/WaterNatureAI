@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/Button";
 import { LoadingPage } from "@/components/ui/Spinner";
 import { BillingSection } from "@/components/settings/BillingSection";
 import { DocumentUploadCard } from "@/components/settings/DocumentUploadCard";
+import { KakaoConfigSection } from "@/components/settings/KakaoConfigSection";
 import { NotificationPreview } from "@/components/settings/NotificationPreview";
 import {
   getNotificationSettings,
@@ -364,6 +365,9 @@ export default function SettingsPage() {
             </div>
           </form>
         </div>
+
+        {/* 카카오 발신 자격증명 (SOLAPI) — 시스템 전역·운영자 전용 */}
+        <KakaoConfigSection />
 
         {/* Billing & subscription */}
         <BillingSection />

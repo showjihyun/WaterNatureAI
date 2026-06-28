@@ -89,3 +89,30 @@ export async function updateLlmSettings(body: {
     body: JSON.stringify(body),
   });
 }
+
+// ── 카카오/SOLAPI 발신 설정 (시스템 전역 · 운영자 전용) ──
+export interface KakaoConfig {
+  provider: string;
+  sender_key: string;          // SOLAPI 발신프로필 pfId
+  template_briefing: string;   // 승인된 알림톡 템플릿 코드
+  api_key_configured: boolean; // 시크릿은 값이 아닌 설정 여부만
+  api_secret_configured: boolean;
+  configured: boolean;
+}
+
+export async function getKakaoConfig(): Promise<KakaoConfig> {
+  return apiFetch<KakaoConfig>("/settings/kakao");
+}
+
+export async function updateKakaoConfig(body: {
+  provider?: string;
+  sender_key?: string;
+  template_briefing?: string;
+  api_key?: string;    // 입력 시 서버에서 암호화하여 DB 저장(평문 미저장)
+  api_secret?: string;
+}): Promise<KakaoConfig> {
+  return apiFetch<KakaoConfig>("/settings/kakao", {
+    method: "PUT",
+    body: JSON.stringify(body),
+  });
+}

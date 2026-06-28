@@ -25,10 +25,11 @@ from app.db.models.notification import Notification
 from app.db.models.opportunity import Match, Opportunity, UserOpportunityAction
 from app.services.billing.provider import active_subscribed
 from app.services.keyword_watch import keyword_match_rows
+from app.services.notifications.kakao_config import resolve_kakao_config
 from app.services.notifications.provider import (
     NotificationProvider,
     NotRegisteredOrBlocked,
-    SolapiProvider,
+    get_provider,
 )
 from app.services.reminders import reminder_days_for, upcoming_reminders
 
@@ -224,11 +225,12 @@ def build_briefing_preview(db, company_id: uuid.UUID) -> dict:
         blockers.append("수신 휴대폰 번호 미등록")
     if sub is None or sub.status not in ("active", "trialing"):
         blockers.append("미구독(구독 시 발송)")
+    kcfg = resolve_kakao_config(db)  # 설정 UI(암호화 DB) 우선, .env 폴백
     keys_ready = bool(
-        settings.solapi_api_key
-        and settings.solapi_api_secret
-        and settings.kakao_sender_key
-        and settings.kakao_template_briefing
+        kcfg["api_key"]
+        and kcfg["api_secret"]
+        and kcfg["sender_key"]
+        and kcfg["template_briefing"]
     )
     if not keys_ready:
         blockers.append("SOLAPI 발신프로필·템플릿 미설정(사업자 후)")
@@ -307,7 +309,7 @@ def send_deadline_reminders(*, _provider: NotificationProvider | None = None) ->
             .join(Subscription, Subscription.company_id == Company.id)
             .where(NotificationSetting.enabled.is_(True))
         ).all()
-        provider = _provider if _provider is not None else SolapiProvider()
+        provider = _provider if _provider is not None else get_provider(db)
         for company, sub in rows:
             if not active_subscribed(sub.status) or not company.phone:
                 continue
@@ -403,7 +405,8 @@ def send_company_briefing(
             return "skip:no_matches"
 
         variables = render_briefing_variables(company.name, entries, bdate)
-        template_code = settings.kakao_template_briefing
+        kcfg = resolve_kakao_config(db)  # 설정 UI(암호화 DB) 우선, .env 폴백
+        template_code = kcfg["template_briefing"]
         opp_ids = [opp.id for opp, _, _ in entries]
 
         notif = Notification(
@@ -417,12 +420,12 @@ def send_company_briefing(
                 "opportunity_ids": [str(oid) for oid in opp_ids],
             },
             status="queued",
-            provider=settings.kakao_provider,
+            provider=kcfg["provider"],
         )
         db.add(notif)
         db.flush()
 
-        provider = _provider if _provider is not None else SolapiProvider()
+        provider = _provider if _provider is not None else get_provider(db)
         result_status = "sent"
         try:
             res = provider.send_alimtalk(company.phone, template_code, variables)

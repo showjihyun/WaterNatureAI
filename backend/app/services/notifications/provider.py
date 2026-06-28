@@ -85,11 +85,15 @@ class SolapiProvider(NotificationProvider):
         api_secret: str | None = None,
         sender_key: str | None = None,
         base_url: str | None = None,
+        template_briefing: str | None = None,
     ) -> None:
         self.api_key = api_key if api_key is not None else settings.solapi_api_key
         self.api_secret = api_secret if api_secret is not None else settings.solapi_api_secret
         self.sender_key = sender_key if sender_key is not None else settings.kakao_sender_key
         self.base_url = (base_url or settings.solapi_base_url).rstrip("/")
+        self.template_briefing = (
+            template_briefing if template_briefing is not None else settings.kakao_template_briefing
+        )
         self._timeout = httpx.Timeout(
             connect=settings.http_timeout_connect,
             read=settings.http_timeout_read,
@@ -107,7 +111,7 @@ class SolapiProvider(NotificationProvider):
             missing.append("solapi_api_secret")
         if not self.sender_key:
             missing.append("kakao_sender_key(pfId)")
-        if need_template and not settings.kakao_template_briefing:
+        if need_template and not self.template_briefing:
             missing.append("kakao_template_briefing")
         if missing:
             raise RuntimeError(
@@ -186,5 +190,15 @@ class SolapiProvider(NotificationProvider):
         return SendResult(provider_msg_id=self._msg_id(payload), channel="sms")
 
 
-def get_provider() -> NotificationProvider:
-    return SolapiProvider()
+def get_provider(db=None) -> NotificationProvider:
+    """DB(설정 UI, 암호화) 우선 → .env 폴백으로 SolapiProvider 구성."""
+    from app.services.notifications.kakao_config import resolve_kakao_config  # noqa: PLC0415
+
+    cfg = resolve_kakao_config(db)
+    return SolapiProvider(
+        api_key=cfg["api_key"],
+        api_secret=cfg["api_secret"],
+        sender_key=cfg["sender_key"],
+        base_url=cfg["base_url"],
+        template_briefing=cfg["template_briefing"],
+    )

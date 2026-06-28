@@ -149,6 +149,48 @@ def put_llm(body: LlmSettingIn, admin: CurrentAdmin, db: DbSession) -> dict:
     return {"ok": True, "provider": provider, "model": model}
 
 
+class KakaoSettingIn(BaseModel):
+    """카카오/SOLAPI 발신 설정 입력. 빈 문자열/미입력은 '변경 안 함'(기존 값 유지).
+
+    api_key/api_secret은 입력 시 **암호화하여 DB 저장**(평문 미저장)하고 응답에 반환하지 않는다.
+    """
+
+    provider: str | None = None
+    sender_key: str | None = None          # SOLAPI 발신프로필 pfId
+    template_briefing: str | None = None   # 승인된 알림톡 템플릿 코드
+    api_key: str | None = None
+    api_secret: str | None = None
+
+
+@router.get("/kakao")
+def get_kakao(admin: CurrentAdmin, db: DbSession) -> dict:
+    """카카오/SOLAPI 발신 설정 상태(**운영자 전용**). 시크릿은 설정 여부(bool)만 노출."""
+    from app.services.notifications import kakao_config  # noqa: PLC0415
+
+    return kakao_config.kakao_status(db)
+
+
+@router.put("/kakao")
+def put_kakao(body: KakaoSettingIn, admin: CurrentAdmin, db: DbSession) -> dict:
+    """카카오/SOLAPI 발신 설정 변경(**시스템 전역 → 운영자 전용**).
+
+    ⚠️ 보안: 카카오 발신 계정은 플랫폼 1개라 일반 사용자가 바꾸면 전체 발송을
+    가로채거나 무력화할 수 있다. ADMIN_EMAILS(운영자)만 허용(CurrentAdmin).
+    api_key/api_secret은 암호화하여 DB 저장하며 응답에 시크릿을 반환하지 않는다.
+    """
+    from app.services.notifications import kakao_config  # noqa: PLC0415
+
+    kakao_config.set_kakao_config(
+        db,
+        provider=body.provider,
+        sender_key=body.sender_key,
+        template_briefing=body.template_briefing,
+        api_key=body.api_key,
+        api_secret=body.api_secret,
+    )
+    return kakao_config.kakao_status(db)
+
+
 @router.get("/billing")
 def get_billing(company_id: CurrentCompany, db: DbSession) -> dict:
     sub = db.scalar(select(Subscription).where(Subscription.company_id == company_id))
