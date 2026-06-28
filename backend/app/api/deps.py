@@ -4,12 +4,13 @@ from __future__ import annotations
 import uuid
 from typing import Annotated
 
-from fastapi import Depends, HTTPException, status
+from fastapi import Depends, HTTPException, Request, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from sqlalchemy.orm import Session
 
 from app.core.config import settings
 from app.core.security import decode_access_token
+from app.core.security_log import client_ip, log_security_event
 from app.db.base import get_session
 
 bearer = HTTPBearer(auto_error=True)
@@ -39,17 +40,26 @@ CurrentCompany = Annotated[uuid.UUID, Depends(get_current_company_id)]
 
 
 def get_admin_email(
-    claims: Annotated[dict, Depends(get_claims)], db: DbSession
+    claims: Annotated[dict, Depends(get_claims)], db: DbSession, request: Request
 ) -> str:
-    """플랫폼 집계(North Star) 지표 접근 게이트 — settings.admin_emails 의 이메일만 허용."""
+    """운영자 전용 리소스 접근 게이트 — settings.admin_emails 의 이메일만 허용. 거부는 로깅(A09)."""
     admins = {e.strip().lower() for e in settings.admin_emails.split(",") if e.strip()}
     if not admins:
+        log_security_event(
+            "admin_access", ip=client_ip(request), outcome="denied", reason="disabled"
+        )
         raise HTTPException(status.HTTP_403_FORBIDDEN, "운영 지표가 비활성화되어 있습니다.")
     from app.db.models.accounts import User  # noqa: PLC0415
 
     user_id = claims.get("sub")
     user = db.get(User, uuid.UUID(user_id)) if user_id else None
     if not user or (user.email or "").lower() not in admins:
+        log_security_event(
+            "admin_access",
+            actor=user.email if user else None,
+            ip=client_ip(request),
+            outcome="denied",
+        )
         raise HTTPException(status.HTTP_403_FORBIDDEN, "운영자 전용 지표입니다.")
     return user.email
 

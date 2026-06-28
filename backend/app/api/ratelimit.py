@@ -13,6 +13,7 @@ import redis
 from fastapi import HTTPException, Request, status
 
 from app.core.config import settings
+from app.core.security_log import log_security_event
 
 logger = logging.getLogger(__name__)
 
@@ -46,6 +47,7 @@ def rate_limit(name: str, *, limit: int, window_sec: int) -> Callable[[Request],
             logger.warning("rate_limit redis 오류(fail-open): %s", exc)
             return
         if count > limit:
+            log_security_event("rate_limit_exceeded", ip=ip, outcome="blocked", name=name)
             raise HTTPException(
                 status.HTTP_429_TOO_MANY_REQUESTS,
                 "요청이 너무 많습니다. 잠시 후 다시 시도하세요.",

@@ -1,11 +1,12 @@
 """설정 — 수신설정/구독 상태/LLM 공급자(시스템). 정본: dashboard-api.md §7."""
 from __future__ import annotations
 
-from fastapi import APIRouter, HTTPException, status
+from fastapi import APIRouter, HTTPException, Request, status
 from pydantic import BaseModel, ConfigDict, Field
 from sqlalchemy import select
 
 from app.api.deps import CurrentAdmin, CurrentCompany, DbSession
+from app.core.security_log import client_ip, log_security_event
 from app.db.models.accounts import NotificationSetting
 from app.db.models.app_settings import AppSetting
 from app.db.models.billing import Subscription
@@ -119,7 +120,7 @@ def get_llm(admin: CurrentAdmin, db: DbSession) -> dict:
 
 
 @router.put("/llm")
-def put_llm(body: LlmSettingIn, admin: CurrentAdmin, db: DbSession) -> dict:
+def put_llm(body: LlmSettingIn, admin: CurrentAdmin, request: Request, db: DbSession) -> dict:
     """활성 LLM 공급자/모델 변경(**시스템 전역 → 운영자 전용**).
 
     ⚠️ 보안: 이 값/키는 전 테넌트 공통이므로 일반 사용자가 바꾸면 다른 회사의
@@ -151,6 +152,15 @@ def put_llm(body: LlmSettingIn, admin: CurrentAdmin, db: DbSession) -> dict:
     else:
         row.value = value
     db.commit()
+    log_security_event(
+        "admin_config_change",
+        actor=admin,
+        ip=client_ip(request),
+        outcome="success",
+        target="llm",
+        provider=provider,
+        key_updated=bool(body.api_key and body.api_key.strip()),
+    )
     return {"ok": True, "provider": provider, "model": model}
 
 
@@ -178,7 +188,7 @@ def get_kakao(admin: CurrentAdmin, db: DbSession) -> dict:
 
 
 @router.put("/kakao")
-def put_kakao(body: KakaoSettingIn, admin: CurrentAdmin, db: DbSession) -> dict:
+def put_kakao(body: KakaoSettingIn, admin: CurrentAdmin, request: Request, db: DbSession) -> dict:
     """카카오/SOLAPI 발신 설정 변경(**시스템 전역 → 운영자 전용**).
 
     ⚠️ 보안: 카카오 발신 계정은 플랫폼 1개라 일반 사용자가 바꾸면 전체 발송을
@@ -194,6 +204,22 @@ def put_kakao(body: KakaoSettingIn, admin: CurrentAdmin, db: DbSession) -> dict:
         template_briefing=body.template_briefing,
         api_key=body.api_key,
         api_secret=body.api_secret,
+    )
+    log_security_event(
+        "admin_config_change",
+        actor=admin,
+        ip=client_ip(request),
+        outcome="success",
+        target="kakao",
+        fields=[
+            f
+            for f in ("provider", "sender_key", "template_briefing")
+            if (getattr(body, f) or "").strip()
+        ],
+        secrets_updated=bool(
+            (body.api_key and body.api_key.strip())
+            or (body.api_secret and body.api_secret.strip())
+        ),
     )
     return kakao_config.kakao_status(db)
 
