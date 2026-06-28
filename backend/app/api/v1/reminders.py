@@ -11,6 +11,7 @@ from fastapi import APIRouter
 from pydantic import BaseModel
 
 from app.api.deps import CurrentCompany, DbSession
+from app.core.dates import KST
 from app.db.models.accounts import Company, NotificationSetting
 from app.db.models.opportunity import Opportunity
 from app.schemas.opportunity import RecommendationItem
@@ -28,7 +29,7 @@ class ReminderItem(BaseModel):
 def _d_day(deadline: datetime | None) -> int | None:
     if not deadline:
         return None
-    return (deadline.date() - datetime.now(timezone.utc).date()).days
+    return (deadline.astimezone(KST).date() - datetime.now(KST).date()).days
 
 
 def _item(o: Opportunity, score: int | None, company: Company | None) -> RecommendationItem:

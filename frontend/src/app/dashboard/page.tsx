@@ -8,6 +8,7 @@ import { RecommendationCard } from "@/components/dashboard/RecommendationCard";
 import { RecommendationList } from "@/components/dashboard/RecommendationList";
 import { DeadlineReminders } from "@/components/dashboard/DeadlineReminders";
 import { StatsPanel } from "@/components/dashboard/StatsPanel";
+import { CollectionStatsPanel } from "@/components/dashboard/CollectionStatsPanel";
 import { Alert } from "@/components/ui/Alert";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { LoadingPage } from "@/components/ui/Spinner";
@@ -16,7 +17,7 @@ import { SortControl } from "@/components/ui/SortControl";
 import { useViewMode } from "@/lib/useViewMode";
 import { sortRecommendations } from "@/lib/utils";
 import { getTodayRecommendations } from "@/lib/api/recommendations";
-import { getDashboardStats } from "@/lib/api/dashboard";
+import { getDashboardStats, getCollectionStats } from "@/lib/api/dashboard";
 import { getCompanyProfile } from "@/lib/api/settings";
 import { hideOpportunity, unhideOpportunity } from "@/lib/api/opportunities";
 import type { SortKey, RecommendationItem } from "@/types/api";
@@ -79,6 +80,14 @@ function DashboardContent() {
   } = useQuery({
     queryKey: ["dashboard", "stats", isMock],
     queryFn: () => getDashboardStats(isMock),
+    staleTime: 5 * 60 * 1000,
+  });
+
+  // 데이터 수집 현황(시장 통계) — 실데이터 전용(목 모드 제외).
+  const { data: collectionStats } = useQuery({
+    queryKey: ["dashboard", "collection"],
+    queryFn: getCollectionStats,
+    enabled: !isMock,
     staleTime: 5 * 60 * 1000,
   });
 
@@ -336,6 +345,13 @@ function DashboardContent() {
       {stats && !statsLoading && (
         <div className="mt-8">
           <StatsPanel stats={stats} />
+        </div>
+      )}
+
+      {/* 데이터 수집 현황 — 일/주/월/년 추세 + 소스/분야/예산/낙찰 분석(시장 통계). */}
+      {!isMock && collectionStats && (
+        <div className="mt-8">
+          <CollectionStatsPanel stats={collectionStats} />
         </div>
       )}
     </AppShell>

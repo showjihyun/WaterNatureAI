@@ -64,7 +64,7 @@ _CONTEXT_JSON_SCHEMA = {
 # ── 내부 유틸 ────────────────────────────────────────────────────────────────
 
 def _sha256_norm(*parts: object) -> str:
-    """content_hash: sha256(industry|technologies|customers|strengths|track_records).
+    """content_hash: sha256(industry|technologies|customers|certifications|strengths|track_records).
 
     각 파트를 JSON 직렬화(정렬)하여 결합 → sha256 hex.
     """
@@ -241,6 +241,7 @@ def build_company_context(
             context.get("industry", ""),
             context.get("technologies", []),
             context.get("customers", []),
+            context.get("certifications", []),  # 인증도 해시 포함 → 인증만 수정해도 재임베딩·재매칭.
             context.get("strengths", []),
             context.get("track_records", []),
         )

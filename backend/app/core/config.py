@@ -85,7 +85,7 @@ class Settings(BaseSettings):
 
     # ── LLM 공급자 (멀티: anthropic | openai | gemini) ──────────────────
     # 기본 공급자. 런타임 선택은 DB app_settings('llm')가 .env 기본값을 덮는다.
-    # 키는 .env에만 보관(설정 UI는 공급자/모델만 선택, 키 입력 없음).
+    # 키는 .env 기본값 또는 설정 UI 입력값을 암호화해 app_settings(DB)에 저장(set_provider_key).
     llm_provider: str = "anthropic"
     # Anthropic (Claude) — 키 넣으면 AI 근거 활성(optional)
     llm_model: str = "claude-opus-4-8"      # = Anthropic 모델

@@ -2,7 +2,7 @@
 
 - 공급자별 구조화 출력: Anthropic tool_use · OpenAI function calling · Gemini JSON.
 - 런타임 공급자/모델은 `app_settings('llm')` → 없으면 config 기본값.
-- API 키는 .env(config)에만 보관(설정 UI는 공급자/모델만 선택, 키 입력 없음).
+- API 키는 .env(config) 기본값, 또는 설정 UI 입력값을 암호화해 app_settings(DB)에 보관(평문 미저장).
 - 키 없으면 호출 시 RuntimeError(score_match가 흡수 → 규칙 폴백).
 
 함수:

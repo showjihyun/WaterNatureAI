@@ -55,8 +55,9 @@ const FEASIBILITY_OPTIONS: FeasibilityOption[] = [
   { value: "no_go", label: "어려움", icon: "🔴" },
 ];
 
-// 출처 — 공고가 들어오는 공공 사이트(다중선택). 빈 선택 = 전체. 라벨은 sourceLabel().
-const SOURCE_OPTIONS: string[] = ["narajangter", "kstartup", "ntis", "bizinfo"];
+// 출처 — 운영 활성 수집기만(다중선택). 빈 선택 = 전체. 라벨은 sourceLabel().
+// bizinfo(기업마당)는 수집기 비활성(데이터 0)이라 칩에서 제외 — 활성화 시 재추가.
+const SOURCE_OPTIONS: string[] = ["narajangter", "kstartup", "ntis"];
 
 // 지역 — 단일 시도(드롭다운). value === label. 빈 값 = 전체.
 const REGION_OPTIONS: string[] = [
@@ -433,6 +434,12 @@ export function OpportunityFilterBar({
             )}
           </button>
       </div>
+      {/* 지역 필터 정직성 — 공고의 다수는 지역 미표기라 선택 시 제외됨을 명시. */}
+      {filters.region && (
+        <p className="border-t border-surface-border px-4 py-1.5 text-[11px] text-ink-400">
+          ‘{filters.region}’ 지역 필터 — 지역이 표기된 공고와 ‘전국’ 공고만 노출됩니다(지역 미표기 공고는 제외).
+        </p>
+      )}
     </div>
   );
 }

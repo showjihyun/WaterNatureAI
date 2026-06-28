@@ -15,6 +15,7 @@ from pydantic import BaseModel
 from sqlalchemy import delete, func, select
 
 from app.api.deps import CurrentCompany, DbSession
+from app.core.dates import KST
 from app.db.models.accounts import Company, KeywordWatch
 from app.db.models.opportunity import Opportunity
 from app.schemas.opportunity import RecommendationItem
@@ -42,7 +43,7 @@ class KeywordWatchIn(BaseModel):
 def _d_day(deadline: datetime | None) -> int | None:
     if not deadline:
         return None
-    return (deadline.date() - datetime.now(timezone.utc).date()).days
+    return (deadline.astimezone(KST).date() - datetime.now(KST).date()).days
 
 
 def _item(

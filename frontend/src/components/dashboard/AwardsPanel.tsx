@@ -142,8 +142,15 @@ function AwardCard({ item }: { item: AwardItem }) {
           label="낙찰률"
           value={item.award_rate != null ? `${item.award_rate}%` : "-"}
         />
+        <AwardField
+          label="참가"
+          value={item.participant_count != null ? `${item.participant_count}개사` : "-"}
+        />
         <AwardField label="수요기관" value={item.demand_agency ?? "-"} />
-        <AwardField label="낙찰일" value={item.final_award_date ?? "-"} />
+        <AwardField
+          label="낙찰일"
+          value={item.final_award_date ? item.final_award_date.replace(/-/g, ".") : "-"}
+        />
       </div>
     </div>
   );

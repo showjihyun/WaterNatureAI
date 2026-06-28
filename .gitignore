@@ -59,6 +59,8 @@ Thumbs.db
 # (kept out of the repo; remove these rules if you want them tracked)
 /*.png
 frontend/screenshots/
+# 예외: README 미리보기용 화면 이미지(목 데이터·집계만 — 개별 업체/공고명·PII 없음)는 추적한다.
+!docs/screenshots/*.png
 
 # ── Business / strategy docs (kept LOCAL only — not for public repo) ──
 # 사업계획·PRD·경쟁사분석·로드맵 등 기획 문서는 공개 저장소에 포함하지 않는다.

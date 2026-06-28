@@ -8,6 +8,7 @@ from fastapi import APIRouter, HTTPException, Query
 from sqlalchemy import func, or_, select
 
 from app.api.deps import CurrentCompany, DbSession
+from app.core.dates import KST
 from app.db.models.accounts import Company
 from app.db.models.opportunity import Match, Opportunity, OpportunityAward
 from app.schemas.opportunity import AwardItem, AwardList, OpportunityList, RecommendationItem
@@ -44,7 +45,7 @@ def _d_day(deadline: datetime | None) -> int | None:
     # 추천(recommendations.today)과 동일 계산 — 목록도 같은 d_day 노출(마감일 미정 방지).
     if not deadline:
         return None
-    return (deadline.date() - datetime.now(timezone.utc).date()).days
+    return (deadline.astimezone(KST).date() - datetime.now(KST).date()).days
 
 
 def _feasibility_dict(result: FeasibilityResult | None) -> dict | None:
@@ -135,8 +136,11 @@ def list_opportunities(
     # 단일 파이썬 경로: 표시단 dedup(동일 공고 중복 제거)이 필요해 전 행을 가져온 뒤
     # 적합도 최고 1건만 남기고 정렬·페이징. (company 스코프라 행 수가 작음 — 수십 건)
     rows = db.execute(base).all()
-    if region:
-        rows = [(m, o) for m, o in rows if _normalize_sido(o.region) == region]
+    if region == "전국":
+        rows = [(m, o) for m, o in rows if _normalize_sido(o.region) == "전국"]
+    elif region:
+        # 특정 시도 선택 시 '전국'(전 지역 유효) 공고도 포함. 지역 미표기(None)는 제외.
+        rows = [(m, o) for m, o in rows if _normalize_sido(o.region) in (region, "전국")]
 
     # dedup: 같은 논리 공고(_dedup_key)면 score 최고 1건 유지. NTIS 등 마감 정보 보존을
     # 위해 동점이면 deadline 있는 행 우선.

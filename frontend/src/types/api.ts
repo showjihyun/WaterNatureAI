@@ -206,3 +206,57 @@ export interface AwardList {
   page: number;
   size: number;
 }
+
+// 데이터 수집 현황 (대시보드 통계 섹션)
+export type TrendPeriod = "day" | "week" | "month" | "year";
+
+export interface TrendPoint {
+  label: string;
+  count: number;
+}
+
+export interface SourceCount {
+  source: string;
+  count: number;
+}
+
+export interface CategoryCount {
+  category: string;
+  count: number;
+}
+
+export interface BudgetBucket {
+  label: string;
+  count: number;
+}
+
+export interface BudgetStats {
+  total: number;
+  avg: number;
+  count_with_budget: number;
+  buckets: BudgetBucket[];
+}
+
+export interface AwardStats {
+  count: number;
+  avg_rate: number | null;
+  avg_amount: number | null;
+  total_amount: number | null;
+}
+
+export interface CollectionSummary {
+  new_today: number;
+  new_7d: number;
+  total: number;
+  awards_total: number;
+}
+
+export interface CollectionStats {
+  as_of: string;
+  summary: CollectionSummary;
+  trends: Record<TrendPeriod, TrendPoint[]>;
+  by_source: SourceCount[];
+  by_category: CategoryCount[];
+  budget: BudgetStats;
+  awards: AwardStats;
+}

@@ -94,7 +94,7 @@ export function RecommendationCard({ item, mock = false, onHide }: Recommendatio
           </div>
         </div>
 
-        {/* Reasons — 각 근거를 한 문장씩 불릿으로(LLM이 2~3개 생성) */}
+        {/* Reasons — 매칭 점수 산출 근거(규칙 템플릿; LLM 키 설정 시 상위 일부만 AI가 다듬음) */}
         {displayedReasons.length > 0 && (
           <div className="space-y-1.5">
             <p className="text-xs font-medium text-ink-400 uppercase tracking-wide">

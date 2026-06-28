@@ -17,6 +17,7 @@ export function ScoreHelpBody(): ReactNode {
         <span className="font-medium text-gray-700">평가 항목:</span> 기술 적합(의미 유사도 + 키워드), 산업 적합, 지역 적합 등을 종합합니다.
       </li>
       <li>35점 이상인 공고만 추천에 노출돼요. 점수가 높을수록 우리 회사에 더 맞는 사업입니다.</li>
+      <li>‘추천 근거’ 문장은 이 평가 항목에서 자동 생성돼요(AI 연동 시 일부 문장은 더 자연스럽게 다듬어져요).</li>
     </ul>
   );
 }

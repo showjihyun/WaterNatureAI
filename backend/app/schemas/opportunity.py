@@ -71,3 +71,55 @@ class StatsOut(BaseModel):
     saved: int
     participated: int
     rates: dict[str, float]
+
+
+# ── 데이터 수집 통계(대시보드 '데이터 수집 현황' 섹션) ───────────────────────────
+class TrendPoint(BaseModel):
+    label: str   # 축 라벨 (일=MM/DD, 주=주시작 MM/DD, 월=YY/MM, 년=YYYY)
+    count: int
+
+
+class SourceCount(BaseModel):
+    source: str  # 소스 코드(narajangter 등) — 라벨 매핑은 프론트 sourceLabel
+    count: int
+
+
+class CategoryCount(BaseModel):
+    category: str
+    count: int
+
+
+class BudgetBucket(BaseModel):
+    label: str
+    count: int
+
+
+class BudgetStats(BaseModel):
+    total: int               # 예산 합계(예산 있는 공고)
+    avg: int                 # 평균 예산
+    count_with_budget: int   # 예산 표기된 공고 수
+    buckets: list[BudgetBucket]
+
+
+class AwardStats(BaseModel):
+    count: int
+    avg_rate: float | None = None     # 평균 낙찰률(%)
+    avg_amount: int | None = None     # 평균 낙찰가
+    total_amount: int | None = None   # 낙찰가 합계
+
+
+class CollectionSummary(BaseModel):
+    new_today: int      # 오늘(KST) 신규 수집 공고
+    new_7d: int         # 최근 7일 신규 수집 공고
+    total: int          # 누적 공고(대표·canonical)
+    awards_total: int   # 누적 낙찰
+
+
+class CollectionStatsOut(BaseModel):
+    as_of: datetime
+    summary: CollectionSummary
+    trends: dict[str, list[TrendPoint]]   # day/week/month/year → 기간별 수집 추세
+    by_source: list[SourceCount]
+    by_category: list[CategoryCount]
+    budget: BudgetStats
+    awards: AwardStats

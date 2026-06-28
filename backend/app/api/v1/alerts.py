@@ -11,6 +11,7 @@ from pydantic import BaseModel
 from sqlalchemy import select
 
 from app.api.deps import CurrentCompany, DbSession
+from app.core.dates import KST
 from app.api.v1.reminders import ReminderItem
 from app.db.models.accounts import Company, KeywordWatch, NotificationSetting
 from app.db.models.opportunity import Opportunity
@@ -33,7 +34,7 @@ class AlertsOut(BaseModel):
 def _d_day(deadline: datetime | None) -> int | None:
     if not deadline:
         return None
-    return (deadline.date() - datetime.now(timezone.utc).date()).days
+    return (deadline.astimezone(KST).date() - datetime.now(KST).date()).days
 
 
 def _item(

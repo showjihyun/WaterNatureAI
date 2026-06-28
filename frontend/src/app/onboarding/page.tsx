@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/Button";
 import { Wordmark, BrandMark } from "@/components/ui/Brand";
 import { apiFetch, apiUpload, ApiError } from "@/lib/api/client";
 import { getCompanyProfile } from "@/lib/api/settings";
+import { AuthGuard } from "@/components/auth/AuthGuard";
 
 const STEPS = [
   { id: 1, label: "회사 기본정보" },
@@ -33,7 +34,7 @@ interface ProfileForm {
   certifications: string;
 }
 
-export default function OnboardingPage() {
+function OnboardingPageInner() {
   const router = useRouter();
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
@@ -452,5 +453,14 @@ export default function OnboardingPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function OnboardingPage() {
+  // 클라이언트 게이팅 — 미인증 시 빈 폼 노출 전 /login으로(쿠키 silent refresh 후 판단).
+  return (
+    <AuthGuard>
+      <OnboardingPageInner />
+    </AuthGuard>
   );
 }

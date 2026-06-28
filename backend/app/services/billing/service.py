@@ -81,7 +81,7 @@ def start_subscription(
     plan_code = settings.billing_plan_default
     plan = _plan(db, plan_code)
 
-    # ① 빌링키 발급(Toss) → billing_keys 저장. ⚠️ 평문(TODO 암호화) — 로그 금지.
+    # ① 빌링키 발급(Toss) → billing_keys 저장. at-rest 암호화(아래 crypto.encrypt) — 로그 금지.
     billing_key_value = prov.issue_billing_key(customer_key, auth_key)
     bk = BillingKey(
         id=uuid.uuid4(),

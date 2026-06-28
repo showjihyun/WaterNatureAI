@@ -42,9 +42,11 @@ function AlertRow({
 }) {
   // detail_url은 외부(스크랩/LLM) 데이터 → 안전한 http(s)만 외부링크, 아니면 내부 워치로.
   const sourceUrl = safeHttpUrl(item.detail_url);
+  // 원문 URL 없을 때 내부 폴백: 마감(관심/진행)→대시보드 리마인더, 키워드→워치 탭.
+  const fallbackUrl = variant === "deadline" ? "/dashboard" : "/opportunities?tab=watch";
   return (
     <a
-      href={sourceUrl || "/opportunities?tab=watch"}
+      href={sourceUrl || fallbackUrl}
       target={sourceUrl ? "_blank" : undefined}
       rel="noreferrer"
       onClick={onClose}

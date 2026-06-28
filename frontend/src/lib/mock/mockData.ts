@@ -91,7 +91,7 @@ export const MOCK_RECOMMENDATIONS: RecommendationItem[] = [
       "에너지 도메인 솔루션 개발 이력",
     ],
     saved: false,
-    source: "공공데이터포털",
+    source: "K-스타트업",
     other_sources: ["나라장터"],
     detail_url: "https://www.data.go.kr/",
   },

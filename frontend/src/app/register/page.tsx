@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { register } from "@/lib/api/auth";
+import { ApiError } from "@/lib/api/client";
 import { Button } from "@/components/ui/Button";
 import { Wordmark, BrandMark } from "@/components/ui/Brand";
 
@@ -42,7 +43,13 @@ export default function RegisterPage() {
       });
       router.push("/onboarding");
     } catch (err) {
-      setError("회원가입에 실패했습니다. 이미 사용 중인 이메일일 수 있습니다.");
+      let msg = "회원가입에 실패했습니다. 잠시 후 다시 시도해 주세요.";
+      if (err instanceof ApiError) {
+        if (err.status === 409) msg = "이미 사용 중인 이메일입니다.";
+        else if (err.status === 429) msg = "요청이 많습니다. 잠시 후 다시 시도해 주세요.";
+        else if (err.status === 422) msg = "입력값을 다시 확인해 주세요.";
+      }
+      setError(msg);
       console.error(err);
     } finally {
       setLoading(false);

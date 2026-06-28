@@ -1,5 +1,5 @@
 import { apiFetch } from "./client";
-import type { NotificationSetting, NotificationSettingIn, BillingStatus, CompanyProfile, CompanyCapabilityIn } from "@/types/api";
+import type { NotificationSetting, NotificationSettingIn, CompanyProfile, CompanyCapabilityIn } from "@/types/api";
 
 export async function getNotificationSettings(): Promise<NotificationSetting> {
   return apiFetch<NotificationSetting>("/settings/notification");
@@ -12,10 +12,6 @@ export async function updateNotificationSettings(
     method: "PUT",
     body: JSON.stringify(body),
   });
-}
-
-export async function getBillingStatus(): Promise<BillingStatus> {
-  return apiFetch<BillingStatus>("/settings/billing");
 }
 
 // ── 카카오 알림톡 브리핑 미리보기 ──

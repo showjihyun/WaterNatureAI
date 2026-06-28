@@ -15,6 +15,7 @@ from pydantic import BaseModel
 from sqlalchemy import and_, delete, select
 
 from app.api.deps import CurrentCompany, DbSession
+from app.core.dates import KST
 from app.db.models.accounts import Company
 from app.db.models.opportunity import (
     PURSUIT_STAGES,
@@ -48,7 +49,7 @@ class PursuitPatch(BaseModel):
 def _d_day(deadline: datetime | None) -> int | None:
     if not deadline:
         return None
-    return (deadline.date() - datetime.now(timezone.utc).date()).days
+    return (deadline.astimezone(KST).date() - datetime.now(KST).date()).days
 
 
 def _item(o: Opportunity, score: int | None, company: Company | None) -> RecommendationItem:
