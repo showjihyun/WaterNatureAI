@@ -54,7 +54,7 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen flex flex-col lg:flex-row">
       {/* Left hero panel — desktop only */}
-      <div className="hidden lg:flex lg:w-1/2 flex-col items-center justify-center bg-ink px-12 py-16 gap-10">
+      <div className="hidden lg:flex lg:w-1/2 flex-col items-center justify-center bg-slate-900 px-12 py-16 gap-10">
         {/* Wordmark */}
         <div className="text-center">
           <div className="flex items-center justify-center gap-2.5">
@@ -87,7 +87,7 @@ export default function LoginPage() {
         {/* Mobile wordmark */}
         <div className="mb-8 text-center lg:hidden">
           <div className="inline-flex items-center gap-2 mb-2">
-            <span className="text-primary-600">
+            <span className="text-primary-600 dark:text-primary-400">
               <BrandMark className="h-6 w-6" />
             </span>
             <Wordmark tone="light" className="text-xl" />
@@ -104,7 +104,7 @@ export default function LoginPage() {
               <div>
                 <label
                   htmlFor="email"
-                  className="block text-sm font-medium text-gray-700 mb-1.5"
+                  className="block text-sm font-medium text-ink-700 mb-1.5"
                 >
                   이메일
                 </label>
@@ -116,14 +116,14 @@ export default function LoginPage() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="company@example.com"
-                  className="block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm text-gray-900 placeholder-gray-400 focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500"
+                  className="block w-full rounded-lg border border-surface-border px-3 py-2.5 text-sm text-ink placeholder-gray-400 focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500"
                 />
               </div>
 
               <div>
                 <label
                   htmlFor="password"
-                  className="block text-sm font-medium text-gray-700 mb-1.5"
+                  className="block text-sm font-medium text-ink-700 mb-1.5"
                 >
                   비밀번호
                 </label>
@@ -135,12 +135,12 @@ export default function LoginPage() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
-                  className="block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm text-gray-900 placeholder-gray-400 focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500"
+                  className="block w-full rounded-lg border border-surface-border px-3 py-2.5 text-sm text-ink placeholder-gray-400 focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500"
                 />
               </div>
 
               {error && (
-                <div className="rounded-lg bg-red-50 px-3 py-2.5 text-sm text-red-700 border border-red-200">
+                <div className="rounded-lg bg-red-50 dark:bg-red-500/15 px-3 py-2.5 text-sm text-red-700 dark:text-red-300 border border-red-200 dark:border-red-500/30">
                   {error}
                 </div>
               )}
@@ -155,11 +155,11 @@ export default function LoginPage() {
               </Button>
             </form>
 
-            <p className="mt-5 text-center text-sm text-gray-500">
+            <p className="mt-5 text-center text-sm text-ink-400">
               계정이 없으신가요?{" "}
               <Link
                 href="/register"
-                className="font-medium text-primary-600 hover:text-primary-700 hover:underline"
+                className="font-medium text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:text-primary-300 hover:underline"
               >
                 회원가입
               </Link>
@@ -167,7 +167,7 @@ export default function LoginPage() {
           </div>
 
           {/* Demo hint */}
-          <p className="mt-4 text-center text-xs text-gray-400">
+          <p className="mt-4 text-center text-xs text-ink-400">
             데모 확인:{" "}
             <Link href="/dashboard?mock=1" className="text-primary-500 underline">
               목 데이터 대시보드 바로가기

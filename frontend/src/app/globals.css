@@ -5,6 +5,42 @@
 @tailwind utilities;
 
 @layer base {
+  /* ── 시맨틱 토큰(라이트) — surface/ink/chart. rgb 채널값(알파 합성용). ───────── */
+  :root {
+    --surface: 248 250 252; /* #F8FAFC slate-50 페이지 배경 */
+    --surface-card: 255 255 255; /* 카드 흰색 */
+    --surface-border: 226 232 240; /* #E2E8F0 slate-200 */
+    --surface-muted: 241 245 249; /* #F1F5F9 slate-100 옅은 채움 */
+    --ink: 15 23 42; /* #0F172A slate-900 본문 */
+    --ink-700: 51 65 85; /* slate-700 */
+    --ink-600: 71 85 105; /* slate-600 */
+    --ink-400: 100 116 139; /* slate-500 보조 */
+    --chart-1: 3 105 161; /* azure */
+    --chart-2: 14 116 144; /* cyan-700 */
+    --chart-3: 21 128 61; /* green-700 */
+    --chart-4: 180 83 9; /* amber-700 */
+    --chart-5: 71 85 105; /* slate-600 */
+    color-scheme: light;
+  }
+
+  /* ── 다크 — 값만 스왑(컴포넌트는 토큰 그대로 사용). ──────────────────────────── */
+  .dark {
+    --surface: 2 6 23; /* #020617 slate-950 */
+    --surface-card: 15 23 42; /* #0F172A slate-900 */
+    --surface-border: 30 41 59; /* #1E293B slate-800 */
+    --surface-muted: 30 41 59; /* slate-800 */
+    --ink: 241 245 249; /* #F1F5F9 slate-100 */
+    --ink-700: 203 213 225; /* slate-300 */
+    --ink-600: 148 163 184; /* slate-400 */
+    --ink-400: 148 163 184; /* slate-400 보조 */
+    --chart-1: 56 189 248; /* sky-400 — 다크에서 밝게 */
+    --chart-2: 45 212 191; /* teal-400 */
+    --chart-3: 74 222 128; /* green-400 */
+    --chart-4: 251 191 36; /* amber-400 */
+    --chart-5: 148 163 184; /* slate-400 */
+    color-scheme: dark;
+  }
+
   html {
     font-family:
       "Pretendard",
@@ -24,7 +60,7 @@
   }
 
   body {
-    @apply text-gray-900 bg-surface;
+    @apply text-ink bg-surface;
   }
 }
 

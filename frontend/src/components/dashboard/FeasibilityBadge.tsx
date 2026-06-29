@@ -13,7 +13,7 @@ const verdictStyles: Record<
   { badge: string; dot: string; icon: React.ReactNode }
 > = {
   go: {
-    badge: "bg-emerald-50 text-emerald-700 ring-emerald-600/20",
+    badge: "bg-emerald-50 dark:bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 ring-emerald-600/20",
     dot: "bg-emerald-500",
     icon: (
       <svg className="h-3 w-3" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
@@ -22,7 +22,7 @@ const verdictStyles: Record<
     ),
   },
   review: {
-    badge: "bg-amber-50 text-amber-700 ring-amber-600/20",
+    badge: "bg-amber-50 dark:bg-amber-500/15 text-amber-700 dark:text-amber-300 ring-amber-600/20",
     dot: "bg-amber-400",
     icon: (
       <svg className="h-3 w-3" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
@@ -31,7 +31,7 @@ const verdictStyles: Record<
     ),
   },
   no_go: {
-    badge: "bg-red-50 text-red-700 ring-red-600/20",
+    badge: "bg-red-50 dark:bg-red-500/15 text-red-700 dark:text-red-300 ring-red-600/20",
     dot: "bg-red-500",
     icon: (
       <svg className="h-3 w-3" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
@@ -67,12 +67,12 @@ export function FeasibilityBadge({ feasibility, compact = true }: FeasibilityBad
       {shownReasons.length > 0 && (
         <div className="flex flex-wrap items-center gap-1">
           {shownReasons.map((reason, i) => (
-            <span key={i} className="text-xs text-gray-500 leading-snug">
+            <span key={i} className="text-xs text-ink-400 leading-snug">
               {reason}
             </span>
           ))}
           {hiddenCount > 0 && (
-            <span className="text-xs text-gray-400">외 {hiddenCount}건</span>
+            <span className="text-xs text-ink-400">외 {hiddenCount}건</span>
           )}
         </div>
       )}

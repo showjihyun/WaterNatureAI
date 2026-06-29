@@ -55,7 +55,7 @@ export function PursuitCard({ item }: { item: PursuitItem }) {
           onClick={() => remove.mutate()}
           disabled={busy}
           aria-label="진행에서 제거"
-          className="shrink-0 rounded p-0.5 text-ink-400 hover:bg-red-50 hover:text-red-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500"
+          className="shrink-0 rounded p-0.5 text-ink-400 hover:bg-red-50 dark:bg-red-500/15 hover:text-red-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500"
         >
           <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
             <path strokeLinecap="round" d="M6 18 18 6M6 6l12 12" />
@@ -66,7 +66,7 @@ export function PursuitCard({ item }: { item: PursuitItem }) {
       <h3 className="mt-0.5 line-clamp-2 text-sm font-semibold leading-snug text-ink">{o.title}</h3>
 
       <div className="mt-2 flex flex-wrap items-center gap-1.5 text-[11px]">
-        {o.score != null && <span className="font-semibold text-primary-600">적합도 {o.score}</span>}
+        {o.score != null && <span className="font-semibold text-primary-600 dark:text-primary-400">적합도 {o.score}</span>}
         {o.d_day != null && <DaysBadge dDay={o.d_day} />}
         <Badge color="gray">{sourceLabel(o.source)}</Badge>
       </div>
@@ -99,7 +99,7 @@ export function PursuitCard({ item }: { item: PursuitItem }) {
             href={sourceUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="rounded px-1 text-xs font-medium text-primary-600 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500"
+            className="rounded px-1 text-xs font-medium text-primary-600 dark:text-primary-400 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500"
           >
             원문 →
           </a>

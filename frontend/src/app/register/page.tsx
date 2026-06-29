@@ -57,24 +57,24 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-primary-50 px-4">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-primary-50 dark:from-slate-950 dark:to-slate-900 px-4">
       <div className="w-full max-w-sm">
         <div className="mb-8 text-center">
           <span className="inline-flex items-center gap-2">
-            <span className="text-primary-600">
+            <span className="text-primary-600 dark:text-primary-400">
               <BrandMark className="h-6 w-6" />
             </span>
             <Wordmark tone="light" className="text-2xl" />
           </span>
-          <p className="mt-2 text-sm text-gray-500">무료로 시작하세요</p>
+          <p className="mt-2 text-sm text-ink-400">무료로 시작하세요</p>
         </div>
 
         <div className="rounded-2xl border border-surface-border bg-surface-card p-8 shadow-sm">
-          <h1 className="mb-6 text-xl font-semibold text-gray-900">회원가입</h1>
+          <h1 className="mb-6 text-xl font-semibold text-ink">회원가입</h1>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label htmlFor="reg-company" className="block text-sm font-medium text-gray-700 mb-1.5">
+              <label htmlFor="reg-company" className="block text-sm font-medium text-ink-700 mb-1.5">
                 회사명
               </label>
               <input
@@ -86,12 +86,12 @@ export default function RegisterPage() {
                 value={form.company_name}
                 onChange={handleChange}
                 placeholder="(주)우리회사"
-                className="block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+                className="block w-full rounded-lg border border-surface-border px-3 py-2.5 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
               />
             </div>
 
             <div>
-              <label htmlFor="reg-email" className="block text-sm font-medium text-gray-700 mb-1.5">
+              <label htmlFor="reg-email" className="block text-sm font-medium text-ink-700 mb-1.5">
                 이메일
               </label>
               <input
@@ -103,13 +103,13 @@ export default function RegisterPage() {
                 value={form.email}
                 onChange={handleChange}
                 placeholder="admin@company.com"
-                className="block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+                className="block w-full rounded-lg border border-surface-border px-3 py-2.5 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
               />
             </div>
 
             <div>
-              <label htmlFor="reg-password" className="block text-sm font-medium text-gray-700 mb-1.5">
-                비밀번호 <span className="text-gray-500 font-normal">(8자 이상)</span>
+              <label htmlFor="reg-password" className="block text-sm font-medium text-ink-700 mb-1.5">
+                비밀번호 <span className="text-ink-400 font-normal">(8자 이상)</span>
               </label>
               <input
                 id="reg-password"
@@ -121,12 +121,12 @@ export default function RegisterPage() {
                 value={form.password}
                 onChange={handleChange}
                 placeholder="••••••••"
-                className="block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+                className="block w-full rounded-lg border border-surface-border px-3 py-2.5 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
               />
             </div>
 
             <div>
-              <label htmlFor="reg-password-confirm" className="block text-sm font-medium text-gray-700 mb-1.5">
+              <label htmlFor="reg-password-confirm" className="block text-sm font-medium text-ink-700 mb-1.5">
                 비밀번호 확인
               </label>
               <input
@@ -138,12 +138,12 @@ export default function RegisterPage() {
                 value={form.passwordConfirm}
                 onChange={handleChange}
                 placeholder="••••••••"
-                className="block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+                className="block w-full rounded-lg border border-surface-border px-3 py-2.5 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
               />
             </div>
 
             {error && (
-              <div className="rounded-lg bg-red-50 px-3 py-2.5 text-sm text-red-700 border border-red-200">
+              <div className="rounded-lg bg-red-50 dark:bg-red-500/15 px-3 py-2.5 text-sm text-red-700 dark:text-red-300 border border-red-200 dark:border-red-500/30">
                 {error}
               </div>
             )}
@@ -153,9 +153,9 @@ export default function RegisterPage() {
             </Button>
           </form>
 
-          <p className="mt-5 text-center text-sm text-gray-500">
+          <p className="mt-5 text-center text-sm text-ink-400">
             이미 계정이 있으신가요?{" "}
-            <Link href="/login" className="font-medium text-primary-600 hover:underline">
+            <Link href="/login" className="font-medium text-primary-600 dark:text-primary-400 hover:underline">
               로그인
             </Link>
           </p>

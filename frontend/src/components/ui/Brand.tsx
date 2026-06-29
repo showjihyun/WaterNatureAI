@@ -35,7 +35,7 @@ export function Wordmark({
       )}
     >
       WaterNature
-      <span className={tone === "dark" ? "text-primary-400" : "text-primary-600"}>AI</span>
+      <span className={tone === "dark" ? "text-primary-400" : "text-primary-600 dark:text-primary-400"}>AI</span>
     </span>
   );
 }
@@ -54,7 +54,7 @@ export function Brand({
 }) {
   return (
     <span className="inline-flex items-center gap-2.5">
-      <span className={tone === "dark" ? "text-primary-400" : "text-primary-600"}>
+      <span className={tone === "dark" ? "text-primary-400" : "text-primary-600 dark:text-primary-400"}>
         <BrandMark className={markClassName} />
       </span>
       <Wordmark tone={tone} className={textClassName} />

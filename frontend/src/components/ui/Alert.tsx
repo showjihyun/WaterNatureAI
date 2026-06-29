@@ -15,10 +15,10 @@ interface AlertProps {
 }
 
 const variantClasses: Record<AlertVariant, string> = {
-  error: "border-red-200 bg-red-50 text-red-700",
-  warning: "border-amber-200 bg-amber-50 text-amber-800",
-  info: "border-primary-200 bg-primary-50 text-primary-700",
-  success: "border-emerald-200 bg-emerald-50 text-emerald-700",
+  error: "border-red-200 dark:border-red-500/30 bg-red-50 dark:bg-red-500/15 text-red-700 dark:text-red-300",
+  warning: "border-amber-200 dark:border-amber-500/30 bg-amber-50 dark:bg-amber-500/15 text-amber-800 dark:text-amber-300",
+  info: "border-primary-200 bg-primary-50 dark:bg-primary-500/15 text-primary-700 dark:text-primary-300",
+  success: "border-emerald-200 dark:border-emerald-500/30 bg-emerald-50 dark:bg-emerald-500/15 text-emerald-700 dark:text-emerald-300",
 };
 
 /** 공용 알림/에러 배너. 페이지마다 재구현하던 border-red-50 div를 대체하고, onRetry로 재시도를 표준화. */

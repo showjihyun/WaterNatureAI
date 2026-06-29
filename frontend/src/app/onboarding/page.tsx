@@ -160,18 +160,18 @@ function OnboardingPageInner() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4 py-12">
+    <div className="min-h-screen flex items-center justify-center bg-surface-muted px-4 py-12">
       <div className="w-full max-w-lg">
         {/* Header */}
         <div className="mb-8 text-center">
           <h1 className="sr-only">회사 프로필 등록</h1>
           <span className="inline-flex items-center gap-2">
-            <span className="text-primary-600">
+            <span className="text-primary-600 dark:text-primary-400">
               <BrandMark className="h-5 w-5" />
             </span>
             <Wordmark tone="light" className="text-xl" />
           </span>
-          <p className="mt-2 text-sm text-gray-500">
+          <p className="mt-2 text-sm text-ink-400">
             회사 프로필을 등록하면 AI가 맞춤 공고를 추천해 드립니다
           </p>
         </div>
@@ -188,8 +188,8 @@ function OnboardingPageInner() {
                     step > s.id
                       ? "bg-primary-600 text-white"
                       : step === s.id
-                      ? "border-2 border-primary-600 text-primary-600"
-                      : "bg-gray-200 text-gray-500"
+                      ? "border-2 border-primary-600 text-primary-600 dark:text-primary-400"
+                      : "bg-surface-muted text-ink-400"
                   }`}
                 >
                   {step > s.id ? (
@@ -207,16 +207,16 @@ function OnboardingPageInner() {
                 {i < STEPS.length - 1 && (
                   <div
                     className={`mx-1.5 h-0.5 w-14 transition-colors ${
-                      step > s.id ? "bg-primary-600" : "bg-gray-200"
+                      step > s.id ? "bg-primary-600" : "bg-surface-muted"
                     }`}
                   />
                 )}
               </div>
             ))}
           </div>
-          <div className="flex justify-between text-xs text-gray-500">
+          <div className="flex justify-between text-xs text-ink-400">
             {STEPS.map((s) => (
-              <span key={s.id} className={step === s.id ? "text-primary-600 font-medium" : ""}>
+              <span key={s.id} className={step === s.id ? "text-primary-600 dark:text-primary-400 font-medium" : ""}>
                 {s.label}
               </span>
             ))}
@@ -227,9 +227,9 @@ function OnboardingPageInner() {
         <div className="rounded-2xl border border-surface-border bg-surface-card p-8 shadow-sm">
           {step === 1 && (
             <form onSubmit={handleNext} className="space-y-4">
-              <h2 className="text-lg font-semibold text-gray-900 mb-5">회사 기본정보</h2>
+              <h2 className="text-lg font-semibold text-ink mb-5">회사 기본정보</h2>
               <div>
-                <label htmlFor="ob-company" className="block text-sm font-medium text-gray-700 mb-1.5">회사명</label>
+                <label htmlFor="ob-company" className="block text-sm font-medium text-ink-700 mb-1.5">회사명</label>
                 <input
                   id="ob-company"
                   name="company_name"
@@ -237,17 +237,17 @@ function OnboardingPageInner() {
                   value={form.company_name}
                   onChange={handleChange}
                   placeholder="(주)우리회사"
-                  className="block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+                  className="block w-full rounded-lg border border-surface-border px-3 py-2.5 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
                 />
               </div>
               <div>
-                <label htmlFor="ob-industry" className="block text-sm font-medium text-gray-700 mb-1.5">업종</label>
+                <label htmlFor="ob-industry" className="block text-sm font-medium text-ink-700 mb-1.5">업종</label>
                 <select
                   id="ob-industry"
                   name="industry"
                   value={form.industry}
                   onChange={handleChange}
-                  className="block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+                  className="block w-full rounded-lg border border-surface-border px-3 py-2.5 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
                 >
                   <option value="">선택하세요</option>
                   <option value="IT서비스">IT서비스</option>
@@ -265,7 +265,7 @@ function OnboardingPageInner() {
                 </select>
               </div>
               <div>
-                <label htmlFor="ob-description" className="block text-sm font-medium text-gray-700 mb-1.5">사업 소개</label>
+                <label htmlFor="ob-description" className="block text-sm font-medium text-ink-700 mb-1.5">사업 소개</label>
                 <textarea
                   id="ob-description"
                   name="description"
@@ -273,18 +273,18 @@ function OnboardingPageInner() {
                   onChange={handleChange}
                   rows={3}
                   placeholder="회사의 주요 사업을 간략히 설명해 주세요"
-                  className="block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500 resize-none"
+                  className="block w-full rounded-lg border border-surface-border px-3 py-2.5 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500 resize-none"
                 />
               </div>
               <div>
-                <label htmlFor="ob-region" className="block text-sm font-medium text-gray-700 mb-1.5">주요 활동 지역</label>
+                <label htmlFor="ob-region" className="block text-sm font-medium text-ink-700 mb-1.5">주요 활동 지역</label>
                 <input
                   id="ob-region"
                   name="region"
                   value={form.region}
                   onChange={handleChange}
                   placeholder="수도권, 전국, 경기도 등"
-                  className="block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+                  className="block w-full rounded-lg border border-surface-border px-3 py-2.5 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
                 />
               </div>
               <Button type="submit" className="w-full mt-2" size="lg">
@@ -295,11 +295,11 @@ function OnboardingPageInner() {
 
           {step === 2 && (
             <form onSubmit={handleNext} className="space-y-4">
-              <h2 className="text-lg font-semibold text-gray-900 mb-5">사업 역량</h2>
+              <h2 className="text-lg font-semibold text-ink mb-5">사업 역량</h2>
               <div>
-                <label htmlFor="ob-services" className="block text-sm font-medium text-gray-700 mb-1.5">
+                <label htmlFor="ob-services" className="block text-sm font-medium text-ink-700 mb-1.5">
                   주요 서비스/제품
-                  <span className="text-gray-500 font-normal ml-1">(쉼표로 구분)</span>
+                  <span className="text-ink-400 font-normal ml-1">(쉼표로 구분)</span>
                 </label>
                 <input
                   id="ob-services"
@@ -308,13 +308,13 @@ function OnboardingPageInner() {
                   value={form.services}
                   onChange={handleChange}
                   placeholder="예: 수처리 시설 시공, 클라우드 구축, 교육 콘텐츠 개발"
-                  className="block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+                  className="block w-full rounded-lg border border-surface-border px-3 py-2.5 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
                 />
               </div>
               <div>
-                <label htmlFor="ob-technologies" className="block text-sm font-medium text-gray-700 mb-1.5">
+                <label htmlFor="ob-technologies" className="block text-sm font-medium text-ink-700 mb-1.5">
                   보유 기술 스택
-                  <span className="text-gray-500 font-normal ml-1">(쉼표로 구분)</span>
+                  <span className="text-ink-400 font-normal ml-1">(쉼표로 구분)</span>
                 </label>
                 <input
                   id="ob-technologies"
@@ -322,7 +322,7 @@ function OnboardingPageInner() {
                   value={form.technologies}
                   onChange={handleChange}
                   placeholder="예: MBR 막여과, 구조설계, Python, IoT 센서"
-                  className="block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+                  className="block w-full rounded-lg border border-surface-border px-3 py-2.5 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
                 />
               </div>
               <div className="flex gap-3">
@@ -338,11 +338,11 @@ function OnboardingPageInner() {
 
           {step === 3 && (
             <form onSubmit={handleNext} className="space-y-4">
-              <h2 className="text-lg font-semibold text-gray-900 mb-5">인증 & 고객</h2>
+              <h2 className="text-lg font-semibold text-ink mb-5">인증 & 고객</h2>
               <div>
-                <label htmlFor="ob-customers" className="block text-sm font-medium text-gray-700 mb-1.5">
+                <label htmlFor="ob-customers" className="block text-sm font-medium text-ink-700 mb-1.5">
                   주요 고객사 유형
-                  <span className="text-gray-500 font-normal ml-1">(쉼표로 구분)</span>
+                  <span className="text-ink-400 font-normal ml-1">(쉼표로 구분)</span>
                 </label>
                 <input
                   id="ob-customers"
@@ -350,13 +350,13 @@ function OnboardingPageInner() {
                   value={form.target_customers}
                   onChange={handleChange}
                   placeholder="중소기업, 공공기관, 대기업 계열사"
-                  className="block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+                  className="block w-full rounded-lg border border-surface-border px-3 py-2.5 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
                 />
               </div>
               <div>
-                <label htmlFor="ob-certifications" className="block text-sm font-medium text-gray-700 mb-1.5">
+                <label htmlFor="ob-certifications" className="block text-sm font-medium text-ink-700 mb-1.5">
                   보유 인증
-                  <span className="text-gray-500 font-normal ml-1">(쉼표로 구분)</span>
+                  <span className="text-ink-400 font-normal ml-1">(쉼표로 구분)</span>
                 </label>
                 <input
                   id="ob-certifications"
@@ -364,7 +364,7 @@ function OnboardingPageInner() {
                   value={form.certifications}
                   onChange={handleChange}
                   placeholder="ISO 9001, GS인증, ISMS, Inno-Biz, 기업부설연구소"
-                  className="block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+                  className="block w-full rounded-lg border border-surface-border px-3 py-2.5 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
                 />
               </div>
 
@@ -386,23 +386,23 @@ function OnboardingPageInner() {
 
           {step === 4 && (
             <form onSubmit={handleSubmit} className="space-y-4">
-              <h2 className="text-lg font-semibold text-gray-900 mb-1">회사소개서 업로드</h2>
-              <p className="text-sm text-gray-500 mb-4">
+              <h2 className="text-lg font-semibold text-ink mb-1">회사소개서 업로드</h2>
+              <p className="text-sm text-ink-400 mb-4">
                 회사소개서 PDF를 올리면 AI가 문서를 읽고 역량·실적을 더 정확히 분석합니다.
-                <span className="text-gray-400"> (선택 — 건너뛰어도 됩니다)</span>
+                <span className="text-ink-400"> (선택 — 건너뛰어도 됩니다)</span>
               </p>
 
               <label
                 htmlFor="brochure"
-                className="flex flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed border-gray-300 px-4 py-8 cursor-pointer hover:border-primary-400 hover:bg-primary-50/30 transition-colors"
+                className="flex flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed border-surface-border px-4 py-8 cursor-pointer hover:border-primary-400 hover:bg-primary-50 dark:bg-primary-500/15/30 transition-colors"
               >
-                <svg className="h-8 w-8 text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5}>
+                <svg className="h-8 w-8 text-ink-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M12 16.5V9.75m0 0l3 3m-3-3l-3 3M6.75 19.5a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.233-2.33 3 3 0 013.758 3.848A3.752 3.752 0 0118 19.5H6.75z" />
                 </svg>
-                <span className="text-sm font-medium text-gray-700">
+                <span className="text-sm font-medium text-ink-700">
                   {uploading ? "분석 중…" : "PDF 파일 선택 또는 드래그"}
                 </span>
-                <span className="text-xs text-gray-400">최대 20MB · PDF</span>
+                <span className="text-xs text-ink-400">최대 20MB · PDF</span>
                 <input
                   id="brochure"
                   type="file"
@@ -414,9 +414,9 @@ function OnboardingPageInner() {
               </label>
 
               {uploadResult && (
-                <div className="rounded-lg bg-green-50 px-3 py-2.5 text-sm text-green-800 border border-green-200">
+                <div className="rounded-lg bg-green-50 dark:bg-green-500/15 px-3 py-2.5 text-sm text-green-800 dark:text-green-300 border border-green-200 dark:border-green-500/30">
                   <p className="font-medium">✓ {uploadResult.filename} 분석 완료</p>
-                  <p className="text-xs text-green-700 mt-0.5">
+                  <p className="text-xs text-green-700 dark:text-green-300 mt-0.5">
                     {uploadResult.page_count}페이지 · {uploadResult.char_count.toLocaleString()}자 추출
                     {uploadResult.truncated && " (일부 발췌)"}
                   </p>
@@ -424,13 +424,13 @@ function OnboardingPageInner() {
               )}
 
               {uploadError && (
-                <div className="rounded-lg bg-red-50 px-3 py-2.5 text-sm text-red-700 border border-red-200">
+                <div className="rounded-lg bg-red-50 dark:bg-red-500/15 px-3 py-2.5 text-sm text-red-700 dark:text-red-300 border border-red-200 dark:border-red-500/30">
                   {uploadError}
                 </div>
               )}
 
               {error && (
-                <div className="rounded-lg bg-red-50 px-3 py-2.5 text-sm text-red-700 border border-red-200">
+                <div className="rounded-lg bg-red-50 dark:bg-red-500/15 px-3 py-2.5 text-sm text-red-700 dark:text-red-300 border border-red-200 dark:border-red-500/30">
                   {error}
                 </div>
               )}

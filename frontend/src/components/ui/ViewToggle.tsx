@@ -34,7 +34,7 @@ export function ViewToggle({ mode, onChange, className }: ViewToggleProps) {
         className={cn(
           buttonBase,
           mode === "card"
-            ? "bg-primary-50 text-primary-700 shadow-sm"
+            ? "bg-primary-50 dark:bg-primary-500/15 text-primary-700 dark:text-primary-300 shadow-sm"
             : "text-ink-400 hover:text-ink-600"
         )}
       >
@@ -54,7 +54,7 @@ export function ViewToggle({ mode, onChange, className }: ViewToggleProps) {
         className={cn(
           buttonBase,
           mode === "list"
-            ? "bg-primary-50 text-primary-700 shadow-sm"
+            ? "bg-primary-50 dark:bg-primary-500/15 text-primary-700 dark:text-primary-300 shadow-sm"
             : "text-ink-400 hover:text-ink-600"
         )}
       >

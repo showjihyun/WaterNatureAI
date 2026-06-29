@@ -3,6 +3,7 @@
 import type { ReactNode } from "react";
 import { Sidebar, MobileNav } from "./Sidebar";
 import { NotificationBell } from "./NotificationBell";
+import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { AuthGuard } from "@/components/auth/AuthGuard";
 
 interface AppShellProps {
@@ -16,7 +17,7 @@ export function AppShell({ children }: AppShellProps) {
         {/* 키보드 사용자: 사이드바 건너뛰고 본문으로 */}
         <a
           href="#main-content"
-          className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[60] focus:rounded-lg focus:bg-ink focus:px-4 focus:py-2 focus:text-sm focus:font-medium focus:text-white"
+          className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[60] focus:rounded-lg focus:bg-slate-900 focus:px-4 focus:py-2 focus:text-sm focus:font-medium focus:text-white"
         >
           본문 바로가기
         </a>
@@ -25,7 +26,8 @@ export function AppShell({ children }: AppShellProps) {
         <div className="flex min-w-0 flex-1 flex-col">
           <MobileNav />
           {/* 데스크톱 상단 유틸리티 바 — 알림 벨 */}
-          <div className="hidden h-14 shrink-0 items-center justify-end border-b border-surface-border bg-surface-card px-6 lg:flex">
+          <div className="hidden h-14 shrink-0 items-center justify-end gap-1 border-b border-surface-border bg-surface-card px-6 lg:flex">
+            <ThemeToggle />
             <NotificationBell />
           </div>
           <main id="main-content" className="flex-1 overflow-y-auto">

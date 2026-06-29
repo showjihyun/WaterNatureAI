@@ -34,13 +34,13 @@ function FunnelStage({
         <span className="font-display tabular-nums">
           <span className="text-base font-bold text-ink">{count}</span>
           {showRate && (
-            <span className={onTrack ? "ml-1 text-xs text-emerald-600" : "ml-1 text-xs text-amber-600"}>
+            <span className={onTrack ? "ml-1 text-xs text-emerald-600 dark:text-emerald-300" : "ml-1 text-xs text-amber-600 dark:text-amber-300"}>
               · {pct}%
             </span>
           )}
         </span>
       </div>
-      <div className="relative mt-1 h-2 overflow-hidden rounded-full bg-gray-100">
+      <div className="relative mt-1 h-2 overflow-hidden rounded-full bg-surface-muted">
         <div
           className={`h-full rounded-full transition-all ${onTrack ? "bg-emerald-500" : "bg-amber-400"}`}
           style={{ width: `${Math.min(pct, 100)}%` }}
@@ -56,9 +56,9 @@ function FunnelStage({
         <p className="mt-0.5 text-[11px] text-ink-400">
           목표 {Math.round(target * 100)}%{" "}
           {onTrack ? (
-            <span className="font-medium text-emerald-600">✓ 달성</span>
+            <span className="font-medium text-emerald-600 dark:text-emerald-300">✓ 달성</span>
           ) : (
-            <span className="text-amber-600">· {gap}%p 부족</span>
+            <span className="text-amber-600 dark:text-amber-300">· {gap}%p 부족</span>
           )}
         </p>
       )}

@@ -28,8 +28,8 @@ function SkeletonRows() {
     <div className="divide-y divide-surface-border overflow-hidden rounded-xl border border-surface-border bg-surface-card shadow-sm">
       {Array.from({ length: 4 }).map((_, i) => (
         <div key={i} className="animate-pulse px-4 py-4">
-          <div className="mb-2 h-3 w-1/4 rounded bg-gray-100" />
-          <div className="h-4 w-2/3 rounded bg-gray-100" />
+          <div className="mb-2 h-3 w-1/4 rounded bg-surface-muted" />
+          <div className="h-4 w-2/3 rounded bg-surface-muted" />
         </div>
       ))}
     </div>
@@ -120,8 +120,8 @@ export function KeywordWatchPanel() {
 
   return (
     <div>
-      <p className="mb-4 text-sm text-gray-500">
-        관심 키워드를 등록하면 AI 추천과 별개로, <span className="font-medium text-gray-700">제목·기관·내용</span>에
+      <p className="mb-4 text-sm text-ink-400">
+        관심 키워드를 등록하면 AI 추천과 별개로, <span className="font-medium text-ink-700">제목·기관·내용</span>에
         그 키워드가 들어간 공고를 모아드려요.
       </p>
 
@@ -137,17 +137,17 @@ export function KeywordWatchPanel() {
             placeholder="예: 수처리, 막여과, 데이터 구축"
             maxLength={80}
             aria-label="키워드 추가"
-            className="min-w-0 flex-1 rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+            className="min-w-0 flex-1 rounded-lg border border-surface-border px-3 py-2 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
           />
           <Button type="submit" loading={addMutation.isPending} disabled={input.trim().length < 2}>
             추가
           </Button>
         </form>
-        {error && <p className="mt-2 text-xs text-red-600">{error}</p>}
+        {error && <p className="mt-2 text-xs text-red-600 dark:text-red-300">{error}</p>}
 
         <div className="mt-4">
           {watchesLoading ? (
-            <div className="h-7 w-44 animate-pulse rounded-full bg-gray-100" />
+            <div className="h-7 w-44 animate-pulse rounded-full bg-surface-muted" />
           ) : hasKeywords ? (
             <div className="flex flex-wrap gap-2">
               {watches!.map((w) => (
@@ -170,7 +170,7 @@ export function KeywordWatchPanel() {
               ))}
             </div>
           ) : (
-            <p className="text-sm text-gray-400">
+            <p className="text-sm text-ink-400">
               아직 등록한 키워드가 없습니다. 위 입력창에 추가해 보세요.
             </p>
           )}
@@ -179,7 +179,7 @@ export function KeywordWatchPanel() {
 
       {/* 진행 추가 토스트 */}
       {addedTitle && (
-        <div className="mb-4 flex flex-wrap items-center gap-2 rounded-lg border border-green-200 bg-green-50 px-3 py-2 text-sm text-green-800">
+        <div className="mb-4 flex flex-wrap items-center gap-2 rounded-lg border border-green-200 dark:border-green-500/30 bg-green-50 dark:bg-green-500/15 px-3 py-2 text-sm text-green-800 dark:text-green-300">
           <span>✓ &lsquo;{addedTitle}&rsquo; 을(를) 진행 관리에 추가했어요.</span>
           <a href="/pipeline" className="ml-auto font-medium underline">
             진행 관리 보기 →
@@ -190,9 +190,9 @@ export function KeywordWatchPanel() {
       {/* 매칭 공고 피드 */}
       {hasKeywords && (
         <div className="mb-3 flex items-center gap-2">
-          <h2 className="text-sm font-semibold text-gray-700">매칭 공고</h2>
+          <h2 className="text-sm font-semibold text-ink-700">매칭 공고</h2>
           {matchCount > 0 && (
-            <span className="inline-flex h-5 min-w-[1.25rem] items-center justify-center rounded-full bg-primary-100 px-1.5 text-xs font-bold text-primary-700">
+            <span className="inline-flex h-5 min-w-[1.25rem] items-center justify-center rounded-full bg-primary-100 dark:bg-primary-500/20 px-1.5 text-xs font-bold text-primary-700 dark:text-primary-300">
               {matchCount}
             </span>
           )}
@@ -208,7 +208,7 @@ export function KeywordWatchPanel() {
       ) : matchesLoading ? (
         <SkeletonRows />
       ) : isError ? (
-        <div className="rounded-xl border border-red-200 bg-red-50 px-5 py-4 text-sm text-red-700">
+        <div className="rounded-xl border border-red-200 dark:border-red-500/30 bg-red-50 dark:bg-red-500/15 px-5 py-4 text-sm text-red-700 dark:text-red-300">
           매칭 공고를 불러오는 중 오류가 발생했습니다.
         </div>
       ) : matchCount === 0 ? (

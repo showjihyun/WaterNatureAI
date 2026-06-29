@@ -95,7 +95,7 @@ function OpportunitiesContent() {
             className={cn(
               "-mb-px whitespace-nowrap rounded-t border-b-2 px-3.5 py-2 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500",
               tab === key
-                ? "border-primary-600 text-primary-700"
+                ? "border-primary-600 text-primary-700 dark:text-primary-300"
                 : "border-transparent text-ink-400 hover:border-surface-border hover:text-ink-600"
             )}
           >
@@ -127,10 +127,10 @@ function OpportunitiesContent() {
       {/* Results header: total count + sort/view controls */}
       {!isLoading && !error && data && (
         <div className="mb-4 flex items-center justify-between gap-3">
-          <p className="text-sm text-gray-500">
-            총 <span className="font-medium text-gray-800">{data.total}</span>건
+          <p className="text-sm text-ink-400">
+            총 <span className="font-medium text-ink">{data.total}</span>건
             {activeCount > 0 && (
-              <span className="ml-1 text-primary-600 font-medium">
+              <span className="ml-1 text-primary-600 dark:text-primary-400 font-medium">
                 (필터 {activeCount}개 적용)
               </span>
             )}
@@ -182,7 +182,7 @@ function OpportunitiesContent() {
               >
                 이전
               </Button>
-              <span className="text-sm text-gray-500">
+              <span className="text-sm text-ink-400">
                 {data.page} / {Math.ceil(data.total / data.size)}
               </span>
               <Button

@@ -140,7 +140,7 @@ function Chip({ active, onClick, children, className }: ChipProps) {
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-1",
         active
           ? "bg-primary-600 text-white shadow-sm"
-          : "bg-surface border border-surface-border text-ink-600 hover:bg-primary-50 hover:text-primary-700 hover:border-primary-300",
+          : "bg-surface border border-surface-border text-ink-600 hover:bg-primary-50 dark:bg-primary-500/15 hover:text-primary-700 dark:text-primary-300 hover:border-primary-300",
         className
       )}
     >
@@ -411,8 +411,8 @@ export function OpportunityFilterBar({
               "shrink-0 inline-flex items-center gap-1 rounded-lg px-2.5 py-1 text-xs font-medium transition-colors",
               "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-1",
               activeCount > 0
-                ? "text-primary-600 hover:bg-primary-50"
-                : "text-ink-400 hover:bg-gray-100"
+                ? "text-primary-600 dark:text-primary-400 hover:bg-primary-50 dark:bg-primary-500/15"
+                : "text-ink-400 hover:bg-surface-muted"
             )}
             aria-label="필터 초기화"
           >

@@ -29,7 +29,7 @@ function KpiCard({
         {value}
         <span className="text-sm font-normal text-ink-400"> / {target}</span>
       </p>
-      <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-gray-100">
+      <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-surface-muted">
         <div
           className={`h-full rounded-full ${ok ? "bg-emerald-500" : "bg-primary-500"}`}
           style={{ width: `${Math.min(Math.max(ratio, 0) * 100, 100)}%` }}
@@ -63,7 +63,7 @@ export default function MetricsPage() {
       {isLoading ? (
         <LoadingPage />
       ) : error ? (
-        <div className="rounded-xl border border-amber-200 bg-amber-50 px-5 py-4 text-sm text-amber-800">
+        <div className="rounded-xl border border-amber-200 dark:border-amber-500/30 bg-amber-50 dark:bg-amber-500/15 px-5 py-4 text-sm text-amber-800 dark:text-amber-300">
           운영자 전용 지표입니다. <code className="font-mono">ADMIN_EMAILS</code>에 등록된 계정으로
           로그인하면 볼 수 있어요.
         </div>
@@ -116,12 +116,12 @@ export default function MetricsPage() {
                       <span className="text-sm font-medium text-ink">{s.label}</span>
                       <span className="font-display text-sm tabular-nums">
                         <span className="font-bold text-ink">{s.pick(data).toLocaleString()}</span>
-                        <span className={onTrack ? "ml-1 text-emerald-600" : "ml-1 text-amber-600"}>
+                        <span className={onTrack ? "ml-1 text-emerald-600 dark:text-emerald-300" : "ml-1 text-amber-600 dark:text-amber-300"}>
                           · {pct(rate)}%
                         </span>
                       </span>
                     </div>
-                    <div className="relative mt-1 h-2.5 overflow-hidden rounded-full bg-gray-100">
+                    <div className="relative mt-1 h-2.5 overflow-hidden rounded-full bg-surface-muted">
                       <div
                         className={`h-full rounded-full ${onTrack ? "bg-emerald-500" : "bg-amber-400"}`}
                         style={{ width: `${Math.min(pct(rate), 100)}%` }}
@@ -135,9 +135,9 @@ export default function MetricsPage() {
                     <p className="mt-0.5 text-[11px] text-ink-400">
                       목표 {pct(s.target)}%{" "}
                       {onTrack ? (
-                        <span className="font-medium text-emerald-600">✓ 달성</span>
+                        <span className="font-medium text-emerald-600 dark:text-emerald-300">✓ 달성</span>
                       ) : (
-                        <span className="text-amber-600">· {Math.round((s.target - rate) * 100)}%p 부족</span>
+                        <span className="text-amber-600 dark:text-amber-300">· {Math.round((s.target - rate) * 100)}%p 부족</span>
                       )}
                     </p>
                   </div>

@@ -33,7 +33,7 @@ export function SaveButton({
         "inline-flex items-center justify-center gap-1.5 rounded-lg font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-primary-500 disabled:opacity-50",
         showLabel ? "h-9 px-3 text-sm" : "h-9 w-9",
         saved
-          ? "bg-primary-100 text-primary-700 hover:bg-primary-200"
+          ? "bg-primary-100 dark:bg-primary-500/20 text-primary-700 dark:text-primary-300 hover:bg-primary-200"
           : "text-ink-400 hover:bg-surface hover:text-ink-600",
         className
       )}

@@ -33,7 +33,7 @@ export function SubscoreBreakdown({
           return (
             <div key={d.key} className="flex items-center gap-2">
               <span className="w-7 shrink-0 text-[11px] text-ink-500">{d.label}</span>
-              <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-gray-100">
+              <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-surface-muted">
                 <div
                   className="h-full rounded-full bg-primary-400 transition-all"
                   style={{ width: `${pct}%` }}
@@ -41,7 +41,7 @@ export function SubscoreBreakdown({
               </div>
               <span className="w-9 shrink-0 text-right font-display text-[11px] tabular-nums text-ink-400">
                 {v}
-                <span className="text-gray-300">/{d.max}</span>
+                <span className="text-ink-400">/{d.max}</span>
               </span>
             </div>
           );

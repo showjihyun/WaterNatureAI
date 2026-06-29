@@ -123,7 +123,7 @@ export function RecommendationCard({ item, mock = false, onHide }: Recommendatio
 
         {/* 리스크/참고 한 줄 */}
         {item.risk && (
-          <div className="mt-3 flex items-start gap-1.5 rounded-lg bg-amber-50/70 px-2.5 py-1.5 text-xs text-amber-800">
+          <div className="mt-3 flex items-start gap-1.5 rounded-lg bg-amber-50 dark:bg-amber-500/15/70 px-2.5 py-1.5 text-xs text-amber-800 dark:text-amber-300">
             <svg className="mt-0.5 h-3 w-3 shrink-0" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
             </svg>

@@ -27,16 +27,16 @@ function SkeletonCard() {
     <div className="animate-pulse rounded-xl border border-surface-border bg-surface-card p-5 space-y-3 shadow-sm">
       <div className="flex justify-between">
         <div className="space-y-2">
-          <div className="h-4 w-24 rounded bg-gray-200" />
-          <div className="h-5 w-64 rounded bg-gray-200" />
+          <div className="h-4 w-24 rounded bg-surface-muted" />
+          <div className="h-5 w-64 rounded bg-surface-muted" />
         </div>
-        <div className="h-8 w-16 rounded-lg bg-gray-200" />
+        <div className="h-8 w-16 rounded-lg bg-surface-muted" />
       </div>
-      <div className="h-1.5 w-full rounded bg-gray-100" />
+      <div className="h-1.5 w-full rounded bg-surface-muted" />
       <div className="flex gap-2">
-        <div className="h-6 w-20 rounded-full bg-gray-100" />
-        <div className="h-6 w-28 rounded-full bg-gray-100" />
-        <div className="h-6 w-24 rounded-full bg-gray-100" />
+        <div className="h-6 w-20 rounded-full bg-surface-muted" />
+        <div className="h-6 w-28 rounded-full bg-surface-muted" />
+        <div className="h-6 w-24 rounded-full bg-surface-muted" />
       </div>
     </div>
   );
@@ -158,7 +158,7 @@ function DashboardContent() {
           <p className="mt-0.5 text-sm text-ink-400">{today}</p>
         </div>
         {isMock && (
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-50 px-3 py-1 text-xs font-medium text-amber-700 ring-1 ring-inset ring-amber-600/20">
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-50 dark:bg-amber-500/15 px-3 py-1 text-xs font-medium text-amber-700 dark:text-amber-300 ring-1 ring-inset ring-amber-600/20">
             <svg className="h-3 w-3" fill="currentColor" viewBox="0 0 8 8">
               <circle cx="4" cy="4" r="3" />
             </svg>
@@ -174,9 +174,9 @@ function DashboardContent() {
       {needsCapability && hasRecs && (
         <a
           href="/settings"
-          className="mb-6 flex items-center gap-3 rounded-xl border border-primary-200 bg-primary-50 px-4 py-3 transition-colors hover:bg-primary-100/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500"
+          className="mb-6 flex items-center gap-3 rounded-xl border border-primary-200 bg-primary-50 dark:bg-primary-500/15 px-4 py-3 transition-colors hover:bg-primary-100 dark:bg-primary-500/20/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500"
         >
-          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-primary-100 text-primary-700">
+          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-primary-100 dark:bg-primary-500/20 text-primary-700 dark:text-primary-300">
             <svg className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
@@ -184,7 +184,7 @@ function DashboardContent() {
           <span className="min-w-0 flex-1 text-sm text-ink-600">
             <span className="font-semibold text-ink">수행 역량을 설정하면</span> 각 공고의 수행 가능성(Go/No-Go)을 자동으로 판단해 드려요.
           </span>
-          <span className="shrink-0 text-sm font-medium text-primary-600">설정하기 →</span>
+          <span className="shrink-0 text-sm font-medium text-primary-600 dark:text-primary-400">설정하기 →</span>
         </a>
       )}
 
@@ -194,7 +194,7 @@ function DashboardContent() {
           <h2 className="text-sm font-semibold text-ink-600">
             AI 맞춤 추천{" "}
             {recommendations && (
-              <span className="ml-1.5 inline-flex h-5 min-w-[1.25rem] items-center justify-center rounded-full bg-primary-100 px-1.5 text-xs font-bold text-primary-700">
+              <span className="ml-1.5 inline-flex h-5 min-w-[1.25rem] items-center justify-center rounded-full bg-primary-100 dark:bg-primary-500/20 px-1.5 text-xs font-bold text-primary-700 dark:text-primary-300">
                 {recommendations.length}
               </span>
             )}
@@ -206,7 +206,7 @@ function DashboardContent() {
             <ViewToggle mode={mode} onChange={setMode} />
             <a
               href={`/opportunities${isMock ? "?mock=1" : ""}`}
-              className="rounded-lg px-2 py-1 text-xs font-medium text-primary-600 hover:bg-primary-50 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500"
+              className="rounded-lg px-2 py-1 text-xs font-medium text-primary-600 dark:text-primary-400 hover:bg-primary-50 dark:bg-primary-500/15 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500"
             >
               전체 보기 →
             </a>
@@ -244,9 +244,9 @@ function DashboardContent() {
             />
           ) : analyzing ? (
             /* ready인데 0건 + 분석 윈도우 내 — 매칭 진행 중(자동 새로고침) */
-            <div className="rounded-xl border border-primary-200 bg-primary-50/60 px-6 py-12 text-center">
-              <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-primary-100">
-                <svg className="h-6 w-6 animate-spin text-primary-600" fill="none" viewBox="0 0 24 24">
+            <div className="rounded-xl border border-primary-200 bg-primary-50 dark:bg-primary-500/15/60 px-6 py-12 text-center">
+              <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-primary-100 dark:bg-primary-500/20">
+                <svg className="h-6 w-6 animate-spin text-primary-600 dark:text-primary-400" fill="none" viewBox="0 0 24 24">
                   <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                   <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
                 </svg>
@@ -257,7 +257,7 @@ function DashboardContent() {
               </p>
               <a
                 href="/opportunities"
-                className="mt-5 inline-flex items-center gap-1 rounded-lg border border-primary-300 bg-white px-3.5 py-2 text-sm font-medium text-primary-700 transition-colors hover:bg-primary-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500"
+                className="mt-5 inline-flex items-center gap-1 rounded-lg border border-primary-300 bg-surface-card px-3.5 py-2 text-sm font-medium text-primary-700 dark:text-primary-300 transition-colors hover:bg-primary-50 dark:bg-primary-500/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500"
               >
                 그동안 공고 탐색 둘러보기
                 <svg className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
@@ -287,7 +287,7 @@ function DashboardContent() {
                 </a>
                 <a
                   href="/opportunities"
-                  className="inline-flex items-center gap-1 rounded-lg border border-surface-border bg-white px-3.5 py-2 text-sm font-medium text-ink-600 transition-colors hover:bg-surface focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500"
+                  className="inline-flex items-center gap-1 rounded-lg border border-surface-border bg-surface-card px-3.5 py-2 text-sm font-medium text-ink-600 transition-colors hover:bg-surface focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500"
                 >
                   공고 탐색
                 </a>
@@ -297,7 +297,7 @@ function DashboardContent() {
         )}
 
         {hidden && (
-          <div className="mb-4 flex flex-wrap items-center gap-2 rounded-lg border border-ink-700/10 bg-ink px-3 py-2 text-sm text-white">
+          <div className="mb-4 flex flex-wrap items-center gap-2 rounded-lg border border-ink-700/10 bg-slate-900 px-3 py-2 text-sm text-white">
             <span className="truncate">
               ‘{hidden.title}’ 을(를) 추천에서 숨겼어요. 비슷한 공고를 덜 추천할게요.
             </span>
@@ -331,7 +331,7 @@ function DashboardContent() {
         {!recsLoading && !recsError && hasRecs && (
           <a
             href={`/opportunities${isMock ? "?mock=1" : ""}`}
-            className="mt-4 flex items-center justify-center gap-1.5 rounded-xl border border-dashed border-surface-border bg-surface-card py-4 text-sm font-medium text-ink-600 transition-colors hover:border-primary-300 hover:text-primary-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500"
+            className="mt-4 flex items-center justify-center gap-1.5 rounded-xl border border-dashed border-surface-border bg-surface-card py-4 text-sm font-medium text-ink-600 transition-colors hover:border-primary-300 hover:text-primary-600 dark:text-primary-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500"
           >
             전체 공고에서 더 많은 기회 탐색하기
             <svg className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">

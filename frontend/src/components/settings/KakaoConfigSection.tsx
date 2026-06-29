@@ -49,9 +49,9 @@ export function KakaoConfigSection() {
   if (error instanceof ApiError && error.status === 403) {
     return (
       <div className="rounded-xl border border-surface-border bg-surface-card p-6 shadow-sm">
-        <h2 className="text-base font-semibold text-gray-900 mb-1">카카오 발신 설정 (SOLAPI)</h2>
-        <p className="text-sm text-gray-500">
-          카카오 알림톡 발신 자격증명은 <span className="font-medium text-gray-600">운영자 전용</span>입니다.
+        <h2 className="text-base font-semibold text-ink mb-1">카카오 발신 설정 (SOLAPI)</h2>
+        <p className="text-sm text-ink-400">
+          카카오 알림톡 발신 자격증명은 <span className="font-medium text-ink-600">운영자 전용</span>입니다.
           백엔드 <code className="rounded bg-surface px-1 text-xs">ADMIN_EMAILS</code>에 운영자 이메일을 등록하면 여기서 설정할 수 있습니다.
         </p>
       </div>
@@ -71,15 +71,15 @@ export function KakaoConfigSection() {
 
   return (
     <div className="rounded-xl border border-surface-border bg-surface-card p-6 shadow-sm">
-      <h2 className="text-base font-semibold text-gray-900 mb-1">카카오 발신 설정 (SOLAPI)</h2>
-      <p className="text-sm text-gray-500 mb-5">
+      <h2 className="text-base font-semibold text-ink mb-1">카카오 발신 설정 (SOLAPI)</h2>
+      <p className="text-sm text-ink-400 mb-5">
         카카오 알림톡 발송에 쓸 SOLAPI 자격증명과 발신프로필·템플릿을 입력합니다. API 키·시크릿은
-        <span className="mx-1 font-medium text-gray-600">암호화되어 DB에 저장</span>되며 화면에 다시 노출되지 않습니다.
+        <span className="mx-1 font-medium text-ink-600">암호화되어 DB에 저장</span>되며 화면에 다시 노출되지 않습니다.
       </p>
 
       <form onSubmit={handleSubmit} className="space-y-5">
         <div>
-          <label htmlFor="kakao-pfid" className="block text-sm font-medium text-gray-700 mb-1.5">
+          <label htmlFor="kakao-pfid" className="block text-sm font-medium text-ink-700 mb-1.5">
             발신프로필 키 (pfId)
           </label>
           <input
@@ -89,12 +89,12 @@ export function KakaoConfigSection() {
             onChange={(e) => setSenderKey(e.target.value)}
             placeholder="SOLAPI 발신프로필 pfId"
             autoComplete="off"
-            className="block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm font-mono focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+            className="block w-full rounded-lg border border-surface-border px-3 py-2 text-sm font-mono focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
           />
         </div>
 
         <div>
-          <label htmlFor="kakao-template" className="block text-sm font-medium text-gray-700 mb-1.5">
+          <label htmlFor="kakao-template" className="block text-sm font-medium text-ink-700 mb-1.5">
             알림톡 템플릿 코드 (브리핑)
           </label>
           <input
@@ -104,15 +104,15 @@ export function KakaoConfigSection() {
             onChange={(e) => setTemplateCode(e.target.value)}
             placeholder="승인된 브리핑 템플릿 코드"
             autoComplete="off"
-            className="block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm font-mono focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+            className="block w-full rounded-lg border border-surface-border px-3 py-2 text-sm font-mono focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
           />
         </div>
 
         <div>
-          <label htmlFor="kakao-apikey" className="block text-sm font-medium text-gray-700 mb-1.5">
+          <label htmlFor="kakao-apikey" className="block text-sm font-medium text-ink-700 mb-1.5">
             SOLAPI API Key
             {data?.api_key_configured && (
-              <span className="ml-2 text-xs font-normal text-emerald-600">✓ 설정됨</span>
+              <span className="ml-2 text-xs font-normal text-emerald-600 dark:text-emerald-300">✓ 설정됨</span>
             )}
           </label>
           <input
@@ -122,15 +122,15 @@ export function KakaoConfigSection() {
             onChange={(e) => setApiKey(e.target.value)}
             placeholder={data?.api_key_configured ? "변경하려면 새 키 입력 (비우면 현재 키 유지)" : "API Key 입력"}
             autoComplete="off"
-            className="block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm font-mono focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+            className="block w-full rounded-lg border border-surface-border px-3 py-2 text-sm font-mono focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
           />
         </div>
 
         <div>
-          <label htmlFor="kakao-apisecret" className="block text-sm font-medium text-gray-700 mb-1.5">
+          <label htmlFor="kakao-apisecret" className="block text-sm font-medium text-ink-700 mb-1.5">
             SOLAPI API Secret
             {data?.api_secret_configured && (
-              <span className="ml-2 text-xs font-normal text-emerald-600">✓ 설정됨</span>
+              <span className="ml-2 text-xs font-normal text-emerald-600 dark:text-emerald-300">✓ 설정됨</span>
             )}
           </label>
           <input
@@ -140,10 +140,10 @@ export function KakaoConfigSection() {
             onChange={(e) => setApiSecret(e.target.value)}
             placeholder={data?.api_secret_configured ? "변경하려면 새 시크릿 입력 (비우면 현재 값 유지)" : "API Secret 입력"}
             autoComplete="off"
-            className="block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm font-mono focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+            className="block w-full rounded-lg border border-surface-border px-3 py-2 text-sm font-mono focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
           />
-          <p className="mt-1.5 text-xs text-gray-500">
-            입력한 키/시크릿은 서버에서 <span className="text-gray-600">암호화되어 DB에 저장</span>되며,
+          <p className="mt-1.5 text-xs text-ink-400">
+            입력한 키/시크릿은 서버에서 <span className="text-ink-600">암호화되어 DB에 저장</span>되며,
             저장 후 화면에 다시 표시되지 않습니다.
           </p>
         </div>
@@ -155,10 +155,10 @@ export function KakaoConfigSection() {
             저장
           </Button>
           {data?.configured && !saved && (
-            <span className="text-xs font-medium text-emerald-600">발송 설정 완료</span>
+            <span className="text-xs font-medium text-emerald-600 dark:text-emerald-300">발송 설정 완료</span>
           )}
           {saved && (
-            <span className="text-sm text-emerald-600 font-medium flex items-center gap-1.5">
+            <span className="text-sm text-emerald-600 dark:text-emerald-300 font-medium flex items-center gap-1.5">
               <svg className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
               </svg>

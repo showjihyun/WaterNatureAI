@@ -47,7 +47,7 @@ export function InfoPopover({ title, children, ariaLabel, className }: InfoPopov
         aria-label={ariaLabel ?? `${title} 도움말`}
         aria-expanded={open}
         onClick={() => setOpen((prev) => !prev)}
-        className="inline-flex h-4 w-4 items-center justify-center rounded-full bg-gray-200 text-gray-500 hover:bg-gray-300 hover:text-gray-700 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-gray-400 shrink-0"
+        className="inline-flex h-4 w-4 items-center justify-center rounded-full bg-surface-muted text-ink-400 hover:bg-surface-muted hover:text-ink-700 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-ink-400 shrink-0"
       >
         <span className="text-[10px] font-bold leading-none select-none">?</span>
       </button>
@@ -60,13 +60,13 @@ export function InfoPopover({ title, children, ariaLabel, className }: InfoPopov
           className="absolute left-0 top-6 z-50 w-72 max-w-[calc(100vw-2rem)] rounded-xl border border-surface-border bg-surface-card shadow-lg"
         >
           {/* Header */}
-          <div className="flex items-center justify-between gap-2 border-b border-gray-100 px-4 py-2.5">
-            <span className="text-sm font-semibold text-gray-800">{title}</span>
+          <div className="flex items-center justify-between gap-2 border-b border-surface-border px-4 py-2.5">
+            <span className="text-sm font-semibold text-ink">{title}</span>
             <button
               type="button"
               aria-label="닫기"
               onClick={() => setOpen(false)}
-              className="inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-md text-gray-400 hover:bg-gray-100 hover:text-gray-600 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-400"
+              className="inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-md text-ink-400 hover:bg-surface-muted hover:text-ink-600 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink-400"
             >
               <svg
                 className="h-3.5 w-3.5"
@@ -81,7 +81,7 @@ export function InfoPopover({ title, children, ariaLabel, className }: InfoPopov
           </div>
 
           {/* Body */}
-          <div className="px-4 py-3 text-xs text-gray-600 leading-relaxed">{children}</div>
+          <div className="px-4 py-3 text-xs text-ink-600 leading-relaxed">{children}</div>
         </div>
       )}
     </div>

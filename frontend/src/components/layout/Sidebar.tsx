@@ -88,7 +88,7 @@ const leafClasses = (active: boolean) =>
     "flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400",
     active
       ? "bg-primary-500/15 text-primary-300 border-l-2 border-primary-400"
-      : "text-slate-300/70 hover:bg-white/5 hover:text-white"
+      : "text-slate-300/70 hover:bg-surface-card/5 hover:text-white"
   );
 
 function NavLink({
@@ -131,7 +131,7 @@ function NavGroupItem({
         aria-expanded={open}
         className={cn(
           "flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400",
-          childActive ? "text-primary-300" : "text-slate-300/70 hover:bg-white/5 hover:text-white"
+          childActive ? "text-primary-300" : "text-slate-300/70 hover:bg-surface-card/5 hover:text-white"
         )}
       >
         <span className={cn("shrink-0", childActive ? "text-primary-400" : "text-slate-400")}>
@@ -174,7 +174,7 @@ function Wordmark({ onClose }: { onClose?: () => void }) {
         <button
           onClick={onClose}
           aria-label="메뉴 닫기"
-          className="flex h-8 w-8 items-center justify-center rounded-lg text-slate-400 hover:bg-white/5 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400"
+          className="flex h-8 w-8 items-center justify-center rounded-lg text-slate-400 hover:bg-surface-card/5 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400"
         >
           <svg viewBox="0 0 24 24" fill="none" className="h-5 w-5" stroke="currentColor" strokeWidth="2">
             <path strokeLinecap="round" d="M6 18 18 6M6 6l12 12" />
@@ -221,7 +221,7 @@ function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
       <div className="border-t border-white/10 p-3">
         <button
           onClick={handleLogout}
-          className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-sm font-medium text-slate-400 hover:bg-white/5 hover:text-slate-200 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400"
+          className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-sm font-medium text-slate-400 hover:bg-surface-card/5 hover:text-slate-200 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400"
         >
           <svg viewBox="0 0 24 24" fill="none" className="h-4 w-4" stroke="currentColor" strokeWidth="2">
             <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9" />
@@ -236,7 +236,7 @@ function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
 /** 데스크톱(lg+) 고정 사이드바. */
 export function Sidebar() {
   return (
-    <aside className="hidden lg:flex h-screen w-56 flex-col bg-ink">
+    <aside className="hidden lg:flex h-screen w-56 flex-col bg-slate-900">
       <SidebarContent />
     </aside>
   );
@@ -271,7 +271,7 @@ export function MobileNav() {
             onClick={() => setOpen(false)}
             aria-hidden="true"
           />
-          <aside className="absolute inset-y-0 left-0 flex w-64 flex-col bg-ink shadow-xl">
+          <aside className="absolute inset-y-0 left-0 flex w-64 flex-col bg-slate-900 shadow-xl">
             <SidebarContent onNavigate={() => setOpen(false)} />
           </aside>
         </div>

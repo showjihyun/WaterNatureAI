@@ -19,7 +19,7 @@ export function ScoreBadge({ score, showBar = true, className }: ScoreBadgeProps
         </span>
       </div>
       {showBar && score != null && (
-        <div className="h-1.5 w-20 rounded-full bg-gray-100 overflow-hidden">
+        <div className="h-1.5 w-20 rounded-full bg-surface-muted overflow-hidden">
           <div
             className="h-full rounded-full bg-primary-500 transition-all"
             style={{ width: `${Math.min(score, 100)}%` }}

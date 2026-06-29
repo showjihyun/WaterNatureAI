@@ -35,7 +35,7 @@ function OpportunityDetailContent() {
   if (error || !data) {
     return (
       <AppShell>
-        <div className="rounded-xl border border-red-200 bg-red-50 px-5 py-4 text-sm text-red-700">
+        <div className="rounded-xl border border-red-200 dark:border-red-500/30 bg-red-50 dark:bg-red-500/15 px-5 py-4 text-sm text-red-700 dark:text-red-300">
           공고를 불러오지 못했습니다.{" "}
           <Link href="/opportunities" className="underline">
             목록으로
@@ -83,12 +83,12 @@ function OpportunityDetailContent() {
   return (
     <AppShell>
       {/* Breadcrumb */}
-      <div className="mb-5 flex items-center gap-2 text-sm text-gray-400">
-        <Link href="/opportunities" className="hover:text-gray-600">
+      <div className="mb-5 flex items-center gap-2 text-sm text-ink-400">
+        <Link href="/opportunities" className="hover:text-ink-600">
           공고 탐색
         </Link>
         <span>/</span>
-        <span className="text-gray-600 truncate max-w-xs">{opportunity.title}</span>
+        <span className="text-ink-600 truncate max-w-xs">{opportunity.title}</span>
       </div>
 
       <div className="grid gap-6 lg:grid-cols-3">
@@ -107,7 +107,7 @@ function OpportunityDetailContent() {
                 <Badge color="gray">출처: {sourceLabel(opportunity.source)}</Badge>
               )}
             </div>
-            <h1 className="text-lg font-bold text-gray-900 leading-snug mb-4">
+            <h1 className="text-lg font-bold text-ink leading-snug mb-4">
               {opportunity.title}
             </h1>
             <div className="flex items-center justify-between flex-wrap gap-3">
@@ -117,7 +117,7 @@ function OpportunityDetailContent() {
                     <ul className="space-y-1.5 list-none">
                       <li>우리 회사 역량과 공고의 일치도를 0~100으로 점수화한 값이에요.</li>
                       <li>
-                        <span className="font-medium text-gray-700">평가 항목:</span> 기술 적합(의미 유사도 + 키워드), 산업 적합, 지역 적합 등을 종합합니다.
+                        <span className="font-medium text-ink-700">평가 항목:</span> 기술 적합(의미 유사도 + 키워드), 산업 적합, 지역 적합 등을 종합합니다.
                       </li>
                       <li>35점 이상인 공고만 추천에 노출돼요. 점수가 높을수록 우리 회사에 더 맞는 사업입니다.</li>
                     </ul>
@@ -134,9 +134,9 @@ function OpportunityDetailContent() {
 
             {/* Feasibility verdict */}
             {feasibility && (
-              <div className="mt-4 pt-4 border-t border-gray-100">
+              <div className="mt-4 pt-4 border-t border-surface-border">
                 <div className="flex items-center gap-1.5 mb-2">
-                  <p className="text-xs font-medium text-gray-500 uppercase tracking-wide">
+                  <p className="text-xs font-medium text-ink-400 uppercase tracking-wide">
                     수행 가능성
                   </p>
                   <InfoPopover title="수행 가능성이란?" ariaLabel="수행 가능성 도움말">
@@ -144,7 +144,7 @@ function OpportunityDetailContent() {
                       <li>설정한 &apos;수행 역량&apos;으로 이 사업을 실제로 감당할 수 있는지 판단해요.</li>
                       <li>🟢 수행 가능 · 🟡 검토 필요 · 🔴 수행 어려움</li>
                       <li>
-                        <span className="font-medium text-gray-700">기준</span> — 수행 유형 일치 / 사업 규모(예산 vs 감당 가능 최대 규모) / 기술 수준.
+                        <span className="font-medium text-ink-700">기준</span> — 수행 유형 일치 / 사업 규모(예산 vs 감당 가능 최대 규모) / 기술 수준.
                       </li>
                       <li>기준 값은 [설정 &gt; 수행 역량]에서 바꿀 수 있어요.</li>
                     </ul>
@@ -170,7 +170,7 @@ function OpportunityDetailContent() {
             <button
               onClick={handleView}
               disabled={!opportunity.detail_url}
-              className="mt-3 inline-flex items-center gap-1 text-sm font-medium text-primary-600 transition-colors hover:text-primary-700 disabled:opacity-40"
+              className="mt-3 inline-flex items-center gap-1 text-sm font-medium text-primary-600 dark:text-primary-400 transition-colors hover:text-primary-700 dark:text-primary-300 disabled:opacity-40"
             >
               원문에서 전체 내용 보기
               <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
@@ -182,7 +182,7 @@ function OpportunityDetailContent() {
           {/* Match reasons */}
           {match && match.reasons.length > 0 && (
             <div className="rounded-xl border border-surface-border bg-surface-card p-6 shadow-sm">
-              <h2 className="text-sm font-semibold text-gray-700 mb-4 flex items-center gap-2">
+              <h2 className="text-sm font-semibold text-ink-700 mb-4 flex items-center gap-2">
                 <svg className="h-4 w-4 text-primary-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
                 </svg>
@@ -194,7 +194,7 @@ function OpportunityDetailContent() {
                     <svg className="h-4 w-4 text-emerald-500 mt-0.5 shrink-0" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
                     </svg>
-                    <span className="text-gray-700">{reason}</span>
+                    <span className="text-ink-700">{reason}</span>
                   </li>
                 ))}
               </ul>
@@ -203,21 +203,21 @@ function OpportunityDetailContent() {
 
           {/* Risk */}
           {match?.risk && (
-            <div className="rounded-xl border border-amber-200 bg-amber-50 p-5">
-              <h2 className="text-sm font-semibold text-amber-800 mb-2 flex items-center gap-2">
+            <div className="rounded-xl border border-amber-200 dark:border-amber-500/30 bg-amber-50 dark:bg-amber-500/15 p-5">
+              <h2 className="text-sm font-semibold text-amber-800 dark:text-amber-300 mb-2 flex items-center gap-2">
                 <svg className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
                 </svg>
                 주의사항
               </h2>
-              <p className="text-sm text-amber-700">{match.risk}</p>
+              <p className="text-sm text-amber-700 dark:text-amber-300">{match.risk}</p>
             </div>
           )}
 
           {/* Other sources */}
           {other_sources.length > 0 && (
             <div className="rounded-xl border border-surface-border bg-surface-card p-5 shadow-sm">
-              <h2 className="text-sm font-semibold text-gray-700 mb-3">타 공고 출처</h2>
+              <h2 className="text-sm font-semibold text-ink-700 mb-3">타 공고 출처</h2>
               <div className="flex flex-wrap gap-2">
                 {other_sources.map((src, i) => (
                   <Badge key={i} color="gray">
@@ -232,15 +232,15 @@ function OpportunityDetailContent() {
         {/* Sidebar */}
         <div className="space-y-4">
           <div className="rounded-xl border border-surface-border bg-surface-card p-5 shadow-sm">
-            <h2 className="text-sm font-semibold text-gray-700 mb-4">공고 정보</h2>
+            <h2 className="text-sm font-semibold text-ink-700 mb-4">공고 정보</h2>
             <dl className="space-y-3 text-sm">
               <div>
-                <dt className="text-xs text-gray-400 mb-0.5">예상 규모</dt>
-                <dd className="font-semibold text-gray-900">{formatBudget(opportunity.budget_amount)}</dd>
+                <dt className="text-xs text-ink-400 mb-0.5">예상 규모</dt>
+                <dd className="font-semibold text-ink">{formatBudget(opportunity.budget_amount)}</dd>
               </div>
               <div>
-                <dt className="text-xs text-gray-400 mb-0.5">마감일</dt>
-                <dd className="font-medium text-gray-900">
+                <dt className="text-xs text-ink-400 mb-0.5">마감일</dt>
+                <dd className="font-medium text-ink">
                   {opportunity.deadline
                     ? new Date(opportunity.deadline).toLocaleDateString("ko-KR", {
                         year: "numeric",
@@ -251,19 +251,19 @@ function OpportunityDetailContent() {
                 </dd>
               </div>
               <div>
-                <dt className="text-xs text-gray-400 mb-0.5">발주기관</dt>
-                <dd className="font-medium text-gray-900">{opportunity.agency ?? "-"}</dd>
+                <dt className="text-xs text-ink-400 mb-0.5">발주기관</dt>
+                <dd className="font-medium text-ink">{opportunity.agency ?? "-"}</dd>
               </div>
               {opportunity.region && (
                 <div>
-                  <dt className="text-xs text-gray-400 mb-0.5">지역</dt>
-                  <dd className="font-medium text-gray-900">{opportunity.region}</dd>
+                  <dt className="text-xs text-ink-400 mb-0.5">지역</dt>
+                  <dd className="font-medium text-ink">{opportunity.region}</dd>
                 </div>
               )}
               <div>
-                <dt className="text-xs text-gray-400 mb-0.5">공고 상태</dt>
+                <dt className="text-xs text-ink-400 mb-0.5">공고 상태</dt>
                 <dd>
-                  <span className="inline-flex items-center rounded-md bg-green-50 px-2 py-0.5 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">
+                  <span className="inline-flex items-center rounded-md bg-green-50 dark:bg-green-500/15 px-2 py-0.5 text-xs font-medium text-green-700 dark:text-green-300 ring-1 ring-inset ring-green-600/20">
                     {opportunity.status === "open" ? "진행 중" : opportunity.status}
                   </span>
                 </dd>

@@ -15,8 +15,8 @@ function SkeletonRows() {
     <div className="divide-y divide-surface-border overflow-hidden rounded-xl border border-surface-border bg-surface-card shadow-sm">
       {Array.from({ length: 4 }).map((_, i) => (
         <div key={i} className="animate-pulse px-4 py-4">
-          <div className="mb-2 h-3 w-1/4 rounded bg-gray-100" />
-          <div className="h-4 w-2/3 rounded bg-gray-100" />
+          <div className="mb-2 h-3 w-1/4 rounded bg-surface-muted" />
+          <div className="h-4 w-2/3 rounded bg-surface-muted" />
         </div>
       ))}
     </div>
@@ -62,7 +62,7 @@ export default function SavedPage() {
       </div>
 
       {addedTitle && (
-        <div className="mb-4 flex flex-wrap items-center gap-2 rounded-lg border border-green-200 bg-green-50 px-3 py-2 text-sm text-green-800">
+        <div className="mb-4 flex flex-wrap items-center gap-2 rounded-lg border border-green-200 dark:border-green-500/30 bg-green-50 dark:bg-green-500/15 px-3 py-2 text-sm text-green-800 dark:text-green-300">
           <span>✓ &lsquo;{addedTitle}&rsquo; 을(를) 진행 관리에 추가했어요.</span>
           <a href="/pipeline" className="ml-auto font-medium underline">
             진행 관리 보기 →

@@ -237,7 +237,7 @@ export default function SettingsPage() {
     <AppShell>
       <div className="mb-6">
         <h1 className="text-xl font-bold text-ink">설정</h1>
-        <p className="mt-0.5 text-sm text-gray-500">알림 및 계정 설정을 관리합니다</p>
+        <p className="mt-0.5 text-sm text-ink-400">알림 및 계정 설정을 관리합니다</p>
       </div>
 
       {/* 설정 탭 — 한 화면에 다 펼치지 않고 주제별로 전환 */}
@@ -257,7 +257,7 @@ export default function SettingsPage() {
             className={cn(
               "-mb-px whitespace-nowrap rounded-t border-b-2 px-3.5 py-2 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500",
               tab === t.key
-                ? "border-primary-600 text-primary-700"
+                ? "border-primary-600 text-primary-700 dark:text-primary-300"
                 : "border-transparent text-ink-400 hover:border-surface-border hover:text-ink-600"
             )}
           >
@@ -276,28 +276,28 @@ export default function SettingsPage() {
           >
             <div>
               <h2 className="text-sm font-bold uppercase tracking-wide text-ink-400">계정·시스템</h2>
-              <p className="mt-0.5 text-xs text-gray-400">AI 공급자 키와 구독을 관리합니다.</p>
+              <p className="mt-0.5 text-xs text-ink-400">AI 공급자 키와 구독을 관리합니다.</p>
             </div>
 
             {/* AI 공급자 (LLM) — GET /llm은 운영자 전용이라 비운영자(403)에겐 숨김 */}
         {llmData && (
         <div className="rounded-xl border border-surface-border bg-surface-card p-6 shadow-sm">
-          <h2 className="text-base font-semibold text-gray-900 mb-1">AI 공급자</h2>
-          <p className="text-sm text-gray-500 mb-5">
+          <h2 className="text-base font-semibold text-ink mb-1">AI 공급자</h2>
+          <p className="text-sm text-ink-400 mb-5">
             추천 적합도·근거 생성에 쓸 LLM 공급자·모델을 고르고 API 키를 입력합니다. 키는
-            <span className="mx-1 font-medium text-gray-600">암호화되어 DB에 저장</span>되며
+            <span className="mx-1 font-medium text-ink-600">암호화되어 DB에 저장</span>되며
             화면에 다시 노출되지 않습니다.
           </p>
 
           <form onSubmit={handleLlmSubmit} className="space-y-5">
             {/* Provider */}
             <div>
-              <label htmlFor="llm-provider" className="block text-sm font-medium text-gray-700 mb-1.5">공급자</label>
+              <label htmlFor="llm-provider" className="block text-sm font-medium text-ink-700 mb-1.5">공급자</label>
               <select
                 id="llm-provider"
                 value={llmProvider}
                 onChange={(e) => handleProviderChange(e.target.value)}
-                className="block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+                className="block w-full rounded-lg border border-surface-border px-3 py-2 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
               >
                 {llmData?.providers.map((p) => (
                   <option key={p.provider} value={p.provider}>
@@ -310,12 +310,12 @@ export default function SettingsPage() {
 
             {/* Model */}
             <div>
-              <label htmlFor="llm-model" className="block text-sm font-medium text-gray-700 mb-1.5">모델</label>
+              <label htmlFor="llm-model" className="block text-sm font-medium text-ink-700 mb-1.5">모델</label>
               <select
                 id="llm-model"
                 value={llmModel}
                 onChange={(e) => setLlmModel(e.target.value)}
-                className="block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+                className="block w-full rounded-lg border border-surface-border px-3 py-2 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
               >
                 {selectedProviderInfo?.models.map((m) => (
                   <option key={m.id} value={m.id}>
@@ -327,10 +327,10 @@ export default function SettingsPage() {
 
             {/* API key (암호화 후 DB 저장) */}
             <div>
-              <label htmlFor="llm-apikey" className="block text-sm font-medium text-gray-700 mb-1.5">
+              <label htmlFor="llm-apikey" className="block text-sm font-medium text-ink-700 mb-1.5">
                 API 키
                 {selectedConfigured && (
-                  <span className="ml-2 text-xs font-normal text-emerald-600">✓ 설정됨</span>
+                  <span className="ml-2 text-xs font-normal text-emerald-600 dark:text-emerald-300">✓ 설정됨</span>
                 )}
               </label>
               <input
@@ -340,10 +340,10 @@ export default function SettingsPage() {
                 onChange={(e) => setLlmApiKey(e.target.value)}
                 placeholder={selectedConfigured ? "변경하려면 새 키 입력 (비우면 현재 키 유지)" : "sk-... 키 입력"}
                 autoComplete="off"
-                className="block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm font-mono focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+                className="block w-full rounded-lg border border-surface-border px-3 py-2 text-sm font-mono focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
               />
-              <p className="mt-1.5 text-xs text-gray-500">
-                입력한 키는 서버에서 <span className="text-gray-600">암호화되어 DB에 저장</span>되며,
+              <p className="mt-1.5 text-xs text-ink-400">
+                입력한 키는 서버에서 <span className="text-ink-600">암호화되어 DB에 저장</span>되며,
                 저장 후 화면에 다시 표시되지 않습니다.
               </p>
             </div>
@@ -357,7 +357,7 @@ export default function SettingsPage() {
                 저장
               </Button>
               {llmSaved && (
-                <span className="text-sm text-emerald-600 font-medium flex items-center gap-1.5">
+                <span className="text-sm text-emerald-600 dark:text-emerald-300 font-medium flex items-center gap-1.5">
                   <svg className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
                   </svg>
@@ -386,20 +386,20 @@ export default function SettingsPage() {
           >
             <div>
               <h2 className="text-sm font-bold uppercase tracking-wide text-ink-400">알림</h2>
-              <p className="mt-0.5 text-xs text-gray-400">
+              <p className="mt-0.5 text-xs text-ink-400">
                 맞춤 알림 규칙·마감 리마인더와 브리핑 미리보기. 내 공고:
-                <a href="/saved" className="ml-1 font-medium text-primary-600 hover:underline">관심 공고</a>
-                <span className="mx-1 text-gray-300">·</span>
-                <a href="/pipeline" className="font-medium text-primary-600 hover:underline">진행 관리</a>
-                <span className="mx-1 text-gray-300">·</span>
-                <a href="/opportunities?tab=watch" className="font-medium text-primary-600 hover:underline">키워드 워치</a>
+                <a href="/saved" className="ml-1 font-medium text-primary-600 dark:text-primary-400 hover:underline">관심 공고</a>
+                <span className="mx-1 text-ink-400">·</span>
+                <a href="/pipeline" className="font-medium text-primary-600 dark:text-primary-400 hover:underline">진행 관리</a>
+                <span className="mx-1 text-ink-400">·</span>
+                <a href="/opportunities?tab=watch" className="font-medium text-primary-600 dark:text-primary-400 hover:underline">키워드 워치</a>
               </p>
             </div>
 
         {/* Notification settings card */}
         <div className="rounded-xl border border-surface-border bg-surface-card p-6 shadow-sm">
-          <h2 className="text-base font-semibold text-gray-900 mb-1">알림 설정</h2>
-          <p className="text-sm text-gray-500 mb-5">
+          <h2 className="text-base font-semibold text-ink mb-1">알림 설정</h2>
+          <p className="text-sm text-ink-400 mb-5">
             매일 AI 추천 공고를 받아볼 채널과 시간을 설정합니다.
           </p>
 
@@ -407,8 +407,8 @@ export default function SettingsPage() {
             {/* Enabled toggle */}
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-700">알림 활성화</p>
-                <p className="text-xs text-gray-500 mt-0.5">
+                <p className="text-sm font-medium text-ink-700">알림 활성화</p>
+                <p className="text-xs text-ink-400 mt-0.5">
                   오늘의 추천 공고를 매일 알림으로 받습니다
                 </p>
               </div>
@@ -416,14 +416,14 @@ export default function SettingsPage() {
                 type="button"
                 onClick={() => setForm((f) => ({ ...f, enabled: !f.enabled }))}
                 className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 ${
-                  form.enabled ? "bg-primary-600" : "bg-gray-200"
+                  form.enabled ? "bg-primary-600" : "bg-surface-muted"
                 }`}
                 role="switch"
                 aria-checked={form.enabled}
                 aria-label="알림 활성화"
               >
                 <span
-                  className={`inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform ${
+                  className={`inline-block h-4 w-4 transform rounded-full bg-surface-card shadow transition-transform ${
                     form.enabled ? "translate-x-6" : "translate-x-1"
                   }`}
                 />
@@ -432,7 +432,7 @@ export default function SettingsPage() {
 
             {/* Channel */}
             <fieldset>
-              <legend className="block text-sm font-medium text-gray-700 mb-1.5">알림 채널</legend>
+              <legend className="block text-sm font-medium text-ink-700 mb-1.5">알림 채널</legend>
               <div className="flex gap-3">
                 {["alimtalk", "email"].map((ch) => (
                   <label key={ch} className="flex items-center gap-2 cursor-pointer">
@@ -442,9 +442,9 @@ export default function SettingsPage() {
                       value={ch}
                       checked={form.channel === ch}
                       onChange={() => setForm((f) => ({ ...f, channel: ch }))}
-                      className="h-4 w-4 text-primary-600 border-gray-300 focus:ring-primary-500"
+                      className="h-4 w-4 text-primary-600 dark:text-primary-400 border-surface-border focus:ring-primary-500"
                     />
-                    <span className="text-sm text-gray-700">
+                    <span className="text-sm text-ink-700">
                       {ch === "alimtalk" ? "카카오 알림톡" : "이메일"}
                     </span>
                   </label>
@@ -454,14 +454,14 @@ export default function SettingsPage() {
 
             {/* Send hour */}
             <div>
-              <label htmlFor="notif-send-hour" className="block text-sm font-medium text-gray-700 mb-1.5">
+              <label htmlFor="notif-send-hour" className="block text-sm font-medium text-ink-700 mb-1.5">
                 발송 시각 (KST)
               </label>
               <select
                 id="notif-send-hour"
                 value={form.send_hour}
                 onChange={(e) => setForm((f) => ({ ...f, send_hour: parseInt(e.target.value) }))}
-                className="block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500 sm:w-40"
+                className="block w-full rounded-lg border border-surface-border px-3 py-2 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500 sm:w-40"
               >
                 {Array.from({ length: 24 }, (_, i) => (
                   <option key={i} value={i}>
@@ -478,9 +478,9 @@ export default function SettingsPage() {
                 type="checkbox"
                 checked={form.send_empty}
                 onChange={(e) => setForm((f) => ({ ...f, send_empty: e.target.checked }))}
-                className="h-4 w-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+                className="h-4 w-4 rounded border-surface-border text-primary-600 dark:text-primary-400 focus:ring-primary-500"
               />
-              <label htmlFor="send_empty" className="text-sm text-gray-700">
+              <label htmlFor="send_empty" className="text-sm text-ink-700">
                 추천 공고 없을 때도 알림 발송
               </label>
             </div>
@@ -488,15 +488,15 @@ export default function SettingsPage() {
             {/* 맞춤 알림 규칙(#4) — 적합도 임계값 + 출처 선택 */}
             <div className="space-y-4 rounded-lg border border-surface-border bg-surface/60 p-4">
               <div>
-                <p className="text-sm font-medium text-gray-700">맞춤 알림 규칙</p>
-                <p className="mt-0.5 text-xs text-gray-500">
+                <p className="text-sm font-medium text-ink-700">맞춤 알림 규칙</p>
+                <p className="mt-0.5 text-xs text-ink-400">
                   알림에 담을 추천의 최소 적합도와 공고 출처를 정합니다. 미리보기에 바로 반영됩니다.
                 </p>
               </div>
 
               {/* 최소 적합도 */}
               <div>
-                <label htmlFor="notif-min-score" className="block text-sm font-medium text-gray-700 mb-1.5">
+                <label htmlFor="notif-min-score" className="block text-sm font-medium text-ink-700 mb-1.5">
                   알림 최소 적합도
                 </label>
                 <select
@@ -508,7 +508,7 @@ export default function SettingsPage() {
                       min_score: e.target.value === "" ? null : Number(e.target.value),
                     }))
                   }
-                  className="block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+                  className="block w-full rounded-lg border border-surface-border px-3 py-2 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
                 >
                   {SCORE_OPTIONS.map((o) => (
                     <option key={o.value} value={o.value}>
@@ -516,14 +516,14 @@ export default function SettingsPage() {
                     </option>
                   ))}
                 </select>
-                <p className="mt-1.5 text-xs text-gray-400">
+                <p className="mt-1.5 text-xs text-ink-400">
                   높일수록 더 잘 맞는 공고만 적게 받습니다.
                 </p>
               </div>
 
               {/* 알림 받을 출처 */}
               <fieldset>
-                <legend className="block text-sm font-medium text-gray-700 mb-2">
+                <legend className="block text-sm font-medium text-ink-700 mb-2">
                   알림 받을 공고 출처
                 </legend>
                 <div className="flex flex-wrap gap-x-4 gap-y-2">
@@ -535,21 +535,21 @@ export default function SettingsPage() {
                           type="checkbox"
                           checked={included}
                           onChange={() => toggleExcludedSource(src)}
-                          className="h-4 w-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+                          className="h-4 w-4 rounded border-surface-border text-primary-600 dark:text-primary-400 focus:ring-primary-500"
                         />
-                        <span className="text-sm text-gray-700">{sourceLabel(src)}</span>
+                        <span className="text-sm text-ink-700">{sourceLabel(src)}</span>
                       </label>
                     );
                   })}
                 </div>
-                <p className="mt-1.5 text-xs text-gray-400">
+                <p className="mt-1.5 text-xs text-ink-400">
                   체크를 해제한 출처의 공고는 알림에서 제외됩니다.
                 </p>
               </fieldset>
 
               {/* 마감 리마인더(D-3) */}
               <div>
-                <label htmlFor="notif-reminder-days" className="block text-sm font-medium text-gray-700 mb-1.5">
+                <label htmlFor="notif-reminder-days" className="block text-sm font-medium text-ink-700 mb-1.5">
                   마감 리마인더
                 </label>
                 <select
@@ -558,7 +558,7 @@ export default function SettingsPage() {
                   onChange={(e) =>
                     setForm((f) => ({ ...f, deadline_reminder_days: Number(e.target.value) }))
                   }
-                  className="block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+                  className="block w-full rounded-lg border border-surface-border px-3 py-2 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
                 >
                   {REMINDER_OPTIONS.map((o) => (
                     <option key={o.value} value={o.value}>
@@ -566,7 +566,7 @@ export default function SettingsPage() {
                     </option>
                   ))}
                 </select>
-                <p className="mt-1.5 text-xs text-gray-400">
+                <p className="mt-1.5 text-xs text-ink-400">
                   관심·진행 공고의 마감이 가까우면 대시보드 ‘마감 임박’과 알림으로 알려드려요.
                 </p>
               </div>
@@ -577,7 +577,7 @@ export default function SettingsPage() {
                 저장
               </Button>
               {notifSaved && (
-                <span className="text-sm text-emerald-600 font-medium flex items-center gap-1.5">
+                <span className="text-sm text-emerald-600 dark:text-emerald-300 font-medium flex items-center gap-1.5">
                   <svg className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
                   </svg>
@@ -585,7 +585,7 @@ export default function SettingsPage() {
                 </span>
               )}
               {notifMutation.isError && (
-                <span className="text-sm font-medium text-red-600">저장에 실패했습니다. 다시 시도해 주세요.</span>
+                <span className="text-sm font-medium text-red-600 dark:text-red-300">저장에 실패했습니다. 다시 시도해 주세요.</span>
               )}
             </div>
           </form>
@@ -605,20 +605,20 @@ export default function SettingsPage() {
           >
             <div>
               <h2 className="text-sm font-bold uppercase tracking-wide text-ink-400">회사 프로필</h2>
-              <p className="mt-0.5 text-xs text-gray-400">수행 역량과 회사소개서로 추천 정확도를 높입니다.</p>
+              <p className="mt-0.5 text-xs text-ink-400">수행 역량과 회사소개서로 추천 정확도를 높입니다.</p>
             </div>
 
         {/* Capability settings card */}
         <div className="rounded-xl border border-surface-border bg-surface-card p-6 shadow-sm">
-          <h2 className="text-base font-semibold text-gray-900 mb-1">수행 역량</h2>
-          <p className="text-sm text-gray-500 mb-5">
+          <h2 className="text-base font-semibold text-ink mb-1">수행 역량</h2>
+          <p className="text-sm text-ink-400 mb-5">
             역량을 설정하면 AI가 각 공고의 수행 가능성(Go/No-Go)을 판단합니다.
           </p>
 
           <form onSubmit={handleCapSubmit} className="space-y-5">
             {/* Tech level */}
             <div>
-              <span id="cap-tech-label" className="block text-sm font-medium text-gray-700 mb-2">
+              <span id="cap-tech-label" className="block text-sm font-medium text-ink-700 mb-2">
                 기술 수준 (1~5)
               </span>
               <div className="flex gap-2" role="group" aria-labelledby="cap-tech-label">
@@ -635,7 +635,7 @@ export default function SettingsPage() {
                     className={`h-9 w-9 rounded-lg text-sm font-semibold border transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-1 ${
                       capForm.tech_level === level
                         ? "border-primary-600 bg-primary-600 text-white"
-                        : "border-gray-300 bg-white text-gray-700 hover:bg-gray-50"
+                        : "border-surface-border bg-surface-card text-ink-700 hover:bg-surface-muted"
                     }`}
                     aria-pressed={capForm.tech_level === level}
                   >
@@ -643,16 +643,16 @@ export default function SettingsPage() {
                   </button>
                 ))}
               </div>
-              <p className="mt-1.5 text-xs text-gray-400">
+              <p className="mt-1.5 text-xs text-ink-400">
                 1: 초급 · 3: 중급 · 5: 전문가 수준
               </p>
             </div>
 
             {/* Max project budget */}
             <div>
-              <label htmlFor="cap-budget" className="block text-sm font-medium text-gray-700 mb-1.5">
+              <label htmlFor="cap-budget" className="block text-sm font-medium text-ink-700 mb-1.5">
                 수행 가능 최대 사업 규모
-                <span className="ml-1.5 text-xs text-gray-500 font-normal">(원 단위, 빈 값 = 제한 없음)</span>
+                <span className="ml-1.5 text-xs text-ink-400 font-normal">(원 단위, 빈 값 = 제한 없음)</span>
               </label>
               <div className="relative">
                 <input
@@ -664,14 +664,14 @@ export default function SettingsPage() {
                     setCapForm((f) => ({ ...f, max_project_budget: e.target.value }))
                   }
                   placeholder="예: 500000000 (5억원)"
-                  className="block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500 pr-12"
+                  className="block w-full rounded-lg border border-surface-border px-3 py-2 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500 pr-12"
                 />
-                <span className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-xs text-gray-400">
+                <span className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-xs text-ink-400">
                   원
                 </span>
               </div>
               {capForm.max_project_budget && !isNaN(Number(capForm.max_project_budget.replace(/,/g, ""))) && (
-                <p className="mt-1 text-xs text-gray-400">
+                <p className="mt-1 text-xs text-ink-400">
                   {(Number(capForm.max_project_budget.replace(/,/g, "")) / 100000000).toFixed(1)}억원
                 </p>
               )}
@@ -679,7 +679,7 @@ export default function SettingsPage() {
 
             {/* Capable categories */}
             <fieldset>
-              <legend className="block text-sm font-medium text-gray-700 mb-2">
+              <legend className="block text-sm font-medium text-ink-700 mb-2">
                 수행 가능 유형
               </legend>
               <div className="flex gap-3">
@@ -689,9 +689,9 @@ export default function SettingsPage() {
                       type="checkbox"
                       checked={capForm.capable_categories.includes(cat)}
                       onChange={() => toggleCategory(cat)}
-                      className="h-4 w-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+                      className="h-4 w-4 rounded border-surface-border text-primary-600 dark:text-primary-400 focus:ring-primary-500"
                     />
-                    <span className="text-sm text-gray-700">{cat}</span>
+                    <span className="text-sm text-ink-700">{cat}</span>
                   </label>
                 ))}
               </div>
@@ -702,7 +702,7 @@ export default function SettingsPage() {
                 역량 저장
               </Button>
               {capSaved && (
-                <span className="text-sm text-emerald-600 font-medium flex items-center gap-1.5">
+                <span className="text-sm text-emerald-600 dark:text-emerald-300 font-medium flex items-center gap-1.5">
                   <svg className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
                   </svg>
@@ -710,7 +710,7 @@ export default function SettingsPage() {
                 </span>
               )}
               {capMutation.isError && (
-                <span className="text-sm font-medium text-red-600">저장에 실패했습니다. 다시 시도해 주세요.</span>
+                <span className="text-sm font-medium text-red-600 dark:text-red-300">저장에 실패했습니다. 다시 시도해 주세요.</span>
               )}
             </div>
           </form>

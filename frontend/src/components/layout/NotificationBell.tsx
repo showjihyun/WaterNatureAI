@@ -62,7 +62,7 @@ function AlertRow({
           {formatDDay(item.d_day)}
         </span>
       ) : (
-        <span className="mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded bg-primary-50 text-primary-600">
+        <span className="mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded bg-primary-50 dark:bg-primary-500/15 text-primary-600 dark:text-primary-400">
           <svg className="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
             <circle cx="11" cy="11" r="7" />
             <path strokeLinecap="round" d="m21 21-4.3-4.3" />
@@ -160,12 +160,12 @@ export function NotificationBell() {
             알림
           </div>
           {empty ? (
-            <p className="px-4 py-10 text-center text-sm text-gray-400">새 알림이 없어요</p>
+            <p className="px-4 py-10 text-center text-sm text-ink-400">새 알림이 없어요</p>
           ) : (
             <div className="divide-y divide-surface-border">
               {reminders.length > 0 && (
                 <div className="p-2">
-                  <p className="px-2 py-1 text-xs font-semibold text-amber-700">
+                  <p className="px-2 py-1 text-xs font-semibold text-amber-700 dark:text-amber-300">
                     마감 임박 {reminders.length}
                   </p>
                   {reminders.map((r) => (
@@ -180,7 +180,7 @@ export function NotificationBell() {
               )}
               {hits.length > 0 && (
                 <div className="p-2">
-                  <p className="px-2 py-1 text-xs font-semibold text-primary-700">
+                  <p className="px-2 py-1 text-xs font-semibold text-primary-700 dark:text-primary-300">
                     새 키워드 공고 {hits.length}
                   </p>
                   {hits.map((h) => (
@@ -198,7 +198,7 @@ export function NotificationBell() {
           <a
             href="/opportunities?tab=watch"
             onClick={() => setOpen(false)}
-            className="block border-t border-surface-border px-4 py-2.5 text-center text-xs font-medium text-primary-600 hover:bg-surface"
+            className="block border-t border-surface-border px-4 py-2.5 text-center text-xs font-medium text-primary-600 dark:text-primary-400 hover:bg-surface"
           >
             키워드 워치 전체 보기 →
           </a>

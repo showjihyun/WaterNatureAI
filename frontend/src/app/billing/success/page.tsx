@@ -39,7 +39,7 @@ function BillingSuccessInner() {
   }, [params]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
+    <div className="min-h-screen flex items-center justify-center bg-surface-muted px-4">
       <div
         role="status"
         aria-live="polite"
@@ -47,19 +47,19 @@ function BillingSuccessInner() {
       >
         {state === "loading" && (
           <>
-            <div className="mx-auto mb-4 h-10 w-10 animate-spin rounded-full border-4 border-gray-200 border-t-primary-600" />
-            <p className="text-sm text-gray-600">결제 정보를 확인하고 있습니다…</p>
+            <div className="mx-auto mb-4 h-10 w-10 animate-spin rounded-full border-4 border-surface-border border-t-primary-600" />
+            <p className="text-sm text-ink-600">결제 정보를 확인하고 있습니다…</p>
           </>
         )}
         {state === "done" && (
           <>
-            <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-green-100">
-              <svg className="h-6 w-6 text-green-600" viewBox="0 0 20 20" fill="currentColor">
+            <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-green-100 dark:bg-green-500/20">
+              <svg className="h-6 w-6 text-green-600 dark:text-green-300" viewBox="0 0 20 20" fill="currentColor">
                 <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
               </svg>
             </div>
-            <h1 className="text-lg font-semibold text-gray-900 mb-1">구독 완료</h1>
-            <p className="text-sm text-gray-600 mb-6">{message}</p>
+            <h1 className="text-lg font-semibold text-ink mb-1">구독 완료</h1>
+            <p className="text-sm text-ink-600 mb-6">{message}</p>
             <Button className="w-full" onClick={() => router.push("/dashboard")}>
               대시보드로 이동
             </Button>
@@ -67,11 +67,11 @@ function BillingSuccessInner() {
         )}
         {state === "error" && (
           <>
-            <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-red-100">
-              <span className="text-xl text-red-600">!</span>
+            <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-red-100 dark:bg-red-500/20">
+              <span className="text-xl text-red-600 dark:text-red-300">!</span>
             </div>
-            <h1 className="text-lg font-semibold text-gray-900 mb-1">구독 처리 실패</h1>
-            <p className="text-sm text-gray-600 mb-6">{message}</p>
+            <h1 className="text-lg font-semibold text-ink mb-1">구독 처리 실패</h1>
+            <p className="text-sm text-ink-600 mb-6">{message}</p>
             <Button variant="secondary" className="w-full" onClick={() => router.push("/settings")}>
               설정으로 돌아가기
             </Button>
@@ -84,7 +84,7 @@ function BillingSuccessInner() {
 
 export default function BillingSuccessPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen bg-gray-50" />}>
+    <Suspense fallback={<div className="min-h-screen bg-surface-muted" />}>
       <BillingSuccessInner />
     </Suspense>
   );

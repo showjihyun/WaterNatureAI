@@ -28,7 +28,7 @@ export function DaysBadge({ dDay, deadline, className }: DaysBadgeProps) {
         {label}
       </span>
       {deadline && (
-        <span className="text-xs text-gray-400">
+        <span className="text-xs text-ink-400">
           {new Date(deadline).toLocaleDateString("ko-KR", {
             month: "numeric",
             day: "numeric",

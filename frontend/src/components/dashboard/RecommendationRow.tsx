@@ -66,7 +66,7 @@ export function RecommendationRow({
             {item.matched_keywords.map((kw) => (
               <span
                 key={kw}
-                className="inline-flex items-center gap-0.5 rounded bg-primary-50 px-1.5 py-0.5 text-[10px] font-medium text-primary-700 ring-1 ring-inset ring-primary-600/10"
+                className="inline-flex items-center gap-0.5 rounded bg-primary-50 dark:bg-primary-500/15 px-1.5 py-0.5 text-[10px] font-medium text-primary-700 dark:text-primary-300 ring-1 ring-inset ring-primary-600/10"
               >
                 <svg className="h-2.5 w-2.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                   <circle cx="11" cy="11" r="7" />
@@ -88,7 +88,7 @@ export function RecommendationRow({
           {formatScore(item.score)}
         </span>
         {item.score != null && (
-          <div className="h-2 w-16 overflow-hidden rounded-full bg-gray-100">
+          <div className="h-2 w-16 overflow-hidden rounded-full bg-surface-muted">
             <div
               className="h-full rounded-full bg-primary-500 transition-all"
               style={{ width: `${Math.min(item.score, 100)}%` }}
@@ -99,7 +99,7 @@ export function RecommendationRow({
           <InfoPopover title="적합도 구성" ariaLabel="적합도 구성 보기">
             <SubscoreBreakdown subscore={item.subscore} />
             {item.risk && (
-              <p className="mt-2 flex items-start gap-1 text-[11px] leading-snug text-amber-700">
+              <p className="mt-2 flex items-start gap-1 text-[11px] leading-snug text-amber-700 dark:text-amber-300">
                 <span aria-hidden="true">⚠</span>
                 <span>{item.risk}</span>
               </p>
@@ -146,7 +146,7 @@ export function RecommendationRow({
               onClick={onAddToPipeline}
               aria-label="진행 관리에 추가"
               title="진행 관리에 추가"
-              className="inline-flex h-9 items-center gap-0.5 rounded-lg border border-surface-border px-2 text-[11px] font-medium text-ink-600 transition-colors hover:border-primary-300 hover:bg-primary-50 hover:text-primary-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-primary-500"
+              className="inline-flex h-9 items-center gap-0.5 rounded-lg border border-surface-border px-2 text-[11px] font-medium text-ink-600 transition-colors hover:border-primary-300 hover:bg-primary-50 dark:bg-primary-500/15 hover:text-primary-700 dark:text-primary-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-primary-500"
             >
               <svg className="h-3 w-3" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
                 <path strokeLinecap="round" d="M12 4.5v15m7.5-7.5h-15" />

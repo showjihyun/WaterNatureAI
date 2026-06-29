@@ -10,12 +10,12 @@ interface BadgeProps {
 }
 
 const colorClasses: Record<Color, string> = {
-  green: "bg-emerald-50 text-emerald-700 ring-emerald-600/20",
-  amber: "bg-amber-50 text-amber-700 ring-amber-600/20",
-  red: "bg-red-50 text-red-700 ring-red-600/20",
-  blue: "bg-blue-50 text-blue-700 ring-blue-600/20",
+  green: "bg-emerald-50 dark:bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 ring-emerald-600/20",
+  amber: "bg-amber-50 dark:bg-amber-500/15 text-amber-700 dark:text-amber-300 ring-amber-600/20",
+  red: "bg-red-50 dark:bg-red-500/15 text-red-700 dark:text-red-300 ring-red-600/20",
+  blue: "bg-blue-50 dark:bg-blue-500/15 text-blue-700 dark:text-blue-300 ring-blue-600/20",
   gray: "bg-surface text-ink-600 ring-ink-400/20",
-  indigo: "bg-primary-50 text-primary-700 ring-primary-600/20",
+  indigo: "bg-primary-50 dark:bg-primary-500/15 text-primary-700 dark:text-primary-300 ring-primary-600/20",
 };
 
 export function Badge({ color = "gray", children, className }: BadgeProps) {

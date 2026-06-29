@@ -70,8 +70,8 @@ export function AwardsPanel({ mock = false }: AwardsPanelProps) {
       {!isLoading && !error && data && (
         <>
           {/* Total count */}
-          <p className="mb-4 text-sm text-gray-500">
-            총 <span className="font-medium text-gray-800">{data.total}</span>건
+          <p className="mb-4 text-sm text-ink-400">
+            총 <span className="font-medium text-ink">{data.total}</span>건
           </p>
 
           {data.items.length === 0 ? (
@@ -98,7 +98,7 @@ export function AwardsPanel({ mock = false }: AwardsPanelProps) {
               >
                 이전
               </Button>
-              <span className="text-sm text-gray-500">
+              <span className="text-sm text-ink-400">
                 {data.page} / {totalPages}
               </span>
               <Button

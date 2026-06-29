@@ -46,17 +46,22 @@ function StatTile({
   );
 }
 
+// 차트 카테고리 색(소스별·분야별) — 다크에서 토큰이 자동으로 밝아짐(globals .dark).
+const CHART_BARS = ["bg-chart-1", "bg-chart-2", "bg-chart-3", "bg-chart-4", "bg-chart-5"];
+
 /** 가로 막대 한 줄(소스별/분야별/예산 분포 공용). */
 function BarRow({
   label,
   value,
   max,
   right,
+  barClass = "bg-primary-500/70",
 }: {
   label: string;
   value: number;
   max: number;
   right: string;
+  barClass?: string;
 }) {
   const pct = max > 0 ? Math.max(2, Math.round((value / max) * 100)) : 0;
   return (
@@ -65,9 +70,9 @@ function BarRow({
         <span className="truncate text-ink-600">{label}</span>
         <span className="shrink-0 font-medium tabular-nums text-ink">{right}</span>
       </div>
-      <div className="h-2 overflow-hidden rounded-full bg-gray-100">
+      <div className="h-2 overflow-hidden rounded-full bg-surface-muted">
         <div
-          className="h-full rounded-full bg-primary-500/70 transition-all"
+          className={`h-full rounded-full transition-all ${barClass}`}
           style={{ width: `${pct}%` }}
         />
       </div>
@@ -142,7 +147,7 @@ export function CollectionStatsPanel({ stats }: { stats: CollectionStats }) {
           label="오늘 신규"
           value={num(stats.summary.new_today)}
           hint="오늘 수집된 공고"
-          accent="text-primary-600"
+          accent="text-primary-600 dark:text-primary-400"
         />
         <StatTile label="최근 7일" value={num(stats.summary.new_7d)} hint="신규 수집" />
         <StatTile label="누적 공고" value={num(stats.summary.total)} hint="대표 공고 기준" />
@@ -168,7 +173,7 @@ export function CollectionStatsPanel({ stats }: { stats: CollectionStats }) {
                   onClick={() => setPeriod(p.key)}
                   className={`rounded-md px-2.5 py-1 text-xs font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 ${
                     active
-                      ? "bg-white text-primary-700 shadow-sm"
+                      ? "bg-surface-card text-primary-700 dark:text-primary-300 shadow-sm"
                       : "text-ink-500 hover:text-ink"
                   }`}
                 >
@@ -193,13 +198,14 @@ export function CollectionStatsPanel({ stats }: { stats: CollectionStats }) {
             {stats.by_source.length === 0 ? (
               <p className="text-xs text-ink-400">수집 데이터가 없습니다.</p>
             ) : (
-              stats.by_source.map((x) => (
+              stats.by_source.map((x, i) => (
                 <BarRow
                   key={x.source}
                   label={sourceLabel(x.source)}
                   value={x.count}
                   max={srcMax}
                   right={`${num(x.count)} · ${Math.round((x.count / sourceTotal) * 100)}%`}
+                  barClass={CHART_BARS[i % CHART_BARS.length]}
                 />
               ))
             )}
@@ -213,13 +219,14 @@ export function CollectionStatsPanel({ stats }: { stats: CollectionStats }) {
             {stats.by_category.length === 0 ? (
               <p className="text-xs text-ink-400">분류 정보가 없습니다.</p>
             ) : (
-              stats.by_category.map((x) => (
+              stats.by_category.map((x, i) => (
                 <BarRow
                   key={x.category}
                   label={x.category}
                   value={x.count}
                   max={catMax}
                   right={`${num(x.count)}건`}
+                  barClass={CHART_BARS[i % CHART_BARS.length]}
                 />
               ))
             )}
