@@ -14,6 +14,7 @@ from sqlalchemy.orm import Session
 from app.core.config import settings
 from app.services.embedding import vectorstore
 from app.services.keywords import INDUSTRY_KEYWORDS, STOPWORDS
+from app.services.ksic import KEYWORDS as KSIC_KEYWORDS, ksic_name, ETC as KSIC_ETC
 
 logger = logging.getLogger(__name__)
 
@@ -145,54 +146,52 @@ def _industry_score(
     ctx_industries: list[str],
     opp_text: str,
     opp_category: str | None = None,
+    opp_industry: str | None = None,
+    ctx_capable_industries: list[str] | None = None,
 ) -> int:
-    """산업 일치 (0~15) — opp_text(title+desc) 기반 파생.
+    """산업(업종) 일치 (0~15).
 
-    1. 회사 industry/industries 로 INDUSTRY_KEYWORDS 에서 산업 시그널 키워드 집합 도출.
-    2. 시그널 키워드 중 opp_text 에 1개 이상 등장 → 15 (강한 산업 매칭).
-    3. 회사 industry 문자열 자체가 opp_text 에 부분 포함 → 8 (약한 산업 매칭).
+    1. 표준 업종축(KSIC): opp.industry 가 회사 수행업종(capable_industries)에 포함 → 15.
+       같은 분류축 직접 비교 = 가장 신뢰 높은 신호.
+    2. 키워드 파생: 회사 산업(자유텍스트 INDUSTRY_KEYWORDS ∪ 회사 KSIC 업종 키워드)이
+       opp_text 에 등장 → 15.
+    3. 약한 매칭: 회사 산업명이 opp_text 부분 포함 → 8.
     4. 없으면 0.
-    (category 의존 제거; "category 없으면 7" 무료점수 제거)
+    (구버전의 'opp.category(유형) vs 회사 산업' 비교 제거 — 유형은 업종축이 아니라 노이즈였음.)
     """
+    caps = [c for c in (ctx_capable_industries or []) if c and c != KSIC_ETC]
+
+    # 1. KSIC 표준 업종축 직접 매칭(최강 신호)
+    if opp_industry and opp_industry != KSIC_ETC and opp_industry in caps:
+        return 15
+
+    if not opp_text:
+        return 0
+
     all_industries: list[str] = []
     if ctx_industry:
         all_industries.append(ctx_industry.strip())
     all_industries.extend([i.strip() for i in (ctx_industries or []) if i.strip()])
 
-    if not all_industries or not opp_text:
+    # 시그널 키워드 = 자유텍스트 산업 매핑 ∪ 회사 KSIC 업종 분류 키워드(분류 누락 보완)
+    signal_keywords: set[str] = set()
+    for ind in all_industries:
+        signal_keywords.update(INDUSTRY_KEYWORDS.get(ind, [ind]))
+    for code in caps:
+        signal_keywords.update(KSIC_KEYWORDS.get(code, []))
+
+    if not signal_keywords:
         return 0
 
     opp_lower = opp_text.lower()
-
-    # 산업 시그널 키워드 집합 수집
-    signal_keywords: set[str] = set()
-    for ind in all_industries:
-        kws = INDUSTRY_KEYWORDS.get(ind)
-        if kws:
-            signal_keywords.update(kws)
-        else:
-            # 맵에 없는 산업명 → 산업명 자체를 시그널로
-            signal_keywords.add(ind)
-
-    # 1. 강한 매칭: 시그널 키워드가 opp_text 에 하나라도 등장
+    # 2. 강한 매칭: 시그널 키워드가 opp_text 에 하나라도 등장
     for kw in signal_keywords:
         if kw.lower() in opp_lower:
             return 15
-
-    # 2. 약한 매칭: 회사 industry 문자열이 opp_text 에 부분 포함
+    # 3. 약한 매칭: 회사 산업명이 opp_text 부분 포함
     for ind in all_industries:
         if ind.lower() in opp_lower:
             return 8
-
-    # 3. 보너스: opp.category 와 회사 industry 직접 일치 (부가적 경로)
-    if opp_category:
-        cat = opp_category.strip()
-        for ind in all_industries:
-            if ind == cat:
-                return 8
-            if ind in cat or cat in ind:
-                return 5
-
     return 0
 
 
@@ -282,6 +281,8 @@ def _compute_rule_presets(company_context: dict, opportunity: dict) -> dict[str,
         ctx.get("industries", []),
         opp_text,
         opp.get("category"),
+        opp.get("industry"),
+        ctx.get("capable_industries", []),
     )
     tech = _tech_keyword_score(
         ctx.get("technologies", []),
@@ -330,28 +331,34 @@ def _build_rule_reasons(
         display_region = effective_region or "전국"
         reasons.append(f"지역 적합: {display_region}")
 
-    # 산업
+    # 산업(업종)
     if rule_scores.get("industry", 0) > 0:
-        industry = company_context.get("industry", "")
-        # opp_text 에서 매칭된 산업 키워드 찾기
-        opp_lower = opp_text.lower() if opp_text else ""
-        matched_industry_kw = ""
-        all_inds = []
-        if industry:
-            all_inds.append(industry)
-        all_inds.extend(company_context.get("industries") or [])
-        for ind in all_inds:
-            kws = INDUSTRY_KEYWORDS.get(ind, [ind])
-            for kw in kws:
-                if kw.lower() in opp_lower:
-                    matched_industry_kw = kw
+        opp_ind = opportunity.get("industry")
+        caps = [c for c in (company_context.get("capable_industries") or []) if c != KSIC_ETC]
+        if opp_ind and opp_ind != KSIC_ETC and opp_ind in caps:
+            # 표준 업종축 직접 일치 — 가장 명확한 근거.
+            reasons.append(f"업종 적합: {ksic_name(opp_ind)} (표준 업종 일치)")
+        else:
+            industry = company_context.get("industry", "")
+            # opp_text 에서 매칭된 산업 키워드 찾기
+            opp_lower = opp_text.lower() if opp_text else ""
+            matched_industry_kw = ""
+            all_inds = []
+            if industry:
+                all_inds.append(industry)
+            all_inds.extend(company_context.get("industries") or [])
+            for ind in all_inds:
+                kws = INDUSTRY_KEYWORDS.get(ind, [ind])
+                for kw in kws:
+                    if kw.lower() in opp_lower:
+                        matched_industry_kw = kw
+                        break
+                if matched_industry_kw:
                     break
             if matched_industry_kw:
-                break
-        if matched_industry_kw:
-            reasons.append(f"산업 적합: {industry} (공고: '{matched_industry_kw}')")
-        else:
-            reasons.append(f"산업 적합: {industry or '해당 분야'}")
+                reasons.append(f"산업 적합: {industry} (공고: '{matched_industry_kw}')")
+            else:
+                reasons.append(f"산업 적합: {industry or '해당 분야'}")
 
     # 고객군
     if rule_scores.get("customer", 0) > 0:
@@ -519,6 +526,10 @@ def _format_context(ctx: dict) -> str:
     lines = []
     if ctx.get("industry"):
         lines.append(f"- 대표 산업: {ctx['industry']}")
+    if ctx.get("capable_industries"):
+        names = [ksic_name(c) for c in ctx["capable_industries"] if ksic_name(c) and c != KSIC_ETC]
+        if names:
+            lines.append(f"- 수행 업종(표준): {', '.join(names)}")
     if ctx.get("technologies"):
         lines.append(f"- 기술: {', '.join(ctx['technologies'])}")
     if ctx.get("customers"):
@@ -549,7 +560,9 @@ def _format_opportunity(opp: dict) -> str:
     if opp.get("agency"):
         lines.append(f"- 발주기관: {opp['agency']}")
     if opp.get("category"):
-        lines.append(f"- 분류: {opp['category']}")
+        lines.append(f"- 유형: {opp['category']}")
+    if opp.get("industry") and opp["industry"] != KSIC_ETC:
+        lines.append(f"- 업종(표준): {ksic_name(opp['industry'])}")
     if opp.get("region"):
         lines.append(f"- 지역: {opp['region']}")
     if opp.get("description"):

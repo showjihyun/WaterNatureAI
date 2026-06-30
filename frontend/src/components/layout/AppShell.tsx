@@ -31,8 +31,8 @@ export function AppShell({ children }: AppShellProps) {
             <NotificationBell />
           </div>
           <main id="main-content" className="flex-1 overflow-y-auto">
-            {/* 초광폭 모니터에서 콘텐츠가 과도하게 늘어나지 않도록 폭 상한 + 중앙정렬 */}
-            <div className="mx-auto min-h-full max-w-screen-2xl p-4 sm:p-6">{children}</div>
+            {/* 화면 전체 폭 사용(반응형) — 사이드바를 제외한 본문 영역을 가득 채움 */}
+            <div className="min-h-full p-4 sm:p-6">{children}</div>
           </main>
         </div>
       </div>

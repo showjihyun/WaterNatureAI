@@ -26,7 +26,7 @@ export function DeadlineReminders() {
   if (!data || data.length === 0) return null;
 
   return (
-    <div className="mb-6 rounded-xl border border-amber-200 dark:border-amber-500/30 bg-amber-50 dark:bg-amber-500/15/70 p-4">
+    <div className="mb-6 rounded-xl border border-amber-200 dark:border-amber-500/30 bg-amber-50/70 dark:bg-amber-500/15 p-4">
       <div className="mb-2.5 flex items-center gap-2">
         <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-amber-100 dark:bg-amber-500/20 text-amber-700 dark:text-amber-300">
           <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="2.2" viewBox="0 0 24 24">
@@ -70,7 +70,7 @@ export function DeadlineReminders() {
                   href={sourceUrl}
                   target="_blank"
                   rel="noreferrer"
-                  className="shrink-0 rounded-lg px-2 py-1 text-xs font-semibold text-amber-800 dark:text-amber-300 hover:bg-amber-100 dark:bg-amber-500/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500"
+                  className="shrink-0 rounded-lg px-2 py-1 text-xs font-semibold text-amber-800 dark:text-amber-300 hover:bg-amber-100 dark:hover:bg-amber-500/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500"
                 >
                   원문
                 </a>

@@ -26,6 +26,7 @@ from app.db.models.opportunity import (
     SourceIngestionState,
 )
 from app.services.collectors._redact import redact_secrets
+from app.services.ksic import classify_industry
 
 
 @dataclass
@@ -174,6 +175,8 @@ class BaseCollector(ABC):
             )
         )
         now = datetime.now(timezone.utc)
+        # 표준 업종(KSIC) 자동 분류 — 전 소스 공통 적재점에서 일괄(제목/내용 기반).
+        industry = classify_industry(dto.title, dto.description, dto.source, dto.category)
 
         if existing is None:
             opp = Opportunity(
@@ -184,6 +187,7 @@ class BaseCollector(ABC):
                 title=dto.title,
                 agency=dto.agency,
                 category=dto.category,
+                industry=industry,
                 region=dto.region,
                 description=dto.description,
                 budget_raw=dto.budget_raw,
@@ -206,6 +210,7 @@ class BaseCollector(ABC):
             existing.title = dto.title
             existing.agency = dto.agency
             existing.category = dto.category
+            existing.industry = industry
             existing.region = dto.region
             existing.description = dto.description
             existing.budget_raw = dto.budget_raw

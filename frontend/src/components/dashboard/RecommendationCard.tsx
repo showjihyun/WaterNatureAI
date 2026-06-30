@@ -6,6 +6,7 @@ import { sourceLabel } from "@/lib/sourceLabel";
 import { ScoreBadge } from "./ScoreBadge";
 import { DaysBadge } from "./DaysBadge";
 import { SaveButton } from "@/components/ui/SaveButton";
+import { IndustryBadge } from "@/components/ui/IndustryBadge";
 import { FeasibilityBadge } from "./FeasibilityBadge";
 import { useRecommendationActions } from "./useRecommendationActions";
 import { HideMenu } from "./HideMenu";
@@ -53,6 +54,7 @@ export function RecommendationCard({ item, mock = false, onHide }: Recommendatio
                   {item.category}
                 </span>
               )}
+              <IndustryBadge code={item.industry} />
             </div>
             {/* Title */}
             <h3 className="text-sm font-semibold text-ink leading-snug line-clamp-2">
@@ -123,7 +125,7 @@ export function RecommendationCard({ item, mock = false, onHide }: Recommendatio
 
         {/* 리스크/참고 한 줄 */}
         {item.risk && (
-          <div className="mt-3 flex items-start gap-1.5 rounded-lg bg-amber-50 dark:bg-amber-500/15/70 px-2.5 py-1.5 text-xs text-amber-800 dark:text-amber-300">
+          <div className="mt-3 flex items-start gap-1.5 rounded-lg bg-amber-50/70 dark:bg-amber-500/15 px-2.5 py-1.5 text-xs text-amber-800 dark:text-amber-300">
             <svg className="mt-0.5 h-3 w-3 shrink-0" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
             </svg>
@@ -141,7 +143,7 @@ export function RecommendationCard({ item, mock = false, onHide }: Recommendatio
           <button
             onClick={handleViewSource}
             disabled={!item.detail_url}
-            className="inline-flex items-center gap-1.5 rounded-lg bg-primary-600 px-3 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-primary-700 active:bg-primary-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-primary-500 disabled:opacity-40 disabled:cursor-not-allowed"
+            className="inline-flex h-9 items-center gap-1.5 rounded-lg bg-primary-600 px-3 text-xs font-semibold text-white transition-colors hover:bg-primary-700 active:bg-primary-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-primary-500 disabled:opacity-40 disabled:cursor-not-allowed"
           >
             원문 보기
           <svg

@@ -92,7 +92,8 @@ class Opportunity(UUIDPk, Base):
 
     title: Mapped[str] = mapped_column(Text, nullable=False)
     agency: Mapped[str | None] = mapped_column(Text)
-    category: Mapped[str | None] = mapped_column(Text)
+    category: Mapped[str | None] = mapped_column(Text)  # 계약/지원 '유형'(물품·용역·공사·지원분야) — 업종 아님
+    industry: Mapped[str | None] = mapped_column(String(8), index=True)  # 표준 '업종'(KSIC 대분류 코드)
     region: Mapped[str | None] = mapped_column(Text)
     description: Mapped[str | None] = mapped_column(Text)
 

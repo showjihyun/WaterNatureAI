@@ -44,6 +44,7 @@ class Company(UUIDPk, TimestampMixin, Base):
     tech_level: Mapped[int | None] = mapped_column(SmallInteger)           # 기술수준 1~5
     max_project_budget: Mapped[int | None] = mapped_column(BigInteger)     # 감당 가능 최대 예산(KRW)
     capable_categories: Mapped[list | None] = mapped_column(JSONB)         # 수행 유형(예: ["물품","용역"])
+    capable_industries: Mapped[list | None] = mapped_column(JSONB)         # 수행 업종 KSIC 코드(예: ["J","E"])
 
     # 온보딩 프로필 (0004) — Company Brain LLM 추출 입력
     services: Mapped[list | None] = mapped_column(JSONB)        # 주요 서비스/제품

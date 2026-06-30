@@ -25,7 +25,8 @@ class CompanyProfileIn(BaseModel):
     # 수행 역량 (0002)
     tech_level: Annotated[int | None, Field(default=None, ge=1, le=5)] = None
     max_project_budget: int | None = None
-    capable_categories: list[str] | None = None
+    capable_categories: list[str] | None = None       # 수행 유형(물품·용역·공사)
+    capable_industries: list[str] | None = None        # 수행 업종 KSIC 코드(예: ["J","E"])
 
 
 class CompanyProfileOut(BaseModel):
@@ -50,5 +51,6 @@ class CompanyProfileOut(BaseModel):
     tech_level: int | None = None
     max_project_budget: int | None = None
     capable_categories: list[str] | None = None
+    capable_industries: list[str] | None = None
 
     model_config = {"from_attributes": True}

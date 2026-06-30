@@ -14,7 +14,8 @@ class RecommendationItem(BaseModel):
     opportunity_id: uuid.UUID
     title: str
     agency: str | None = None
-    category: str | None = None
+    category: str | None = None       # 계약/지원 '유형'(물품·용역·공사·지원분야)
+    industry: str | None = None       # 표준 '업종' KSIC 대분류 코드(프론트에서 라벨 매핑)
     budget_amount: int | None = None
     posted_at: datetime | None = None
     deadline: datetime | None = None

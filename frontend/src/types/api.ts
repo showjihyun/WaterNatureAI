@@ -32,7 +32,8 @@ export interface RecommendationItem {
   opportunity_id: string;
   title: string;
   agency: string | null;
-  category: string | null;
+  category: string | null; // 유형(물품·용역·공사·지원분야)
+  industry: string | null; // 표준 업종 KSIC 코드(lib/ksic ksicName으로 라벨)
   budget_amount: number | null;
   deadline: string | null; // ISO datetime string
   d_day: number | null;
@@ -126,12 +127,14 @@ export interface CompanyProfile {
   tech_level?: number | null;
   max_project_budget?: number | null;
   capable_categories?: string[] | null;
+  capable_industries?: string[] | null; // 수행 업종 KSIC 코드
 }
 
 export interface CompanyCapabilityIn {
   tech_level?: number | null;
   max_project_budget?: number | null;
   capable_categories?: string[] | null;
+  capable_industries?: string[] | null; // 수행 업종 KSIC 코드
 }
 
 // Notification Settings
@@ -173,7 +176,8 @@ export interface OpportunityFilters {
   agency?: string;
   sources?: string[]; // 출처 코드 다중선택(없음/빈배열 = 전체)
   region?: string; // 지역(단일 시도 문자열)
-  category?: string; // 분야(단일 정확 카테고리 문자열)
+  category?: string; // 유형(단일 정확 카테고리 문자열: 물품·용역·공사·지원분야)
+  industry?: string; // 표준 업종(KSIC 대분류 코드)
   budget_min?: number;
   budget_max?: number;
   deadline_before?: string;

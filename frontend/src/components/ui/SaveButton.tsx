@@ -34,7 +34,7 @@ export function SaveButton({
         showLabel ? "h-9 px-3 text-sm" : "h-9 w-9",
         saved
           ? "bg-primary-100 dark:bg-primary-500/20 text-primary-700 dark:text-primary-300 hover:bg-primary-200"
-          : "text-ink-400 hover:bg-surface hover:text-ink-600",
+          : "text-ink-400 hover:bg-surface-muted hover:text-ink-600",
         className
       )}
     >

@@ -160,7 +160,7 @@ export function KeywordWatchPanel() {
                   <button
                     onClick={() => removeMutation.mutate(w.id)}
                     aria-label={`${w.keyword} 키워드 삭제`}
-                    className="flex h-5 w-5 items-center justify-center rounded-full text-primary-500 transition-colors hover:bg-primary-200/60 hover:text-primary-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500"
+                    className="flex h-5 w-5 items-center justify-center rounded-full text-primary-500 transition-colors hover:bg-primary-200/60 hover:text-primary-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-primary-500"
                   >
                     <svg className="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                       <path strokeLinecap="round" d="M6 18 18 6M6 6l12 12" />

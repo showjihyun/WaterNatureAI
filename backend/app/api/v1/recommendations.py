@@ -64,7 +64,7 @@ def today(company_id: CurrentCompany, db: DbSession) -> list[RecommendationItem]
     ).all()
     return [
         RecommendationItem(
-            opportunity_id=o.id, title=o.title, agency=o.agency, category=o.category,
+            opportunity_id=o.id, title=o.title, agency=o.agency, category=o.category, industry=o.industry,
             budget_amount=o.budget_amount, posted_at=o.posted_at,
             deadline=o.deadline, d_day=_d_day(o.deadline),
             score=m.score, reasons=_split_reasons(m.reason), source=o.source,
@@ -112,7 +112,7 @@ def saved(company_id: CurrentCompany, db: DbSession) -> list[RecommendationItem]
     ).all()
     return [
         RecommendationItem(
-            opportunity_id=o.id, title=o.title, agency=o.agency, category=o.category,
+            opportunity_id=o.id, title=o.title, agency=o.agency, category=o.category, industry=o.industry,
             budget_amount=o.budget_amount, posted_at=o.posted_at,
             deadline=o.deadline, d_day=_d_day(o.deadline),
             score=score, reasons=[], saved=True, source=o.source,

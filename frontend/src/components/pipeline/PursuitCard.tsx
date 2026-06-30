@@ -55,7 +55,7 @@ export function PursuitCard({ item }: { item: PursuitItem }) {
           onClick={() => remove.mutate()}
           disabled={busy}
           aria-label="진행에서 제거"
-          className="shrink-0 rounded p-0.5 text-ink-400 hover:bg-red-50 dark:bg-red-500/15 hover:text-red-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500"
+          className="shrink-0 rounded p-0.5 text-ink-400 hover:bg-red-50 dark:hover:bg-red-500/15 hover:text-red-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-primary-500"
         >
           <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
             <path strokeLinecap="round" d="M6 18 18 6M6 6l12 12" />
@@ -77,7 +77,7 @@ export function PursuitCard({ item }: { item: PursuitItem }) {
             onClick={() => prev && move.mutate(prev)}
             disabled={!prev || busy}
             aria-label="이전 단계로"
-            className="flex h-6 w-6 items-center justify-center rounded-md border border-surface-border text-ink-600 hover:bg-surface disabled:opacity-30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500"
+            className="flex h-6 w-6 items-center justify-center rounded-md border border-surface-border text-ink-600 hover:bg-surface disabled:opacity-30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-primary-500"
           >
             <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
@@ -87,7 +87,7 @@ export function PursuitCard({ item }: { item: PursuitItem }) {
             onClick={() => next && move.mutate(next)}
             disabled={!next || busy}
             aria-label="다음 단계로"
-            className="flex h-6 w-6 items-center justify-center rounded-md border border-surface-border text-ink-600 hover:bg-surface disabled:opacity-30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500"
+            className="flex h-6 w-6 items-center justify-center rounded-md border border-surface-border text-ink-600 hover:bg-surface disabled:opacity-30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-primary-500"
           >
             <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
@@ -99,7 +99,7 @@ export function PursuitCard({ item }: { item: PursuitItem }) {
             href={sourceUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="rounded px-1 text-xs font-medium text-primary-600 dark:text-primary-400 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500"
+            className="rounded px-1 text-xs font-medium text-primary-600 dark:text-primary-400 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-primary-500"
           >
             원문 →
           </a>

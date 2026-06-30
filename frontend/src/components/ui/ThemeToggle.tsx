@@ -32,7 +32,7 @@ export function ThemeToggle({ className = "" }: { className?: string }) {
       onClick={toggle}
       aria-label={dark ? "라이트 모드로 전환" : "다크 모드로 전환"}
       title={dark ? "라이트 모드" : "다크 모드"}
-      className={`inline-flex h-9 w-9 items-center justify-center rounded-lg text-ink-600 transition-colors hover:bg-surface-muted hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 ${className}`}
+      className={`inline-flex h-9 w-9 items-center justify-center rounded-lg text-ink-600 transition-colors hover:bg-surface-muted hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-primary-500 ${className}`}
     >
       {dark ? (
         // 해(라이트로) 아이콘

@@ -67,7 +67,7 @@ def _dedup_key(o: Opportunity) -> object:
 
 def _build_item(m: Match, o: Opportunity, company: Company | None) -> RecommendationItem:
     return RecommendationItem(
-        opportunity_id=o.id, title=o.title, agency=o.agency, category=o.category,
+        opportunity_id=o.id, title=o.title, agency=o.agency, category=o.category, industry=o.industry,
         budget_amount=o.budget_amount, posted_at=o.posted_at, deadline=o.deadline,
         d_day=_d_day(o.deadline),
         score=m.score, reasons=[m.reason] if m.reason else [], source=o.source,
@@ -95,7 +95,8 @@ def list_opportunities(
     min_score: int | None = None,
     source: list[str] | None = Query(None),  # 출처 필터(나라장터·kstartup·ntis·bizinfo)
     region: str | None = None,
-    category: str | None = None,
+    category: str | None = None,       # 유형(물품·용역·공사·지원분야)
+    industry: str | None = None,       # 표준 업종(KSIC 대분류 코드)
     sort: str = Query("score"),
     feasibility: str | None = Query(None),
     page: int = Query(1, ge=1),
@@ -132,6 +133,8 @@ def list_opportunities(
         base = base.where(Opportunity.source.in_(source))
     if category:
         base = base.where(Opportunity.category == category)
+    if industry:
+        base = base.where(Opportunity.industry == industry)
 
     # 단일 파이썬 경로: 표시단 dedup(동일 공고 중복 제거)이 필요해 전 행을 가져온 뒤
     # 적합도 최고 1건만 남기고 정렬·페이징. (company 스코프라 행 수가 작음 — 수십 건)

@@ -252,7 +252,7 @@ export function MobileNav() {
         <button
           onClick={() => setOpen(true)}
           aria-label="메뉴 열기"
-          className="flex h-9 w-9 items-center justify-center rounded-lg text-ink-600 hover:bg-surface focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500"
+          className="flex h-9 w-9 items-center justify-center rounded-lg text-ink-600 hover:bg-surface focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-primary-500"
         >
           <svg viewBox="0 0 24 24" fill="none" className="h-5 w-5" stroke="currentColor" strokeWidth="2">
             <path strokeLinecap="round" d="M4 6h16M4 12h16M4 18h16" />

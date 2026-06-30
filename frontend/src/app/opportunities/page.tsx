@@ -93,7 +93,7 @@ function OpportunitiesContent() {
             aria-controls={`tabpanel-${key}`}
             onClick={() => switchTab(key)}
             className={cn(
-              "-mb-px whitespace-nowrap rounded-t border-b-2 px-3.5 py-2 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500",
+              "-mb-px whitespace-nowrap rounded-t border-b-2 px-3.5 py-2 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-primary-500",
               tab === key
                 ? "border-primary-600 text-primary-700 dark:text-primary-300"
                 : "border-transparent text-ink-400 hover:border-surface-border hover:text-ink-600"

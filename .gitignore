@@ -71,6 +71,11 @@ docs/03-spec/
 docs/05-spikes/
 docs/init-biz-build-up/
 
+# ── Design-tooling artifacts (impeccable / ui-ux-design-pro 로컬 산출물) ──
+# 디자인 점검 도구가 만든 제품/브랜드 메모 — 앱 코드 아님, 로컬에만 둔다.
+PRODUCT.md
+.interface-design/
+
 # ── Binary office docs (3rd-party gov API source materials; contain PII) ──
 # 정부 OpenAPI 원본 .docx/.xlsx — 개인 이메일 등 PII 포함, 바이너리라 정제 불가.
 # API 레퍼런스 본문은 06-data api ref/*.md 로 유지.

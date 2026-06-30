@@ -171,7 +171,7 @@ export function CollectionStatsPanel({ stats }: { stats: CollectionStats }) {
                   type="button"
                   aria-pressed={active}
                   onClick={() => setPeriod(p.key)}
-                  className={`rounded-md px-2.5 py-1 text-xs font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 ${
+                  className={`rounded-md px-2.5 py-1 text-xs font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-primary-500 ${
                     active
                       ? "bg-surface-card text-primary-700 dark:text-primary-300 shadow-sm"
                       : "text-ink-500 hover:text-ink"

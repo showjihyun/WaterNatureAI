@@ -103,7 +103,8 @@ function DashboardContent() {
     !!profile &&
     profile.tech_level == null &&
     profile.max_project_budget == null &&
-    (!profile.capable_categories || profile.capable_categories.length === 0);
+    (!profile.capable_categories || profile.capable_categories.length === 0) &&
+    (!profile.capable_industries || profile.capable_industries.length === 0);
   const hasRecs = !!recommendations && recommendations.length > 0;
 
   // 추천 0건 분기: 프로필 미완성 vs (ready인데) 분석 중 vs 적합 공고 없음.
@@ -174,7 +175,7 @@ function DashboardContent() {
       {needsCapability && hasRecs && (
         <a
           href="/settings"
-          className="mb-6 flex items-center gap-3 rounded-xl border border-primary-200 bg-primary-50 dark:bg-primary-500/15 px-4 py-3 transition-colors hover:bg-primary-100 dark:bg-primary-500/20/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500"
+          className="mb-6 flex items-center gap-3 rounded-xl border border-primary-200 bg-primary-50 dark:bg-primary-500/15 px-4 py-3 transition-colors hover:bg-primary-100/60 dark:hover:bg-primary-500/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-primary-500"
         >
           <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-primary-100 dark:bg-primary-500/20 text-primary-700 dark:text-primary-300">
             <svg className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
@@ -206,7 +207,7 @@ function DashboardContent() {
             <ViewToggle mode={mode} onChange={setMode} />
             <a
               href={`/opportunities${isMock ? "?mock=1" : ""}`}
-              className="rounded-lg px-2 py-1 text-xs font-medium text-primary-600 dark:text-primary-400 hover:bg-primary-50 dark:bg-primary-500/15 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500"
+              className="rounded-lg px-2 py-1 text-xs font-medium text-primary-600 dark:text-primary-400 hover:bg-primary-50 dark:hover:bg-primary-500/15 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-primary-500"
             >
               전체 보기 →
             </a>
@@ -244,7 +245,7 @@ function DashboardContent() {
             />
           ) : analyzing ? (
             /* ready인데 0건 + 분석 윈도우 내 — 매칭 진행 중(자동 새로고침) */
-            <div className="rounded-xl border border-primary-200 bg-primary-50 dark:bg-primary-500/15/60 px-6 py-12 text-center">
+            <div className="rounded-xl border border-primary-200 bg-primary-50/60 dark:bg-primary-500/15 px-6 py-12 text-center">
               <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-primary-100 dark:bg-primary-500/20">
                 <svg className="h-6 w-6 animate-spin text-primary-600 dark:text-primary-400" fill="none" viewBox="0 0 24 24">
                   <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
@@ -257,7 +258,7 @@ function DashboardContent() {
               </p>
               <a
                 href="/opportunities"
-                className="mt-5 inline-flex items-center gap-1 rounded-lg border border-primary-300 bg-surface-card px-3.5 py-2 text-sm font-medium text-primary-700 dark:text-primary-300 transition-colors hover:bg-primary-50 dark:bg-primary-500/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500"
+                className="mt-5 inline-flex items-center gap-1 rounded-lg border border-primary-300 bg-surface-card px-3.5 py-2 text-sm font-medium text-primary-700 dark:text-primary-300 transition-colors hover:bg-primary-50 dark:hover:bg-primary-500/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-primary-500"
               >
                 그동안 공고 탐색 둘러보기
                 <svg className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
@@ -281,13 +282,13 @@ function DashboardContent() {
               <div className="mt-5 flex flex-wrap justify-center gap-2">
                 <a
                   href="/opportunities?tab=watch"
-                  className="inline-flex items-center gap-1 rounded-lg bg-primary-600 px-3.5 py-2 text-sm font-semibold text-white transition-colors hover:bg-primary-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-primary-500"
+                  className="inline-flex items-center gap-1 rounded-lg bg-primary-600 px-3.5 py-2 text-sm font-semibold text-white transition-colors hover:bg-primary-700 active:bg-primary-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-primary-500"
                 >
                   키워드 워치 등록
                 </a>
                 <a
                   href="/opportunities"
-                  className="inline-flex items-center gap-1 rounded-lg border border-surface-border bg-surface-card px-3.5 py-2 text-sm font-medium text-ink-600 transition-colors hover:bg-surface focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500"
+                  className="inline-flex items-center gap-1 rounded-lg border border-surface-border bg-surface-card px-3.5 py-2 text-sm font-medium text-ink-600 transition-colors hover:bg-surface focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-primary-500"
                 >
                   공고 탐색
                 </a>
@@ -331,7 +332,7 @@ function DashboardContent() {
         {!recsLoading && !recsError && hasRecs && (
           <a
             href={`/opportunities${isMock ? "?mock=1" : ""}`}
-            className="mt-4 flex items-center justify-center gap-1.5 rounded-xl border border-dashed border-surface-border bg-surface-card py-4 text-sm font-medium text-ink-600 transition-colors hover:border-primary-300 hover:text-primary-600 dark:text-primary-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500"
+            className="mt-4 flex items-center justify-center gap-1.5 rounded-xl border border-dashed border-surface-border bg-surface-card py-4 text-sm font-medium text-ink-600 transition-colors hover:border-primary-300 hover:text-primary-600 dark:text-primary-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-primary-500"
           >
             전체 공고에서 더 많은 기회 탐색하기
             <svg className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">

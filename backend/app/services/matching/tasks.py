@@ -110,7 +110,11 @@ def run_daily(*, company_id: str | None = None, _llm_fn: object = _UNSET) -> dic
                 continue
 
             ctx_id = str(ctx_row.id)
-            ctx_json: dict = ctx_row.context_json or {}
+            # 회사 수행 업종(KSIC)을 매칭 컨텍스트에 주입(원본 row 비변형 — 복사).
+            ctx_json: dict = {
+                **(ctx_row.context_json or {}),
+                "capable_industries": company.capable_industries or [],
+            }
 
             # ① 후보 검색 (pgvector) → (id, similarity) 리스트
             candidates = retrieve_candidates(db, ctx_id)
@@ -141,6 +145,7 @@ def run_daily(*, company_id: str | None = None, _llm_fn: object = _UNSET) -> dic
                     "agency": opp.agency,
                     "region": opp.region,
                     "category": opp.category,
+                    "industry": opp.industry,
                     "description": opp.description,
                 }
                 presets = _compute_rule_presets(ctx_json, opp_dict)

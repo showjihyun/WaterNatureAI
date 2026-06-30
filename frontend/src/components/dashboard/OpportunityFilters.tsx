@@ -3,6 +3,8 @@
 import { useRef, useEffect, useCallback } from "react";
 import { cn } from "@/lib/utils";
 import { sourceLabel } from "@/lib/sourceLabel";
+import { KSIC_CHOICES } from "@/lib/ksic";
+import { Chip } from "@/components/ui/Chip";
 import type { OpportunityFilters } from "@/types/api";
 
 // ── helpers ──────────────────────────────────────────────────────────────────
@@ -118,35 +120,6 @@ function detectScorePreset(filters: OpportunityFilters): ScorePreset {
 function detectFeasibilityPreset(filters: OpportunityFilters): FeasibilityPreset {
   if (!filters.feasibility) return "all";
   return filters.feasibility as FeasibilityPreset;
-}
-
-// ── chip primitive ────────────────────────────────────────────────────────────
-
-interface ChipProps {
-  active: boolean;
-  onClick: () => void;
-  children: React.ReactNode;
-  className?: string;
-}
-
-function Chip({ active, onClick, children, className }: ChipProps) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      aria-pressed={active}
-      className={cn(
-        "inline-flex shrink-0 items-center rounded-full px-2.5 py-0.5 text-xs font-medium transition-colors",
-        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-1",
-        active
-          ? "bg-primary-600 text-white shadow-sm"
-          : "bg-surface border border-surface-border text-ink-600 hover:bg-primary-50 dark:bg-primary-500/15 hover:text-primary-700 dark:text-primary-300 hover:border-primary-300",
-        className
-      )}
-    >
-      {children}
-    </button>
-  );
 }
 
 // ── group label ───────────────────────────────────────────────────────────────
@@ -313,12 +286,15 @@ export function OpportunityFilterBar({
               ))}
             </select>
           </div>
-          {/* Category (분야 — 단일 선택 드롭다운) */}
+          {/* 군집 구분: 발주처 | 분류 — 시각 리듬(발견성 유지, 숨김 없음) */}
+          <div aria-hidden="true" className="hidden h-7 w-px shrink-0 self-center bg-surface-border xl:block" />
+          {/* Type (유형 — 계약/지원 유형 단일 선택) */}
           <div className="flex items-center gap-2">
-            <GroupLabel>분야</GroupLabel>
-            <label htmlFor="filter-category" className="sr-only">분야 선택</label>
+            <GroupLabel>유형</GroupLabel>
+            <label htmlFor="filter-category" className="sr-only">유형 선택</label>
             <select
               id="filter-category"
+              title="계약·지원 구분(물품·용역·공사·정부지원분야)"
               value={filters.category ?? ""}
               onChange={(e) => onChange({ category: e.target.value || undefined, page: 1 })}
               className={cn(
@@ -329,7 +305,7 @@ export function OpportunityFilterBar({
                   : "border-surface-border"
               )}
             >
-              <option value="">전체</option>
+              <option value="">전체 유형</option>
               {CATEGORY_GROUPS.map((g) => (
                 <optgroup key={g.label} label={g.label}>
                   {g.options.map((c) => (
@@ -342,6 +318,31 @@ export function OpportunityFilterBar({
               ))}
             </select>
           </div>
+          {/* Industry (업종 — KSIC 한국표준산업분류 대분류 단일 선택) */}
+          <div className="flex items-center gap-2">
+            <GroupLabel>업종</GroupLabel>
+            <label htmlFor="filter-industry" className="sr-only">업종 선택</label>
+            <select
+              id="filter-industry"
+              title="한국표준산업분류(KSIC) 업종 — 회사 산업과 매칭"
+              value={filters.industry ?? ""}
+              onChange={(e) => onChange({ industry: e.target.value || undefined, page: 1 })}
+              className={cn(
+                "h-7 rounded-lg border px-2 text-xs text-ink bg-surface",
+                "focus:border-primary-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-1",
+                filters.industry
+                  ? "border-primary-400 ring-1 ring-primary-200"
+                  : "border-surface-border"
+              )}
+            >
+              <option value="">전체 업종</option>
+              {KSIC_CHOICES.map((s) => (
+                <option key={s.code} value={s.code}>{s.name}</option>
+              ))}
+            </select>
+          </div>
+          {/* 군집 구분: 분류 | 조건 */}
+          <div aria-hidden="true" className="hidden h-7 w-px shrink-0 self-center bg-surface-border xl:block" />
           {/* Budget presets */}
           <div className="flex shrink-0 items-center gap-2">
             <GroupLabel>예산</GroupLabel>
@@ -372,6 +373,8 @@ export function OpportunityFilterBar({
               ))}
             </div>
           </div>
+          {/* 군집 구분: 조건 | 품질 */}
+          <div aria-hidden="true" className="hidden h-7 w-px shrink-0 self-center bg-surface-border xl:block" />
           {/* Score presets */}
           <div className="flex shrink-0 items-center gap-2">
             <GroupLabel>적합도</GroupLabel>
@@ -409,9 +412,9 @@ export function OpportunityFilterBar({
             onClick={onReset}
             className={cn(
               "shrink-0 inline-flex items-center gap-1 rounded-lg px-2.5 py-1 text-xs font-medium transition-colors",
-              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-1",
+              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-primary-500 focus-visible:ring-offset-1",
               activeCount > 0
-                ? "text-primary-600 dark:text-primary-400 hover:bg-primary-50 dark:bg-primary-500/15"
+                ? "text-primary-600 dark:text-primary-400 hover:bg-primary-50 dark:hover:bg-primary-500/15"
                 : "text-ink-400 hover:bg-surface-muted"
             )}
             aria-label="필터 초기화"
@@ -455,6 +458,7 @@ export function countActiveFilters(filters: OpportunityFilters): number {
   if (filters.agency) n++;
   if (filters.region) n++;
   if (filters.category) n++;
+  if (filters.industry) n++;
   if (filters.budget_min != null || filters.budget_max != null) n++;
   if (filters.deadline_before) n++;
   if (filters.min_score != null) n++;

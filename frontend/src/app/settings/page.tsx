@@ -5,6 +5,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { AppShell } from "@/components/layout/AppShell";
 import { Alert } from "@/components/ui/Alert";
 import { Button } from "@/components/ui/Button";
+import { Chip } from "@/components/ui/Chip";
 import { LoadingPage } from "@/components/ui/Spinner";
 import { BillingSection } from "@/components/settings/BillingSection";
 import { DocumentUploadCard } from "@/components/settings/DocumentUploadCard";
@@ -19,6 +20,7 @@ import {
   updateLlmSettings,
 } from "@/lib/api/settings";
 import { sourceLabel } from "@/lib/sourceLabel";
+import { KSIC_CHOICES } from "@/lib/ksic";
 import { cn } from "@/lib/utils";
 import type { NotificationSetting } from "@/types/api";
 
@@ -59,6 +61,7 @@ interface CapabilityForm {
   tech_level: number | null;
   max_project_budget: string; // raw string input; parsed to number|null on submit
   capable_categories: CapableCategory[];
+  capable_industries: string[]; // KSIC 대분류 코드(표준 업종)
 }
 
 export default function SettingsPage() {
@@ -126,6 +129,7 @@ export default function SettingsPage() {
     tech_level: null,
     max_project_budget: "",
     capable_categories: [],
+    capable_industries: [],
   });
   const [capSaved, setCapSaved] = useState(false);
 
@@ -138,6 +142,7 @@ export default function SettingsPage() {
             ? String(profileData.max_project_budget)
             : "",
         capable_categories: (profileData.capable_categories ?? []) as CapableCategory[],
+        capable_industries: profileData.capable_industries ?? [],
       });
     }
   }, [profileData]);
@@ -161,6 +166,7 @@ export default function SettingsPage() {
       tech_level: capForm.tech_level,
       max_project_budget: budget,
       capable_categories: capForm.capable_categories.length > 0 ? capForm.capable_categories : null,
+      capable_industries: capForm.capable_industries.length > 0 ? capForm.capable_industries : null,
     });
   }
 
@@ -170,6 +176,15 @@ export default function SettingsPage() {
       capable_categories: prev.capable_categories.includes(cat)
         ? prev.capable_categories.filter((c) => c !== cat)
         : [...prev.capable_categories, cat],
+    }));
+  }
+
+  function toggleIndustry(code: string) {
+    setCapForm((prev) => ({
+      ...prev,
+      capable_industries: prev.capable_industries.includes(code)
+        ? prev.capable_industries.filter((c) => c !== code)
+        : [...prev.capable_industries, code],
     }));
   }
 
@@ -255,7 +270,7 @@ export default function SettingsPage() {
             aria-controls={`settings-panel-${t.key}`}
             onClick={() => setTab(t.key)}
             className={cn(
-              "-mb-px whitespace-nowrap rounded-t border-b-2 px-3.5 py-2 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500",
+              "-mb-px whitespace-nowrap rounded-t border-b-2 px-3.5 py-2 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-primary-500",
               tab === t.key
                 ? "border-primary-600 text-primary-700 dark:text-primary-300"
                 : "border-transparent text-ink-400 hover:border-surface-border hover:text-ink-600"
@@ -682,19 +697,41 @@ export default function SettingsPage() {
               <legend className="block text-sm font-medium text-ink-700 mb-2">
                 수행 가능 유형
               </legend>
-              <div className="flex gap-3">
+              <div className="flex flex-wrap gap-2">
                 {CAPABLE_CATEGORIES.map((cat) => (
-                  <label key={cat} className="flex items-center gap-2 cursor-pointer">
-                    <input
-                      type="checkbox"
-                      checked={capForm.capable_categories.includes(cat)}
-                      onChange={() => toggleCategory(cat)}
-                      className="h-4 w-4 rounded border-surface-border text-primary-600 dark:text-primary-400 focus:ring-primary-500"
-                    />
-                    <span className="text-sm text-ink-700">{cat}</span>
-                  </label>
+                  <Chip
+                    key={cat}
+                    active={capForm.capable_categories.includes(cat)}
+                    onClick={() => toggleCategory(cat)}
+                    className="px-3 py-1.5 text-sm"
+                  >
+                    {cat}
+                  </Chip>
                 ))}
               </div>
+            </fieldset>
+
+            {/* Capable industries (수행 가능 업종 — KSIC 한국표준산업분류 대분류) */}
+            <fieldset>
+              <legend className="block text-sm font-medium text-ink-700 mb-2">
+                수행 가능 업종{" "}
+                <span className="font-normal text-ink-400">(표준산업분류 · 복수 선택)</span>
+              </legend>
+              <div className="flex flex-wrap gap-2">
+                {KSIC_CHOICES.map((s) => (
+                  <Chip
+                    key={s.code}
+                    active={capForm.capable_industries.includes(s.code)}
+                    onClick={() => toggleIndustry(s.code)}
+                    className="px-3 py-1.5 text-sm"
+                  >
+                    {s.name}
+                  </Chip>
+                ))}
+              </div>
+              <p className="mt-2 text-xs text-ink-400">
+                선택한 업종의 공고에 적합도(업종 점수)가 가산됩니다.
+              </p>
             </fieldset>
 
             <div className="flex items-center gap-3">

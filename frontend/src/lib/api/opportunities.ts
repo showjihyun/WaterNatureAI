@@ -36,6 +36,7 @@ export async function listOpportunities(
   filters.sources?.forEach((s) => params.append("source", s));
   if (filters.region) params.set("region", filters.region);
   if (filters.category) params.set("category", filters.category);
+  if (filters.industry) params.set("industry", filters.industry);
   if (filters.budget_min != null)
     params.set("budget_min", String(filters.budget_min));
   if (filters.budget_max != null)

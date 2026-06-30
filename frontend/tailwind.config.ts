@@ -46,14 +46,22 @@ const config: Config = {
           5: "rgb(var(--chart-5) / <alpha-value>)",
         },
       },
-      // 낮고 부드러운 elevation(슬레이트 틴트) — 일관 그림자 스케일.
+      // 부드러운 톤 — 과하지 않게 둥근 모서리(컨트롤 10·카드 14·패널 16px).
+      borderRadius: {
+        DEFAULT: "0.375rem", // 6px
+        md: "0.5rem", // 8px
+        lg: "0.625rem", // 10px — 버튼/인풋
+        xl: "0.875rem", // 14px — 카드
+        "2xl": "1rem", // 16px — 큰 패널(상한)
+      },
+      // 깃털처럼 확산되는 부드러운 elevation(슬레이트 틴트, 저투명·넓은 blur) — soft float.
       boxShadow: {
-        xs: "0 1px 2px 0 rgb(15 23 42 / 0.05)",
-        sm: "0 1px 2px 0 rgb(15 23 42 / 0.06), 0 1px 3px 0 rgb(15 23 42 / 0.05)",
+        xs: "0 1px 2px 0 rgb(15 23 42 / 0.04)",
+        sm: "0 1px 3px 0 rgb(15 23 42 / 0.04), 0 1px 2px -1px rgb(15 23 42 / 0.03)",
         DEFAULT:
-          "0 2px 6px -1px rgb(15 23 42 / 0.08), 0 1px 3px -1px rgb(15 23 42 / 0.05)",
-        md: "0 6px 16px -4px rgb(15 23 42 / 0.10), 0 2px 6px -2px rgb(15 23 42 / 0.06)",
-        lg: "0 12px 28px -8px rgb(15 23 42 / 0.14)",
+          "0 4px 10px -3px rgb(15 23 42 / 0.06), 0 2px 4px -2px rgb(15 23 42 / 0.04)",
+        md: "0 10px 24px -6px rgb(15 23 42 / 0.08), 0 3px 8px -3px rgb(15 23 42 / 0.04)",
+        lg: "0 20px 44px -12px rgb(15 23 42 / 0.12)",
       },
       fontFamily: {
         sans: [

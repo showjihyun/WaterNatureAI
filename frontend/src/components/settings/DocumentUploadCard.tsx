@@ -67,7 +67,7 @@ export function DocumentUploadCard({ currentFilename }: { currentFilename?: stri
       )}
 
       <label
-        className={`flex cursor-pointer items-center justify-center gap-2 rounded-lg border border-dashed border-surface-border px-4 py-3 text-sm font-medium transition-colors hover:border-primary-300 hover:bg-primary-50 dark:bg-primary-500/15/40 ${
+        className={`flex cursor-pointer items-center justify-center gap-2 rounded-lg border border-dashed border-surface-border px-4 py-3 text-sm font-medium transition-colors hover:border-primary-300 hover:bg-primary-50/40 dark:hover:bg-primary-500/15 ${
           uploading ? "pointer-events-none opacity-60" : "text-ink-600"
         }`}
       >

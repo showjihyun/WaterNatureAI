@@ -8,6 +8,7 @@ import { HideMenu } from "./HideMenu";
 import { SubscoreBreakdown } from "./SubscoreBreakdown";
 import { InfoPopover } from "@/components/ui/InfoPopover";
 import { SaveButton } from "@/components/ui/SaveButton";
+import { IndustryBadge } from "@/components/ui/IndustryBadge";
 import { DaysBadge } from "@/components/ui/DaysBadge";
 import { useRecommendationActions } from "./useRecommendationActions";
 
@@ -59,6 +60,7 @@ export function RecommendationRow({
           {item.category && (
             <span className="text-xs uppercase tracking-wide text-ink-400">{item.category}</span>
           )}
+          <IndustryBadge code={item.industry} />
         </div>
         <h3 className="truncate text-sm font-semibold leading-snug text-ink">{item.title}</h3>
         {item.matched_keywords && item.matched_keywords.length > 0 && (
@@ -146,7 +148,7 @@ export function RecommendationRow({
               onClick={onAddToPipeline}
               aria-label="진행 관리에 추가"
               title="진행 관리에 추가"
-              className="inline-flex h-9 items-center gap-0.5 rounded-lg border border-surface-border px-2 text-[11px] font-medium text-ink-600 transition-colors hover:border-primary-300 hover:bg-primary-50 dark:bg-primary-500/15 hover:text-primary-700 dark:text-primary-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-primary-500"
+              className="inline-flex h-9 items-center gap-0.5 rounded-lg border border-surface-border px-2 text-[11px] font-medium text-ink-600 transition-colors hover:border-primary-300 hover:bg-primary-50 dark:hover:bg-primary-500/15 hover:text-primary-700 dark:hover:text-primary-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-primary-500"
             >
               <svg className="h-3 w-3" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
                 <path strokeLinecap="round" d="M12 4.5v15m7.5-7.5h-15" />
