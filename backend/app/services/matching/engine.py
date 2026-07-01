@@ -14,7 +14,12 @@ from sqlalchemy.orm import Session
 from app.core.config import settings
 from app.services.embedding import vectorstore
 from app.services.keywords import INDUSTRY_KEYWORDS, STOPWORDS
-from app.services.ksic import KEYWORDS as KSIC_KEYWORDS, ksic_name, ETC as KSIC_ETC
+from app.services.ksic import (
+    KEYWORDS as KSIC_KEYWORDS,
+    ETC as KSIC_ETC,
+    keyword_in_text,
+    ksic_name,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -183,14 +188,13 @@ def _industry_score(
     if not signal_keywords:
         return 0
 
-    opp_lower = opp_text.lower()
-    # 2. 강한 매칭: 시그널 키워드가 opp_text 에 하나라도 등장
+    # 2. 강한 매칭: 시그널 키워드가 opp_text 에 하나라도 등장(부분문자열 오매칭 방지)
     for kw in signal_keywords:
-        if kw.lower() in opp_lower:
+        if keyword_in_text(kw, opp_text):
             return 15
     # 3. 약한 매칭: 회사 산업명이 opp_text 부분 포함
     for ind in all_industries:
-        if ind.lower() in opp_lower:
+        if keyword_in_text(ind, opp_text):
             return 8
     return 0
 
@@ -341,7 +345,6 @@ def _build_rule_reasons(
         else:
             industry = company_context.get("industry", "")
             # opp_text 에서 매칭된 산업 키워드 찾기
-            opp_lower = opp_text.lower() if opp_text else ""
             matched_industry_kw = ""
             all_inds = []
             if industry:
@@ -350,7 +353,7 @@ def _build_rule_reasons(
             for ind in all_inds:
                 kws = INDUSTRY_KEYWORDS.get(ind, [ind])
                 for kw in kws:
-                    if kw.lower() in opp_lower:
+                    if keyword_in_text(kw, opp_text or ""):
                         matched_industry_kw = kw
                         break
                 if matched_industry_kw:

@@ -12,6 +12,8 @@
 """
 from __future__ import annotations
 
+import re
+from functools import lru_cache
 from typing import Iterable
 
 # 미분류 버킷 — 신호가 없을 때.
@@ -146,13 +148,47 @@ _CATEGORY_PRIOR: dict[str, tuple[str, int]] = {
 }
 
 
+# ── 키워드 매칭(부분문자열 오매칭 방지) ──────────────────────────────────────
+#   영문 약어(AI/GIS/ICT…)는 더 긴 영단어 안에 substring 으로 박혀 오분류를 낸다
+#   (AI⊂AIR/MAINTENANCE, GIS⊂LOGISTICS, ICT⊂DISTRICT). → 영문 약어는 '단어경계'
+#   (양옆이 영문자가 아님)로만 매칭하고 대소문자 무시(api·AI 양쪽 흡수).
+#   한글 단축 키워드 중 더 긴 무관 단어의 일부가 되는 '함정'은 부정 lookbehind/
+#   lookahead 로 차단한다(예: '마트'⊄'스마트'(smart)).
+_TRAP_PATTERNS: dict[str, str] = {
+    "마트": r"(?<!스)마트",  # 스마트(smart) 안의 '마트'는 도소매(G) 신호가 아님
+}
+
+
+@lru_cache(maxsize=8192)
+def _keyword_matcher(keyword: str) -> "re.Pattern[str]":
+    """키워드별 매칭 규칙 컴파일(1회 캐시). 영문약어=단어경계+대소문자무시, 한글=부분문자열(+함정제외)."""
+    trap = _TRAP_PATTERNS.get(keyword)
+    if trap:
+        return re.compile(trap)
+    if keyword.isascii() and keyword.isalpha():
+        # 영문 약어: 양옆이 영문자가 아니어야 매칭(공백 유무·한글/숫자 경계 무관).
+        return re.compile(rf"(?<![A-Za-z]){re.escape(keyword)}(?![A-Za-z])", re.IGNORECASE)
+    return re.compile(re.escape(keyword))
+
+
+def keyword_in_text(keyword: str, text: str) -> bool:
+    """키워드가 text 에 '의미 있게' 등장하는가.
+
+    단순 `kw in text` 의 부분문자열 오매칭(AI⊂AIR, 마트⊂스마트)을 방지한다:
+    영문 약어는 단어경계, 한글 함정 키워드는 부정 lookbehind 로 차단.
+    """
+    if not keyword or not text:
+        return False
+    return _keyword_matcher(keyword).search(text) is not None
+
+
 def _hit_score(text_title: str, text_body: str, kws: Iterable[str]) -> int:
     """제목 등장=2점, 내용만 등장=1점. 키워드별 1회만(중복 가중 방지)."""
     score = 0
     for kw in kws:
-        if kw in text_title:
+        if keyword_in_text(kw, text_title):
             score += 2
-        elif kw in text_body:
+        elif keyword_in_text(kw, text_body):
             score += 1
     return score
 

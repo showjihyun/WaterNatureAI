@@ -102,6 +102,56 @@ class TestIndustryScore:
         score = _industry_score("환경", [], "폐기물 처리 용역 입찰")
         assert score == 15
 
+    # ── 신규 KSIC 표준 업종축(opp_industry × capable_industries) ──────────────
+
+    def test_ksic_direct_axis_match_returns_15(self):
+        """표준 업종축 직접 일치: opp.industry 가 회사 capable_industries 에 포함 → 15."""
+        score = _industry_score(
+            None, [], "임의 공고 제목 본문",
+            opp_industry="J", ctx_capable_industries=["J", "E"],
+        )
+        assert score == 15
+
+    def test_ksic_capable_industry_keyword_supplements(self):
+        """opp.industry 미분류여도 회사 수행업종(E)의 KSIC 키워드(폐기물)로 보완 매칭 → 15."""
+        score = _industry_score(
+            None, [], "생활 폐기물 수집운반 용역",
+            opp_industry=None, ctx_capable_industries=["E"],
+        )
+        assert score == 15
+
+    def test_ksic_direct_axis_no_overlap_returns_zero(self):
+        """opp.industry 가 capable_industries 에 없고 키워드도 없으면 0."""
+        score = _industry_score(
+            None, [], "사무용 가구 납품",
+            opp_industry="C", ctx_capable_industries=["J"],
+        )
+        assert score == 0
+
+    def test_ksic_etc_is_not_a_match(self):
+        """ETC(기타)는 업종 신호가 아니므로 직접 매칭에서 제외 → 0."""
+        score = _industry_score(
+            None, [], "기타 잡다 공고",
+            opp_industry="ETC", ctx_capable_industries=["ETC"],
+        )
+        assert score == 0
+
+    def test_korean_keyword_not_overmatched_as_substring(self):
+        """회귀: 도소매(G·'마트') 회사가 '스마트공장' IT 공고에 업종점수를 받지 않는다."""
+        score = _industry_score(
+            None, [], "스마트공장 품질검사 시스템 구축",
+            opp_industry=None, ctx_capable_industries=["G"],
+        )
+        assert score == 0
+
+    def test_ascii_acronym_not_overmatched_as_substring(self):
+        """회귀: J(IT)의 영문약어 'AI'가 'AIR' 안에서 매칭돼 15를 주지 않는다."""
+        score = _industry_score(
+            None, [], "AIR 공조설비 유지보수 용역",
+            opp_industry=None, ctx_capable_industries=["J"],
+        )
+        assert score == 0
+
 
 class TestTechKeywordScore:
     def test_one_match_returns_12(self):
