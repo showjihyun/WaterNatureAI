@@ -5,6 +5,8 @@
 """
 from __future__ import annotations
 
+from datetime import datetime, timedelta
+
 import pytest
 
 from app.services.collectors.bizinfo import BizinfoClient, BizinfoCollector
@@ -126,6 +128,10 @@ class TestBizinfoParseItem:
         assert dto.content_hash == expected
 
     def test_status_open_future(self, collector, bizinfo_item):
+        # 마감일을 '오늘 기준 미래'로 둔다 — 고정일자 fixture는 시간이 지나면
+        # deadline<now 가 되어 status가 closed로 뒤집혀 깨진다(타임밤 방지).
+        future = (datetime.now(KST) + timedelta(days=30)).strftime("%Y-%m-%d")
+        bizinfo_item["reqstBeginEndDe"] = f"2026-06-15 ~ {future}"
         assert collector.parse_item(bizinfo_item).status == "open"
 
     def test_raw_json_preserved(self, collector, bizinfo_item):

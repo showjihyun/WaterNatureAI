@@ -188,6 +188,7 @@ class TestBuildCompanyContext:
             context_data["industry"],
             context_data["technologies"],
             context_data["customers"],
+            context_data["certifications"],  # 운영 해시(service.py)와 동일 필드 집합
             context_data["strengths"],
             context_data["track_records"],
         )
