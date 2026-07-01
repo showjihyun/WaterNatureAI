@@ -15,6 +15,7 @@ from app.services.matching.engine import (
     SIM_MAX,
     WEIGHTS,
     ScoreResult,
+    _build_rule_reasons,
     _compute_rule_presets,
     _customer_score,
     _industry_score,
@@ -196,6 +197,14 @@ class TestTechKeywordScore:
         """1자 키워드 제외."""
         score = _tech_keyword_score(["A"], [], "A 개발")
         assert score == 0
+
+    def test_ascii_tech_keyword_word_boundary(self):
+        """회귀: 기술 키워드 'GIS'가 'LOGISTICS' 안에서 매칭돼 점수를 주지 않는다."""
+        assert _tech_keyword_score(["GIS"], [], "LOGISTICS 센터 운영") == 0
+
+    def test_ascii_tech_keyword_case_insensitive_boundary(self):
+        """경계가 맞으면 대소문자 무시하고 매칭('gis'도 'GIS' 키워드에 매칭)."""
+        assert _tech_keyword_score(["GIS"], [], "gis 공간정보 구축") == 12
 
 
 class TestCustomerScore:
@@ -626,6 +635,28 @@ class TestSimilarityComponent:
     def test_below_floor_clamped_to_zero(self):
         """similarity < SIM_FLOOR (0.0 포함) → 0."""
         assert _similarity_component(0.0) == 0
+
+
+# ── _build_rule_reasons 근거-점수 일치 ────────────────────────────────────────
+
+class TestBuildRuleReasons:
+    def test_ksic_keyword_match_shows_industry_not_generic(self):
+        """근거-점수 일치 회귀: capable_industries 키워드로 업종점수가 났으면
+        근거가 '해당 분야'로 뭉뚱그려지지 않고 실제 업종·키워드를 보여준다."""
+        ctx = {"capable_industries": ["E"]}  # 환경
+        opp = {"title": "생활 폐기물 수집운반 용역"}
+        reasons = _build_rule_reasons(ctx, opp, {"industry": 15})
+        ind = [r for r in reasons if "적합" in r and ("업종" in r or "산업" in r)]
+        assert ind, "업종/산업 근거가 있어야 함"
+        assert "해당 분야" not in ind[0]
+        assert "폐기물" in ind[0]
+
+    def test_direct_axis_match_shows_standard_industry(self):
+        """opp.industry 가 capable_industries 에 직접 일치 → '표준 업종 일치' 근거."""
+        ctx = {"capable_industries": ["J"]}
+        opp = {"title": "임의 제목", "industry": "J"}
+        reasons = _build_rule_reasons(ctx, opp, {"industry": 15})
+        assert any("표준 업종 일치" in r for r in reasons)
 
     def test_negative_clamped_to_zero(self):
         """음수 유사도 → 0."""

@@ -5,7 +5,12 @@
 """
 from __future__ import annotations
 
-from app.services.ksic import classify_industry, keyword_in_text
+import re
+from pathlib import Path
+
+import pytest
+
+from app.services.ksic import SECTIONS, classify_industry, keyword_in_text
 
 
 class TestKeywordMatcher:
@@ -63,6 +68,34 @@ class TestClassifyIndustry:
     def test_construction_category_prior(self):
         assert classify_industry("도로 포장공사", category="공사") == "F"
 
+    def test_goods_procurement_not_retail(self):
+        """물품 조달(납품/물품구매)만으로는 도소매(G) 아님 — 유형 축이 담당."""
+        assert classify_industry("사무용 PC 납품", source="narajangter") != "G"
+        assert classify_industry("스마트 그늘막 물품구매 설치", source="narajangter") != "G"
+
+    def test_genuine_retail_classifies_g(self):
+        assert classify_industry("전통시장 상생 유통 판로 지원", source="bizinfo") == "G"
+
+    def test_legal_service_classifies_m(self):
+        assert classify_industry("공탁금 회수 법무 자문 용역", source="narajangter") == "M"
+
     def test_never_returns_none(self):
         assert classify_industry(None) == "ETC"
         assert classify_industry("") == "ETC"
+
+
+class TestFrontendBackendSync:
+    """KSIC 대분류 테이블은 BE ksic.py SECTIONS 와 FE lib/ksic.ts 에 수동 이중 관리된다.
+    한쪽만 수정되면 배지/필터 라벨이 깨지므로, 드리프트를 이 테스트가 큰 소리로 잡는다."""
+
+    def test_frontend_sections_match_backend(self):
+        fe = Path(__file__).resolve().parents[3] / "frontend" / "src" / "lib" / "ksic.ts"
+        if not fe.exists():
+            pytest.skip("frontend/src/lib/ksic.ts 없음(백엔드 단독 환경)")
+        text = fe.read_text(encoding="utf-8")
+        pat = re.compile(r'\{\s*code:\s*"([^"]+)",\s*name:\s*"([^"]+)",\s*short:\s*"([^"]+)"\s*\}')
+        fe_sections = pat.findall(text)
+        assert fe_sections, "lib/ksic.ts 에서 KSIC_SECTIONS 항목을 못 찾음(포맷 변경?)"
+        assert fe_sections == SECTIONS, (
+            "FE lib/ksic.ts 와 BE ksic.py SECTIONS 불일치 — 코드·이름·단축명·순서를 맞추세요."
+        )

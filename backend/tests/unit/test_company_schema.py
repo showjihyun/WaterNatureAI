@@ -31,6 +31,14 @@ class TestCompanyProfileIn:
         assert dumped["name"] == "공간정보기업"
         assert set(dumped) == {"name", "industry", "description", "region", "phone"}
 
+    def test_capable_industries_filters_invalid_codes(self):
+        """KSIC 유효 대분류 코드만 통과 — 알 수 없는 코드(Z/999)는 조용히 제거."""
+        body = CompanyProfileIn(capable_industries=["J", "Z", "E", "999"])
+        assert body.capable_industries == ["J", "E"]
+
+    def test_capable_industries_none_passthrough(self):
+        assert CompanyProfileIn(capable_industries=None).capable_industries is None
+
     def test_empty_name_rejected(self):
         with pytest.raises(ValidationError):
             CompanyProfileIn(name="")

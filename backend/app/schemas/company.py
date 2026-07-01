@@ -4,7 +4,9 @@ from __future__ import annotations
 import uuid
 from typing import Annotated
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
+
+from app.services.ksic import is_valid_code
 
 
 class CompanyProfileIn(BaseModel):
@@ -27,6 +29,14 @@ class CompanyProfileIn(BaseModel):
     max_project_budget: int | None = None
     capable_categories: list[str] | None = None       # 수행 유형(물품·용역·공사)
     capable_industries: list[str] | None = None        # 수행 업종 KSIC 코드(예: ["J","E"])
+
+    @field_validator("capable_industries")
+    @classmethod
+    def _only_valid_ksic(cls, v: list[str] | None) -> list[str] | None:
+        """KSIC 대분류 코드만 허용 — 알 수 없는 코드는 조용히 제거(프론트는 유효코드만 전송)."""
+        if not v:
+            return v
+        return [c for c in v if is_valid_code(c)]
 
 
 class CompanyProfileOut(BaseModel):

@@ -216,8 +216,8 @@ def _tech_keyword_score(
     discriminative = {t for t in raw if len(t) >= 2 and t not in STOPWORDS}
     if not discriminative or not opp_text:
         return 0
-    opp_lower = opp_text.lower()
-    matched = sum(1 for t in discriminative if t.lower() in opp_lower)
+    # keyword_in_text: 영문 약어 단어경계·한글 함정 제외(예: 'AI'⊄'AIR', 'GIS'⊄'LOGISTICS').
+    matched = sum(1 for t in discriminative if keyword_in_text(t, opp_text))
     return min(30, matched * 12)
 
 
@@ -325,7 +325,7 @@ def _build_rule_reasons(
         filter(None, [opportunity.get("title", ""), opportunity.get("description", "")])
     )
     if discriminative and opp_text and rule_scores.get("tech", 0) > 0:
-        matched_kw = [t for t in discriminative if t.lower() in opp_text.lower()]
+        matched_kw = [t for t in discriminative if keyword_in_text(t, opp_text)]
         if matched_kw:
             reasons.append(f"기술 일치: {', '.join(sorted(matched_kw)[:5])}")
 
@@ -358,7 +358,20 @@ def _build_rule_reasons(
                         break
                 if matched_industry_kw:
                     break
-            if matched_industry_kw:
+            # 자유텍스트에서 못 찾으면 회사 KSIC 수행업종 키워드에서 탐색(점수-근거 일치:
+            # capable_industries 키워드로 15점이 났는데 근거가 '해당 분야'로 뭉뚱그려지던 회귀 수정).
+            matched_code = ""
+            if not matched_industry_kw:
+                for code in caps:
+                    for kw in KSIC_KEYWORDS.get(code, []):
+                        if keyword_in_text(kw, opp_text or ""):
+                            matched_industry_kw, matched_code = kw, code
+                            break
+                    if matched_industry_kw:
+                        break
+            if matched_code:
+                reasons.append(f"업종 적합: {ksic_name(matched_code)} (공고: '{matched_industry_kw}')")
+            elif matched_industry_kw:
                 reasons.append(f"산업 적합: {industry} (공고: '{matched_industry_kw}')")
             else:
                 reasons.append(f"산업 적합: {industry or '해당 분야'}")
@@ -530,7 +543,7 @@ def _format_context(ctx: dict) -> str:
     if ctx.get("industry"):
         lines.append(f"- 대표 산업: {ctx['industry']}")
     if ctx.get("capable_industries"):
-        names = [ksic_name(c) for c in ctx["capable_industries"] if ksic_name(c) and c != KSIC_ETC]
+        names = [ksic_name(c) for c in ctx["capable_industries"] if c and c != KSIC_ETC]
         if names:
             lines.append(f"- 수행 업종(표준): {', '.join(names)}")
     if ctx.get("technologies"):
